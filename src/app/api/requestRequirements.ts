@@ -8,7 +8,7 @@ export const SIGN_IN_HEADERS = {
 
 export const SIGNUP_ENDPOINT = "/auth/register";
 export const REDEFINITION_MAIL = "/auth/password";
-export const SIGNIN_ENDPOINT = "/auth/sign_in";
+export const SIGNIN_ENDPOINT = "/auth/login";
 export const SIGNOUT_ENDPOINT = "/auth/sign_out";
 export const CHANGE_PASSWORD_ENDPOINT = "/auth/password";
 export const VALIDATE_TOKEN_ENDPOINT = "/auth/validate_token";

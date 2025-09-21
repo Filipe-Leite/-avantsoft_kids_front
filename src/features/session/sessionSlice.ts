@@ -21,7 +21,6 @@ export interface User {
 export interface UserSignUpData {
   email: string;
   password: string;
-  passwordConfirmation: string;
 }
 
 export interface UserSignInData {
@@ -81,7 +80,7 @@ export const signInUser = createAsyncThunk(
       );
     
     if (response.status >= 200 && response.status < 300){
-      await storeAuthHeader(response.headers);
+      storeAuthHeader(response.data.token);
       return response.data;
     } else {
       return rejectWithValue(response.data);
@@ -154,6 +153,7 @@ const sessionSlice = createSlice({
         state.errorMessages = [];
       })
       .addCase(signInUser.rejected, (state, action: any) => {
+        console.log("signInUser.rejected >>> ", action)
         state.loading = false;
         state.loggedIn = false;
         state.error = true;
@@ -203,11 +203,8 @@ const sessionSlice = createSlice({
 export const sessionAuthSliceReducer = sessionSlice.reducer;
 export const sessionAuthSliceActions = sessionSlice.actions;
 
-function storeAuthHeader(headers: any) {
-    localStorage.setItem('accept', REQUEST_REQUIREMENTS.ACCEPT);
-    localStorage.setItem('accessToken', headers["access-token"]);
-    localStorage.setItem('client', headers["client"]);
-    localStorage.setItem('uid', headers["uid"]);
+function storeAuthHeader(token: string) {
+    localStorage.setItem('token', token);
   }
 
 function removeAuthHeaders() {

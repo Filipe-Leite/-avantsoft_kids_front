@@ -12,7 +12,6 @@ export default function SignUp(){
                                                 password: ''
                                             });
     
-    const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     const errorsMessages = useSelector((state: RootState) => state.session.errorMessages);
 
@@ -35,8 +34,7 @@ export default function SignUp(){
 
         const response = await dispatch(signUpUser({
                                                     email: formData.email,
-                                                    password: formData.password,
-                                                    passwordConfirmation: formData.password
+                                                    password: formData.password
                                                     }));
 
         if (response.meta.requestStatus === 'fulfilled') {
