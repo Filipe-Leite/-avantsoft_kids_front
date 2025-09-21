@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
-import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
+import * as REQUEST_REQUIREMENTS from '../app/api/requestRequirements';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { RootState } from '../app/store';
 
 function PublicOnlyRoute({ children  } : any) {
   const currentUser = useSelector((state : RootState) => state.session.currentUser);
   const location = useLocation();
-  // const [PRIVATE_ROUTES, setPrivateRoutes] = useState<REQUEST_REQUIREMENTS.EndPoints>();
+  const [PRIVATE_ROUTES, setPrivateRoutes] = useState<REQUEST_REQUIREMENTS.EndPoints>();
   const loading = useSelector((state: RootState) => state.session.loading);
   const userValidated = useSelector((state: RootState) => state.session.loggedIn);
   const navigate = useNavigate();
@@ -15,10 +16,10 @@ function PublicOnlyRoute({ children  } : any) {
     if (currentUser){
 
         const routeParams={
-          userNickname: currentUser.nickname
+          userId: currentUser.id
       }
 
-      // const PRIVATE_ROUTES = REQUEST_REQUIREMENTS.handlePrivateRoutes({ROUTE_PARAMS: routeParams});
+      const PRIVATE_ROUTES = REQUEST_REQUIREMENTS.handlePrivateRoutes({ROUTE_PARAMS: routeParams});
 
       setPrivateRoutes(PRIVATE_ROUTES);
     }

@@ -1,7 +1,9 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import { sessionAuthSliceReducer } from '../features/session/sessionSlice';
 
 export const store = configureStore({
             reducer: {
+                      session: sessionAuthSliceReducer,
             }
 });
 

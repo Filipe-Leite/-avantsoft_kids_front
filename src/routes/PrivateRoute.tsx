@@ -1,10 +1,8 @@
-import React, { useEffect } from 'react';
+import { JSX, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Navigate, useLocation } from 'react-router-dom';
 import { RootState, AppDispatch } from '../app/store';
-import { authenticateUserFromStorage } from '../app/features/sessions/sessionSlice';
-import LoadingModal from '../app/components/modal/loadingModal/LoadingModal';
-import { getUserGenericConfig } from '../app/features/sessions/sessionConfig/sessionUserConfigurations';
+import { authenticateUserFromStorage } from '../features/session/sessionSlice';
 
 function PrivateRoute({ children }: { children: JSX.Element }) {
   const currentUser = useSelector((state: RootState) => state.session.currentUser);
@@ -17,27 +15,27 @@ function PrivateRoute({ children }: { children: JSX.Element }) {
   useEffect(() => {
       dispatch(authenticateUserFromStorage());
 
-      const fetchUserMoreInfo = async () => {
-        if (authHeaders && currentUser && currentUser.nickname) {
-          try {
-            await dispatch(
-              getUserGenericConfig({
-                authHeaders,
-                userNickname: currentUser.nickname,
-              })
-            );
-          } catch (error) {
-            console.error("Error fetching user info:", error);
-          }
-        }
-      };
+      // const fetchUserMoreInfo = async () => {
+      //   if (authHeaders && currentUser && currentUser.nickname) {
+      //     try {
+      //       await dispatch(
+      //         getUserGenericConfig({
+      //           authHeaders,
+      //           userNickname: currentUser.nickname,
+      //         })
+      //       );
+      //     } catch (error) {
+      //       console.error("Error fetching user info:", error);
+      //     }
+      //   }
+      // };
 
-      fetchUserMoreInfo();
+      // fetchUserMoreInfo();
       
   }, [children,dispatch]);
 
   if (loading) {
-    return <LoadingModal/>
+    return <h2>Loading</h2>
   }
 
   if (currentUser) {
