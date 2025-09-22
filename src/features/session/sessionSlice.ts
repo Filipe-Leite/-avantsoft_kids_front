@@ -8,14 +8,7 @@ import { AuthHeaders} from '../../app/#interfaces/interfaces';
 
 export interface User {
   email?: string;
-  provider?: string;
-  uid?: string;
   id?: number;
-  allowPasswordChange?: boolean;
-  name?: string;
-  profileImage?: string;
-  nickname?: string;
-  role?: string;
 }
 
 export interface UserSignUpData {
@@ -78,12 +71,14 @@ export const signInUser = createAsyncThunk(
       payload.email,
       payload.password
       );
+
+    console.log("signInUser response >>> ", response)
     
-    if (response.status >= 200 && response.status < 300){
+    if (response.status >= 300){
+      return rejectWithValue(response.data);
+    } else {
       storeAuthHeader(response.data.token);
       return response.data;
-    } else {
-      return rejectWithValue(response.data);
     }
   }
 );
@@ -94,8 +89,10 @@ export const authenticateUserFromStorage = createAsyncThunk(
     const authHeaders = localAuthHeader()
     const response = await validateAuthHeader(authHeaders);
 
+    console.log("authenticateUserFromStorage response >>> ", response)
+
       if (response.status >= 200 && response.status < 300){
-        return response.data.data;
+        return response.data;
       } else {
         return rejectWithValue(response.data);
       }
@@ -153,7 +150,6 @@ const sessionSlice = createSlice({
         state.errorMessages = [];
       })
       .addCase(signInUser.rejected, (state, action: any) => {
-        console.log("signInUser.rejected >>> ", action)
         state.loading = false;
         state.loggedIn = false;
         state.error = true;
@@ -187,7 +183,7 @@ const sessionSlice = createSlice({
         state.loading = false;
         state.loggedIn = true;
         state.authHeaders = localAuthHeader();
-        state.currentUser = convertKeysToCamelCase(action.payload);
+        state.currentUser = convertKeysToCamelCase(action.payload.user);
         state.error = false;
         state.errorMessages = [];
       })
@@ -204,33 +200,23 @@ export const sessionAuthSliceReducer = sessionSlice.reducer;
 export const sessionAuthSliceActions = sessionSlice.actions;
 
 function storeAuthHeader(token: string) {
-    localStorage.setItem('token', token);
-  }
+  localStorage.setItem('Authorization', `Bearer ${token}`);
+}
 
 function removeAuthHeaders() {
-    localStorage.removeItem('accept');
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('client');
-    localStorage.removeItem('uid');
+    localStorage.removeItem('Authorization');
 }
 
 export function getLocalStorageAuthHeaders(){
   const authHeader = {
-    accept: localStorage.getItem('accept') || '',
-    accessToken: localStorage.getItem('accessToken') || '',
-    client: localStorage.getItem('client') || '',
-    uid: localStorage.getItem('uid') || ''
+    authorization: localStorage.getItem('Authorization') || ''
   }
   return authHeader
 }
 
 export const localAuthHeader = () =>{
   const authHeader = {
-    accept: localStorage.getItem('accept') || "",
-    accessToken: localStorage.getItem('accessToken') || "",
-    client: localStorage.getItem('client') || "",
-    uid: localStorage.getItem('uid') || "",
-    'token-type': 'Bearer'
+    authorization: localStorage.getItem('Authorization') || ''
   }
   return authHeader
 }

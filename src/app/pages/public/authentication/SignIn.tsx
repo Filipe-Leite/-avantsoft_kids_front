@@ -1,28 +1,30 @@
 import { Link, useNavigate } from "react-router-dom";
-import * as URL from '../../api/requestRequirements';
-import { useState } from "react";
-import { signUpUser } from "../../../features/session/sessionSlice";
-import { AppDispatch, RootState } from "../../store";
+import * as URL from '../../../api/requestRequirements';
 import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../store";
+import { useState } from "react";
 import { toast } from "react-toastify";
+import { signInUser } from "../../../../features/session/sessionSlice";
+import * as ROUTES from '../../../api/requestRequirements';
 
-export default function SignUp(){
+
+export default function SignIn(){
     const [formData, setFormData] = useState({
                                                 email: '',
                                                 password: ''
                                             });
-    
     const dispatch = useDispatch<AppDispatch>();
     const errorsMessages = useSelector((state: RootState) => state.session.errorMessages);
+    const navigate = useNavigate();
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-                                                                                const { name, value } = event.target;
-                                                                                setFormData(prev => ({
-                                                                                    ...prev,
-                                                                                    [name]: value
-                                                                                }));
-                                                                                console.log(formData)
-                                                                            };
+                                                                            const { name, value } = event.target;
+                                                                            setFormData(prev => ({
+                                                                                ...prev,
+                                                                                [name]: value
+                                                                            }));
+                                                                            console.log(formData)
+                                                                        };
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -32,15 +34,26 @@ export default function SignUp(){
             return;
         }
 
-        const response = await dispatch(signUpUser({
+        const response = await dispatch(signInUser({
                                                     email: formData.email,
                                                     password: formData.password
                                                     }));
 
         if (response.meta.requestStatus === 'fulfilled') {
-            toast.success("User Created")
+
+            const routeParams=  {
+                sellerId: response.payload.user.id
+            }
+      
+            const PRIVATE_ROUTES = ROUTES.handlePrivateRoutes({ROUTE_PARAMS: routeParams});
+
+
+            if (PRIVATE_ROUTES && PRIVATE_ROUTES.HOME){
+                
+                console.log("PRIVATE_ROUTES.HOME >>> ", PRIVATE_ROUTES.HOME)
+                navigate(PRIVATE_ROUTES.HOME);
+            }
         } else if (response.meta.requestStatus === 'rejected' && errorsMessages ){
-            console.log("errorsMessages >> ", errorsMessages)
             errorsMessages.map((item: string) => {toast.error(item)})
         } else {
             toast.error('Some error has ocurred')
@@ -50,34 +63,30 @@ export default function SignUp(){
     return(
         <div id='container-sigin-page'>
             <div id='container-sigin-fields'>
-                <h1>Sign Up</h1>
+                <h1>Login</h1>
                 <div>
                     <label>e-mail</label>
-
-                    <input  
+                    <input
                         id="email"
                         name="email"
                         type="email"
                         value={formData.email}
                         onChange={handleInputChange}
-                        required
-                    />
+                        required/>
                 </div>
                 <div>
                     <label>password</label>
-
                     <input
                         id="password"
                         name="password"
                         type="password"
                         value={formData.password}
                         onChange={handleInputChange}
-                        required
-                    />
+                        required/>
                 </div>
                 <div>
-                    <button onClick={handleSubmit}> Confirm</button>
-                    <Link to={URL.SIGNIN_ENDPOINT}> Sign in</Link>
+                    <button onClick={handleSubmit}> Login</button>
+                    <Link to={URL.SIGNUP_ENDPOINT}> Sign Up</Link>
                 </div>
             </div>
         </div>
