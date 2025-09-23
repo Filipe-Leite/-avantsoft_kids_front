@@ -28,6 +28,12 @@ function RoutesApp() {
                   <Home/>
                 </PrivateRoute>
               } />
+
+              <Route path={'/'} element={
+                <PrivateRoute>
+                  <Home/>
+                </PrivateRoute>
+              } />
             </Routes>
           </BrowserRouter>
   );

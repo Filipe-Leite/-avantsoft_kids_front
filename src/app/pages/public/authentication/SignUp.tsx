@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import * as URL from '../../../api/requestRequirements';
 import { useState } from "react";
 import { signUpUser } from "../../../../features/session/sessionSlice";
@@ -21,7 +21,6 @@ export default function SignUp(){
                                                                                     ...prev,
                                                                                     [name]: value
                                                                                 }));
-                                                                                console.log(formData)
                                                                             };
 
     const handleSubmit = async (event: React.FormEvent) => {
@@ -40,8 +39,9 @@ export default function SignUp(){
         if (response.meta.requestStatus === 'fulfilled') {
             toast.success("User Created")
         } else if (response.meta.requestStatus === 'rejected' && errorsMessages ){
-            console.log("errorsMessages >> ", errorsMessages)
-            errorsMessages.map((item: string) => {toast.error(item)})
+            errorsMessages.forEach((item: string) => {
+                toast.error(item);
+            });
         } else {
             toast.error('Some error has ocurred')
         }

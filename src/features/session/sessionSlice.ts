@@ -3,7 +3,6 @@ import { signInUserWithEmailAndPassword,
          createUserWithEmailAndPassword,
          signOutUserWithAuthHeaders,
          validateAuthHeader} from '../../app/api/sessionAPI';
-import * as REQUEST_REQUIREMENTS from '../../app/api/requestRequirements';
 import { AuthHeaders} from '../../app/#interfaces/interfaces';
 
 export interface User {
@@ -71,8 +70,6 @@ export const signInUser = createAsyncThunk(
       payload.email,
       payload.password
       );
-
-    console.log("signInUser response >>> ", response)
     
     if (response.status >= 300){
       return rejectWithValue(response.data);
@@ -89,7 +86,6 @@ export const authenticateUserFromStorage = createAsyncThunk(
     const authHeaders = localAuthHeader()
     const response = await validateAuthHeader(authHeaders);
 
-    console.log("authenticateUserFromStorage response >>> ", response)
 
       if (response.status >= 200 && response.status < 300){
         return response.data;
@@ -167,7 +163,6 @@ const sessionSlice = createSlice({
         state.error = false;
         state.errorMessages = [];
         removeAuthHeaders();
-        localStorage.removeItem('selectedDialogues');
       })
       .addCase(signOutUser.rejected, (state, action: any) => {
         state.loading = false;

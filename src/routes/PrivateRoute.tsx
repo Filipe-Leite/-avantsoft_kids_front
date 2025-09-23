@@ -1,23 +1,33 @@
-import { JSX, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { JSX, useContext } from 'react';
+import { useSelector } from 'react-redux';
 import { Navigate, useLocation } from 'react-router-dom';
-import { RootState, AppDispatch } from '../app/store';
-import { authenticateUserFromStorage } from '../features/session/sessionSlice';
+import { RootState } from '../app/store';
+import { AuthContext } from '../contexts/auth';
 
 function PrivateRoute({ children }: { children: JSX.Element }) {
-  const currentUser = useSelector((state: RootState) => state.session.currentUser);
-  const authHeaders = useSelector((state: RootState) => state.session.authHeaders);
-  const loggedIn = useSelector((state: RootState) => state.session.loggedIn);
   const loading = useSelector((state: RootState) => state.session.loading);
   const location = useLocation();
-  const fromLocation = (location.state as any)?.from || { pathname: '/auth/login' };
-  const dispatch = useDispatch<AppDispatch>();
+  const authContext = useContext(AuthContext);
+  const { loggedIn, currentUser, authChecked } = authContext as { 
+                                                                  loggedIn: boolean; 
+                                                                  currentUser: any;
+                                                                  authChecked: boolean;
+                                                                };
 
-  if (loading) {
-    return <h2>Loading</h2>
+  if (!authChecked || loading) {
+    return <h2>Loading...</h2>;
   }
 
-  return loggedIn ? children : <Navigate to={fromLocation} state={{ from: location }} replace />;  
+  if (!loggedIn) {
+    const fromLocation = (location.state as any)?.from || { pathname: '/auth/login' };
+    return <Navigate to={fromLocation} state={{ from: location }} replace />;
+  }
+
+  if (!currentUser && !loggedIn) {
+    return <h2>Loading user data...</h2>;
+  }
+
+  return children;
 }
 
 export default PrivateRoute;

@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 import { signInUser } from "../../../../features/session/sessionSlice";
 import * as ROUTES from '../../../api/requestRequirements';
 
-
 export default function SignIn(){
     const [formData, setFormData] = useState({
                                                 email: '',
@@ -23,7 +22,6 @@ export default function SignIn(){
                                                                                 ...prev,
                                                                                 [name]: value
                                                                             }));
-                                                                            console.log(formData)
                                                                         };
 
     const handleSubmit = async (event: React.FormEvent) => {
@@ -50,13 +48,14 @@ export default function SignIn(){
 
             if (PRIVATE_ROUTES && PRIVATE_ROUTES.HOME){
                 
-                console.log("PRIVATE_ROUTES.HOME >>> ", PRIVATE_ROUTES.HOME)
                 navigate(PRIVATE_ROUTES.HOME);
             }
-        } else if (response.meta.requestStatus === 'rejected' && errorsMessages ){
-            errorsMessages.map((item: string) => {toast.error(item)})
+        } else if (response.meta.requestStatus === 'rejected' && errorsMessages ) {
+            errorsMessages.forEach((item: string) => {
+                toast.error(item);
+            });
         } else {
-            toast.error('Some error has ocurred')
+            toast.error('Some error has occurred');
         }
     };
 
