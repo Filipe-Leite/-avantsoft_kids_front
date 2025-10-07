@@ -1,0 +1,37 @@
+#page-letters-index{
+    display: flex;
+    background-color: RGB(255, 251, 237);
+    height: 100vh;
+    width: 100vw;
+    justify-content: center;
+}
+
+.letters-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+    max-width: 1000px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 100px; 
+}
+
+.letter {
+    border: none;
+    border-radius: 50%;
+    min-width: 60px;
+    text-align: center;
+    background-color: transparent;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 50px;
+    cursor: pointer;
+    height: 100px;
+    width: 100px;
+    transition: 0.2s;
+    color: RGB(50, 50, 50);
+
+    &:hover{
+        background-color: RGB(186, 132, 5);
+        color: RGB(255, 255, 255);
+    }
+}

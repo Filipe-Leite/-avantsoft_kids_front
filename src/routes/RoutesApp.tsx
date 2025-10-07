@@ -5,11 +5,14 @@ import * as URL from '../app/api/requestRequirements';
 import SignIn from '../app/pages/public/authentication/SignIn';
 import SignUp from '../app/pages/public/authentication/SignUp';
 import Home from '../app/pages/private/business/Home';
+import PersistLogin from '../features/session/PersistLogin';
+import ResponsiveAppBar from '../app/components/appbar/ResponsiveAppBar';
 
 function RoutesApp() {
 
   return (
           <BrowserRouter>
+            <ResponsiveAppBar/>
             <Routes>
               <Route path={URL.SIGNIN_ENDPOINT} element={
                 <PublicOnlyRoute>
@@ -23,18 +26,20 @@ function RoutesApp() {
                 </PublicOnlyRoute>
               } />
 
-              <Route path={URL.HOME} element={
-                <PrivateRoute>
-                  <Home/>
-                </PrivateRoute>
-              } />
+              <Route element={<PersistLogin/>}>
+                <Route path={URL.HOME} element={
+                  <PrivateRoute>
+                        <Home />
+                  </PrivateRoute>
+                } />
+              </Route> 
 
               <Route path={'/'} element={
-                <PrivateRoute>
-                  <Home/>
-                </PrivateRoute>
-              } />
-            </Routes>
+                  <PrivateRoute>
+                    <Home/>
+                  </PrivateRoute>
+                } />
+              </Routes>
           </BrowserRouter>
   );
 }

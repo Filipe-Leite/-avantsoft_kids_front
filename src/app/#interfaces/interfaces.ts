@@ -1,3 +1,7 @@
+
 export interface AuthHeaders {
-    authorization?: string;
+    'accept'?: string;
+    'access-token'?: string;
+    'client'?: string;
+    'uid'?: string;
 }

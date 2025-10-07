@@ -36,6 +36,7 @@ export default function SignUp(){
                                                     password: formData.password
                                                     }));
 
+        console.log("response >>> ", response)
         if (response.meta.requestStatus === 'fulfilled') {
             toast.success("User Created")
         } else if (response.meta.requestStatus === 'rejected' && errorsMessages ){

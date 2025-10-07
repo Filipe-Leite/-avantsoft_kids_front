@@ -38,18 +38,9 @@ export default function SignIn(){
                                                     }));
 
         if (response.meta.requestStatus === 'fulfilled') {
-
-            const routeParams=  {
-                sellerId: response.payload.user.id
-            }
       
-            const PRIVATE_ROUTES = ROUTES.handlePrivateRoutes({ROUTE_PARAMS: routeParams});
-
-
-            if (PRIVATE_ROUTES && PRIVATE_ROUTES.HOME){
-                
-                navigate(PRIVATE_ROUTES.HOME);
-            }
+            navigate(ROUTES.HOME);
+            
         } else if (response.meta.requestStatus === 'rejected' && errorsMessages ) {
             errorsMessages.forEach((item: string) => {
                 toast.error(item);

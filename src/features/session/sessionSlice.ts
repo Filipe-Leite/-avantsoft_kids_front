@@ -4,6 +4,7 @@ import { signInUserWithEmailAndPassword,
          signOutUserWithAuthHeaders,
          validateAuthHeader} from '../../app/api/sessionAPI';
 import { AuthHeaders} from '../../app/#interfaces/interfaces';
+import { convertKeysToCamelCase } from '../../genericFunctions';
 
 export interface User {
   email?: string;
@@ -71,10 +72,11 @@ export const signInUser = createAsyncThunk(
       payload.password
       );
     
+    
     if (response.status >= 300){
       return rejectWithValue(response.data);
     } else {
-      storeAuthHeader(response.data.token);
+      storeAuthHeader(response.headers)
       return response.data;
     }
   }
@@ -83,15 +85,14 @@ export const signInUser = createAsyncThunk(
 export const authenticateUserFromStorage = createAsyncThunk(
   'session/authenticateUserFromStorage',
   async (_, { rejectWithValue }) => {
-    const authHeaders = localAuthHeader()
+    const authHeaders = localAuthHeader();
     const response = await validateAuthHeader(authHeaders);
 
-
-      if (response.status >= 200 && response.status < 300){
-        return response.data;
-      } else {
-        return rejectWithValue(response.data);
-      }
+    if (response.status >= 200 && response.status < 300){
+      return response.data;
+    } else {
+      return rejectWithValue(response.data);
+    }
   }
 )
 
@@ -178,7 +179,7 @@ const sessionSlice = createSlice({
         state.loading = false;
         state.loggedIn = true;
         state.authHeaders = localAuthHeader();
-        state.currentUser = convertKeysToCamelCase(action.payload.user);
+        state.currentUser = convertKeysToCamelCase(action.payload.data);
         state.error = false;
         state.errorMessages = [];
       })
@@ -194,12 +195,18 @@ const sessionSlice = createSlice({
 export const sessionAuthSliceReducer = sessionSlice.reducer;
 export const sessionAuthSliceActions = sessionSlice.actions;
 
-function storeAuthHeader(token: string) {
-  localStorage.setItem('Authorization', `Bearer ${token}`);
-}
+function storeAuthHeader(headers: AuthHeaders) {
+    localStorage.setItem('accept', 'application/vnd.api+json');
+    localStorage.setItem('accessToken', `${headers['access-token']}`);
+    localStorage.setItem('client', `${headers['client']}`);
+    localStorage.setItem('uid', `${headers['uid']}`);
+  }
 
 function removeAuthHeaders() {
-    localStorage.removeItem('Authorization');
+    localStorage.removeItem('accept');
+    localStorage.removeItem('access-token');
+    localStorage.removeItem('client');
+    localStorage.removeItem('uid');
 }
 
 export function getLocalStorageAuthHeaders(){
@@ -211,27 +218,10 @@ export function getLocalStorageAuthHeaders(){
 
 export const localAuthHeader = () =>{
   const authHeader = {
-    authorization: localStorage.getItem('Authorization') || ''
+    accept: localStorage.getItem('accept') || '',
+    accessToken: localStorage.getItem('accessToken') || '',
+    client: localStorage.getItem('client') || '',
+    uid: localStorage.getItem('uid') || ''
   }
   return authHeader
-}
-
-export function convertKeysToCamelCase(obj: any): any {
-  if (typeof obj === 'object' && obj !== null) {
-    if (Array.isArray(obj)) {
-      return obj.map(item => convertKeysToCamelCase(item));
-    } else if (obj.constructor === Object) {
-      const newObj: { [key: string]: any } = {};
-      for (const key in obj) {
-        if (Object.prototype.hasOwnProperty.call(obj, key)) {
-          const camelCaseKey = key.replace(/_([a-z])/g, (_, letter) =>
-            letter.toUpperCase()
-          );
-          newObj[camelCaseKey] = convertKeysToCamelCase(obj[key]);
-        }
-      }
-      return newObj;
-    }
-  }
-  return obj;
 }

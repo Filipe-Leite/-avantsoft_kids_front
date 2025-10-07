@@ -1,8 +1,9 @@
 import { JSX, useContext } from 'react';
-import { useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 import { Navigate, useLocation } from 'react-router-dom';
-import { RootState } from '../app/store';
+import {  RootState } from '../app/store';
 import { AuthContext } from '../contexts/auth';
+import * as REQUEST_REQUIREMENTS from '../app/api/requestRequirements';
 
 function PrivateRoute({ children }: { children: JSX.Element }) {
   const loading = useSelector((state: RootState) => state.session.loading);
@@ -19,7 +20,8 @@ function PrivateRoute({ children }: { children: JSX.Element }) {
   }
 
   if (!loggedIn) {
-    const fromLocation = (location.state as any)?.from || { pathname: '/auth/login' };
+
+    const fromLocation = (location.state as any)?.from || { pathname: REQUEST_REQUIREMENTS.SIGNIN_ENDPOINT };
     return <Navigate to={fromLocation} state={{ from: location }} replace />;
   }
 

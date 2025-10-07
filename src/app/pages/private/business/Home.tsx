@@ -1,10 +1,17 @@
-import { useParams } from "react-router-dom"
+import './home.css';
 
-export default function Home(){
-    const {sellerId} = useParams<{ sellerId: string }>();
+export default function Home() {
+    const letters = ["#","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","X","Z"];
 
-
-    return(
-        <h1>Home Page {sellerId}</h1>
-    )
+    return (
+        <div id='page-letters-index'>
+            <div className="letters-container">
+                {letters.map((letter, index) => (
+                    <button key={index} className="letter">
+                        {letter}
+                    </button>
+                ))}
+            </div>
+        </div>
+    );
 }
