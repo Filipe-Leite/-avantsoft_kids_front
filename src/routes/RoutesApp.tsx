@@ -7,6 +7,7 @@ import SignUp from '../app/pages/public/authentication/SignUp';
 import Home from '../app/pages/private/business/Home';
 import PersistLogin from '../features/session/PersistLogin';
 import ResponsiveAppBar from '../app/components/appbar/ResponsiveAppBar';
+import LetterIndexSearch from '../app/pages/private/business/LetterIndexSearch';
 
 function RoutesApp() {
 
@@ -30,6 +31,14 @@ function RoutesApp() {
                 <Route path={URL.HOME} element={
                   <PrivateRoute>
                         <Home />
+                  </PrivateRoute>
+                } />
+              </Route> 
+
+              <Route element={<PersistLogin/>}>
+                <Route path={URL.LETTER_INDEX_SEARCH_ENDPOINT} element={
+                  <PrivateRoute>
+                    <LetterIndexSearch />
                   </PrivateRoute>
                 } />
               </Route> 

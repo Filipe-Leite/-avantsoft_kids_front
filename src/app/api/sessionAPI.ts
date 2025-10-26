@@ -57,15 +57,33 @@ export async function validateAuthHeader(headers: AuthHeaders){
     });
 }
 
-export async function signOutUserWithAuthHeaders(headers: any) {
+export async function signOutUserWithAuthHeaders(headers: AuthHeaders) {
     return api
         .delete(REQUEST_REQUIREMENTS.SIGNOUT_ENDPOINT, {
             headers: {
                 "Accept": headers.accept,
-                "access-token": headers.accessToken,
+                "access-token": headers['access-token'],
                 "client": headers.client,
                 "uid": headers.uid
             }
+        })
+        .then((response: any) => {
+            return response;
+        })
+        .catch((error: any) => {
+            return error.response.data;
+        });
+}
+
+export async function getSearchWithQuertTypeAndPage(authHeaders: AuthHeaders, queryType: string, page: number, searchTerm: string){
+
+
+    const PRIVATE_ROUTES = REQUEST_REQUIREMENTS.handlePrivateRoutes({ROUTE_PARAMS: {queryType: queryType, page: page, searchTerm: searchTerm}});
+
+    console.log("PRIVATE_ROUTES.SEARCH >>> ", PRIVATE_ROUTES.SEARCH)
+    return api
+        .get(PRIVATE_ROUTES.SEARCH, {
+            headers: convertKeysToSnakeCase(authHeaders)
         })
         .then((response: any) => {
             return response;

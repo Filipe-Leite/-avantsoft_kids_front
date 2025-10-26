@@ -72,19 +72,17 @@ function SearchBar({ searchInputQuery, setSearchInputQuery, setShowComponent }: 
   // }
 
   return (
-    <div ref={containerComponentSearchRef}>
-      <div id='logo-seach-input-component'>
-        <input
-          id='search-input'
-          type="text"
-          placeholder="Search..."
-          value={searchInputQuery}
-          onChange={(e) => setSearchInputQuery(e.target.value)}
-        />
-        <button>
-          search
-        </button>
-      </div>
+    <div id='logo-seach-input-component' ref={containerComponentSearchRef}>
+      <input
+        id='search-input'
+        type="text"
+        placeholder="Search..."
+        value={searchInputQuery}
+        onChange={(e) => setSearchInputQuery(e.target.value)}
+      />
+      <button>
+        search
+      </button>
     </div>
   );
 }
