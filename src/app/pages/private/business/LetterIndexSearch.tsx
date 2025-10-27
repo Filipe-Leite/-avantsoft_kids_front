@@ -2,37 +2,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import './letterIndexSearch.css';
 import { AppDispatch, RootState, store } from '../../../store';
 import { useEffect, useRef, useState } from 'react';
-import { Level, NavigationState } from '../../../#interfaces/slicesInterfaces';
-import addIcon from '../../../../assets/add-icon-black.png';
+import { Level } from '../../../#interfaces/slicesInterfaces';
+import { CircularProgress } from "@mui/material";
 import { handlePrivateRoutes } from '../../../api/requestRequirements';
-import { getSearch } from '../../../../features/sessionBusiness/sessionNavigation';
+import { getDisciplines, getSearch } from '../../../../features/sessionBusiness/sessionNavigation';
 
 export default function LetterIndexSearch(){
     const dispatch = useDispatch<AppDispatch>();
     const levels = useSelector((state: RootState) => state.sessionNavigation.levels);
+    const disciplines = useSelector((state: RootState) => state.sessionNavigation.disciplines);
     const authHeaders = useSelector((state: RootState) => state.session.authHeaders);
-    const disciplines = ["Administration",
-                            "Aeronautics", 
-                            "Agronomy / Agriculture",
-                            "Anthropology",
-                            "Archaeology",
-                            "Architecture",
-                            "Arts",
-                            "Astronomy",
-                            "Astrophysics",
-                            "Audiovisual Studies",
-                            "Archaeology",
-                            "Architecture",
-                            "Arts",
-                            "Astronomy",
-                            "Astrophysics",
-                            "Audiovisual Studies",
-                            "Archaeology",
-                            "Architecture",
-                            "Arts",
-                            "Astronomy",
-                            "Astrophysics",
-                            "Audiovisual Studies"];
+    // const loadingDisciplines = useSelector((state: RootState) => state.sessionNavigation.loadingDisciplines);
+    const loadingDisciplines = true;
+    
     const [disciplineSearch, setDisciplineSearch] = useState('');
     const [topicSearch, setTopicSearch] = useState('');
     const [subtopicSearch, setSubtopicSearch] = useState('');
@@ -55,6 +37,16 @@ export default function LetterIndexSearch(){
         console.log('FirstLevel atual:', levels);
         console.log('Estado completo:', store.getState());
     }, [levels]);
+
+    useEffect(() => {
+        async function fetchDisciplines(){
+            const response = await dispatch(getDisciplines({authHeaders: authHeaders, page: disciplinePage}))
+
+            console.log("fetchDisciplines >> ", response)
+        }
+
+        fetchDisciplines()
+    }, []);
 
     useEffect(() => {
 
@@ -133,6 +125,26 @@ export default function LetterIndexSearch(){
         
     }
 
+        useEffect(() => {
+        const handleScroll = () => {
+            const container = document.getElementById('ul-disciplines');
+            if (!container) return;
+    
+            const { scrollTop, clientHeight, scrollHeight } = container;
+            if (scrollTop + clientHeight >= scrollHeight && !loadingDisciplines) {
+                setDisciplinePage(disciplinePage + 1);
+            }
+        };
+    
+        setTimeout(() => {
+            const container = document.getElementById('container-ul-group-posts');
+            if (container){
+                container.addEventListener('scroll', handleScroll);
+                return () => container.removeEventListener('scroll', handleScroll);
+            }
+        }, 100);
+    }, [loadingDisciplines]);
+
     return(
         <div id='page-letter-index'>
             <div id='top-page'>
@@ -169,19 +181,23 @@ export default function LetterIndexSearch(){
                                     onFocus={() => setActiveInput('discipline')}
                                     onBlur={() => setActiveInput(null)}
                                 />
-                                {/* <button>
-                                    <img src={addIcon}/>
-                                </button> */}
                             </div>
                         </div>
                         <div id='container-ul-section'>
-                            <ul>
-                                {disciplines.map((discipline, index) => (
+                            <ul id='ul-disciplines'>
+                                {disciplines.length > 0 && disciplines.map((discipline, index) => (
                                     <li key={index}>
-                                        <a>{discipline}</a>
+                                        <a>{discipline.name}</a>
                                     </li>
-                                    
                                 ))}
+                            
+                                {loadingDisciplines ? 
+                                    <div>
+                                        <CircularProgress color='secondary' sx={{ color: 'brown' }}/>
+                                    </div>
+                                    :
+                                    null
+                                }
                             </ul>
                         </div>
                     </div>
@@ -202,16 +218,13 @@ export default function LetterIndexSearch(){
                                     onFocus={() => setActiveInput('topic')}
                                     onBlur={() => setActiveInput(null)}
                                 />
-                                {/* <button>
-                                    <img src={addIcon}/>
-                                </button> */}
                             </div>
                         </div>
                         <div id='container-ul-section'>
                             <ul>
-                                {disciplines.map((discipline, index) => (
+                                {disciplines.length > 0 && disciplines.map((discipline, index) => (
                                     <li key={index}>
-                                        <a>{discipline}</a>
+                                        <a>{discipline.name}</a>
                                     </li>
                                     
                                 ))}
@@ -235,16 +248,13 @@ export default function LetterIndexSearch(){
                                     onFocus={() => setActiveInput('subtopic')}
                                     onBlur={() => setActiveInput(null)}
                                 />
-                                {/* <button>
-                                    <img src={addIcon}/>
-                                </button> */}
                             </div>
                         </div>
                         <div id='container-ul-section'>
                             <ul>
-                                {disciplines.map((discipline, index) => (
+                                {disciplines.length > 0 && disciplines.map((discipline, index) => (
                                     <li key={index}>
-                                        <a>{discipline}</a>
+                                        <a>{discipline.name}</a>
                                     </li>
                                     
                                 ))}
@@ -272,16 +282,13 @@ export default function LetterIndexSearch(){
                                     onFocus={() => setActiveInput('author')}
                                     onBlur={() => setActiveInput(null)}
                                 />
-                                {/* <button>
-                                    <img src={addIcon}/>
-                                </button> */}
                             </div>
                         </div>
                         <div id='container-ul-section'>
                             <ul>
-                                {disciplines.map((discipline, index) => (
+                                {disciplines.length > 0 && disciplines.map((discipline, index) => (
                                     <li key={index}>
-                                        <a>{discipline}</a>
+                                        <a>{discipline.name}</a>
                                     </li>
                                     
                                 ))}
@@ -304,16 +311,13 @@ export default function LetterIndexSearch(){
                                     onFocus={() => setActiveInput('source')}
                                     onBlur={() => setActiveInput(null)}
                                 />
-                                {/* <button>
-                                    <img src={addIcon}/>
-                                </button> */}
                             </div>
                         </div>
                         <div id='container-ul-section'>
                             <ul>
-                                {disciplines.map((discipline, index) => (
+                                {disciplines.length > 0 && disciplines.map((discipline, index) => (
                                     <li key={index}>
-                                        <a>{discipline}</a>
+                                        <a>{discipline.name}</a>
                                     </li>
                                     
                                 ))}

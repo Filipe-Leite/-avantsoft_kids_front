@@ -93,6 +93,23 @@ export async function getSearchWithQuertTypeAndPage(authHeaders: AuthHeaders, qu
         });
 }
 
+export async function getDisciplinesByPage(authHeaders: AuthHeaders | undefined, page: number){
+
+
+    const PRIVATE_ROUTES = REQUEST_REQUIREMENTS.handlePrivateRoutes({ROUTE_PARAMS: { page: page }});
+
+    console.log("PRIVATE_ROUTES.SEARCH >>> ", PRIVATE_ROUTES)
+    return api
+        .get(PRIVATE_ROUTES.GET_DISCIPLINES, {
+            headers: convertKeysToSnakeCase(authHeaders)
+        })
+        .then((response: any) => {
+            return response;
+        })
+        .catch((error: any) => {
+            return error.response.data;
+        });
+}
 
 function convertKeysToSnakeCase(obj: any): any {
     if (typeof obj === 'object' && obj !== null) {

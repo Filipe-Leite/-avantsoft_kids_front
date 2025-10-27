@@ -53,7 +53,8 @@ export function handlePrivateRoutes({ROUTE_PARAMS}: PrivateRoutesParams){
     const ENDPOINTS = {
             HOME: `/letters`,
             SEARCH_INDEX: `/letters/${ROUTE_PARAMS.letter}`,
-            SEARCH: `/search/${ROUTE_PARAMS.queryType}/page/${ROUTE_PARAMS.page}/?q=${ROUTE_PARAMS?.searchTerm}`
+            SEARCH: `/search/${ROUTE_PARAMS.queryType}/page/${ROUTE_PARAMS.page}/?q=${ROUTE_PARAMS?.searchTerm}`,
+            GET_DISCIPLINES: `/disciplines/page/${ROUTE_PARAMS.page}`,
         }
 
     return ENDPOINTS
