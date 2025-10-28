@@ -75,12 +75,19 @@ export async function signOutUserWithAuthHeaders(headers: AuthHeaders) {
         });
 }
 
-export async function getSearchWithQuertTypeAndPage(authHeaders: AuthHeaders, queryType: string, page: number, searchTerm: string){
+export async function getSearchWithQuertTypeAndPage(authHeaders: AuthHeaders | undefined, 
+                                                    queryType: string, 
+                                                    page: number, 
+                                                    searchTerm: string,
+                                                    letter: string | undefined){
 
 
-    const PRIVATE_ROUTES = REQUEST_REQUIREMENTS.handlePrivateRoutes({ROUTE_PARAMS: {queryType: queryType, page: page, searchTerm: searchTerm}});
+    const PRIVATE_ROUTES = REQUEST_REQUIREMENTS.handlePrivateRoutes({ROUTE_PARAMS: 
+                                                                    {queryType: queryType, 
+                                                                     page: page, 
+                                                                     searchTerm: searchTerm,
+                                                                     letter: letter}});
 
-    console.log("PRIVATE_ROUTES.SEARCH >>> ", PRIVATE_ROUTES.SEARCH)
     return api
         .get(PRIVATE_ROUTES.SEARCH, {
             headers: convertKeysToSnakeCase(authHeaders)
@@ -93,12 +100,11 @@ export async function getSearchWithQuertTypeAndPage(authHeaders: AuthHeaders, qu
         });
 }
 
-export async function getDisciplinesByPage(authHeaders: AuthHeaders | undefined, page: number){
+export async function getDisciplinesByPage(authHeaders: AuthHeaders | undefined, page: number, letter: string | undefined){
 
 
-    const PRIVATE_ROUTES = REQUEST_REQUIREMENTS.handlePrivateRoutes({ROUTE_PARAMS: { page: page }});
+    const PRIVATE_ROUTES = REQUEST_REQUIREMENTS.handlePrivateRoutes({ROUTE_PARAMS: { page: page , letter: letter}});
 
-    console.log("PRIVATE_ROUTES.SEARCH >>> ", PRIVATE_ROUTES)
     return api
         .get(PRIVATE_ROUTES.GET_DISCIPLINES, {
             headers: convertKeysToSnakeCase(authHeaders)

@@ -53,8 +53,9 @@ export function handlePrivateRoutes({ROUTE_PARAMS}: PrivateRoutesParams){
     const ENDPOINTS = {
             HOME: `/letters`,
             SEARCH_INDEX: `/letters/${ROUTE_PARAMS.letter}`,
-            SEARCH: `/search/${ROUTE_PARAMS.queryType}/page/${ROUTE_PARAMS.page}/?q=${ROUTE_PARAMS?.searchTerm}`,
-            GET_DISCIPLINES: `/disciplines/page/${ROUTE_PARAMS.page}`,
+            SEARCH: `/search/${ROUTE_PARAMS.queryType}/page/${ROUTE_PARAMS.page}/?q=${ROUTE_PARAMS?.searchTerm}
+                    ${ROUTE_PARAMS?.letter ? `&letter=${ROUTE_PARAMS.letter}` : ''}`,
+            GET_DISCIPLINES: `/disciplines/page/${ROUTE_PARAMS.page}?${ROUTE_PARAMS.letter ? `letter=${ROUTE_PARAMS.letter}` : ''}`,
         }
 
     return ENDPOINTS

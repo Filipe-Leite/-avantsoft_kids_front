@@ -1,6 +1,7 @@
 export interface NavigationState {
     levels?: Level[];
     disciplines: Discipline[];
+    disciplinesSearch: Discipline[];
     errors: string[];
     loadingDisciplines: boolean;
 }

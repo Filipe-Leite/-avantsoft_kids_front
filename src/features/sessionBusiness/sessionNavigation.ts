@@ -7,20 +7,23 @@ import { convertKeysToCamelCase } from "../../genericFunctions";
 const initialState: NavigationState = {
     levels: [],
     disciplines: [],
+    disciplinesSearch: [],
     errors: [],
     loadingDisciplines: false
 };
 
 interface GetSearch{
-  authHeaders: AuthHeaders;
+  authHeaders?: AuthHeaders;
   queryType: string;
   page: number;
   searchTerm: string;
+  letter?: string;
 }
 
 interface GetDisciplines{
   authHeaders?: AuthHeaders;
   page: number;
+  letter?: string;
 }
 
 
@@ -31,7 +34,8 @@ export const getSearch = createAsyncThunk(
             payload.authHeaders,
             payload.queryType,
             payload.page,
-            payload.searchTerm
+            payload.searchTerm,
+            payload.letter
         )
         if (response.status >= 200 && response.status < 300) {
             return response.data 
@@ -46,7 +50,8 @@ export const getDisciplines = createAsyncThunk(
     async (payload: GetDisciplines, {rejectWithValue}) => {
         const response = await getDisciplinesByPage(
             payload.authHeaders,
-            payload.page
+            payload.page,
+            payload.letter
         )
         if (response.status >= 200 && response.status < 300) {
             return response.data 
@@ -77,8 +82,8 @@ const sessionNavigationSlice = createSlice({
       builder
       .addCase(getSearch.pending, (state, action: any) => {
         
-        if (action.meta.arg.queryType === 'discipline' && action.meta.arg.queryType === 1 ){
-          state.disciplines = [];
+        if (action.meta.arg.queryType === 'discipline' && action.meta.arg.page === 1 ){
+          state.disciplinesSearch = [];
           state.loadingDisciplines = true;
         }
       })
@@ -86,13 +91,12 @@ const sessionNavigationSlice = createSlice({
 
         if (action.meta.arg.queryType === 'discipline'){
           if (action.meta.arg.page === 1){
-            state.disciplines = convertKeysToCamelCase(action.payload);
+            state.disciplinesSearch = convertKeysToCamelCase(action.payload);
             state.loadingDisciplines = false;
           } else {
-            state.disciplines = [...state.disciplines,...convertKeysToCamelCase(action.payload)];
+            state.disciplinesSearch = [...state.disciplinesSearch,...convertKeysToCamelCase(action.payload)];
             state.loadingDisciplines = false;
           }
-          console.log("state.disciplines >>>>>", state.disciplines)
         } else if ((action.meta.arg.queryType === 'topic')){
           console.log("getSearch.fulfilled 'topic' >>>>>")
         } else if ((action.meta.arg.queryType === 'subtopic')){
@@ -109,21 +113,19 @@ const sessionNavigationSlice = createSlice({
           state.loadingDisciplines = false;
         }
       })
-
       .addCase(getDisciplines.pending, (state, action: any) => {
-        console.log("getDisciplines.pending >>>>>>> ")
 
-        state.disciplines = []
+        if (action.meta.arg.page === 1){
+          state.disciplines = []
+        }
         state.loadingDisciplines = true;
       })
       .addCase(getDisciplines.fulfilled, (state, action: any) => {
-        console.log("getDisciplines.fulfilled >>>>>>> ", action)
         state.disciplines = [...state.disciplines,...convertKeysToCamelCase(action.payload)];
 
         state.loadingDisciplines = false;
       })
-      .addCase(getDisciplines.rejected, (state, action: any) => {
-        console.log("getDisciplines.rejected >>>>>>> ")
+      .addCase(getDisciplines.rejected, (state) => {
         state.loadingDisciplines = false;
       })
     }

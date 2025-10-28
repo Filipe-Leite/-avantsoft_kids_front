@@ -4,22 +4,20 @@ import { AppDispatch, RootState, store } from '../../../store';
 import { useEffect, useRef, useState } from 'react';
 import { Level } from '../../../#interfaces/slicesInterfaces';
 import { CircularProgress } from "@mui/material";
-import { handlePrivateRoutes } from '../../../api/requestRequirements';
 import { getDisciplines, getSearch } from '../../../../features/sessionBusiness/sessionNavigation';
 
 export default function LetterIndexSearch(){
     const dispatch = useDispatch<AppDispatch>();
     const levels = useSelector((state: RootState) => state.sessionNavigation.levels);
     const disciplines = useSelector((state: RootState) => state.sessionNavigation.disciplines);
+    const disciplinesSearch = useSelector((state: RootState) => state.sessionNavigation.disciplinesSearch);
     const authHeaders = useSelector((state: RootState) => state.session.authHeaders);
-    // const loadingDisciplines = useSelector((state: RootState) => state.sessionNavigation.loadingDisciplines);
-    const loadingDisciplines = true;
-    
-    const [disciplineSearch, setDisciplineSearch] = useState('');
-    const [topicSearch, setTopicSearch] = useState('');
-    const [subtopicSearch, setSubtopicSearch] = useState('');
-    const [authorSearch, setAuthorSearch] = useState('');
-    const [sourceSearch, setSourceSearch] = useState('');
+    const loadingDisciplines = useSelector((state: RootState) => state.sessionNavigation.loadingDisciplines);
+    const [inputDisciplineSearch, setInputDisciplineSearch] = useState('');
+    const [inputTopicSearch, setInputTopicSearch] = useState('');
+    const [inputSubtopicSearch, setInputSubtopicSearch] = useState('');
+    const [inputAuthorSearch, setInputAuthorSearch] = useState('');
+    const [inputSourceSearch, setInputSourceSearch] = useState('');
     const [searchDisciplineResults, setSearchDisciplineResults] = useState([]);
     const [searchTopicResults, setSearchTopicResults] = useState([]);
     const [searchSubtopicResults, setSearchSubtopicResults] = useState([]);
@@ -32,6 +30,8 @@ export default function LetterIndexSearch(){
     const inputSourceRef = useRef<HTMLInputElement | null>(null);
     const [activeInput, setActiveInput] = useState<string | null>(null);
     const [disciplinePage, setDisciplinePage] = useState(1);
+    const [disciplineSearchPage, setDisciplineSearchPage] = useState(1);
+    const letterchoice = ( levels && levels.length > 0 ? levels.find(obj => obj.position === 1 && obj.key === 'letter')?.choice : undefined )
 
     useEffect(() => {
         console.log('FirstLevel atual:', levels);
@@ -40,62 +40,66 @@ export default function LetterIndexSearch(){
 
     useEffect(() => {
         async function fetchDisciplines(){
-            const response = await dispatch(getDisciplines({authHeaders: authHeaders, page: disciplinePage}))
-
-            console.log("fetchDisciplines >> ", response)
+            await dispatch(getDisciplines({authHeaders: authHeaders, 
+                                           page: disciplinePage, 
+                                           letter: letterchoice}))
         }
 
-        fetchDisciplines()
-    }, []);
+        async function fetchDisciplinesSearch(){
+            await dispatch(getSearch({authHeaders: authHeaders,
+                                                             queryType: 'discipline',
+                                                             page: disciplinePage,
+                                                             searchTerm: inputDisciplineSearch.trim(),
+                                                             letter: letterchoice}))
+        }
+
+        (inputDisciplineSearch.length == 0 ?
+
+            fetchDisciplines()
+            :
+            fetchDisciplinesSearch()
+        )
+
+    }, [disciplinePage, disciplineSearchPage]);
 
     useEffect(() => {
-
-        console.log("activeInput >>>> ", activeInput)
-        console.log("inputDisciplineRef >>>> ", inputDisciplineRef)
-        console.log("inputTopicRef >>>> ", inputTopicRef)
-        console.log("inputSubtopicTopicRef >>>> ", inputSubtopicTopicRef)
-        console.log("inputAuthorRef >>>> ", inputAuthorRef)
-        console.log("inputSourceRef >>>> ", inputSourceRef)
         
         const timeoutId = setTimeout(() => {
 
             if (activeInput === 'discipline' && authHeaders){
-                if (disciplineSearch.trim() !== '') {
-                    const PRIVATE_ROUTES = handlePrivateRoutes({ROUTE_PARAMS: 
-                                                                            {queryType: 'discipline',
-                                                                             page: disciplinePage  
-                                                                            }})
-                                                                    
-                    const response = dispatch(getSearch({authHeaders: authHeaders,
+
+                if (inputDisciplineSearch.trim() !== '') {
+                        dispatch(getSearch({authHeaders: authHeaders,
                                                          queryType: 'discipline',
                                                          page: disciplinePage,
-                                                         searchTerm: disciplineSearch}))
+                                                         searchTerm: inputDisciplineSearch.trim(),
+                                                         letter: letterchoice}))
 
-                    setDisciplineSearch(disciplineSearch);
+                    setInputDisciplineSearch(inputDisciplineSearch);
                 } else {
                     setSearchDisciplineResults([]);
                 }
             } else if (activeInput === 'topic') {
-                if (topicSearch.trim() !== '') {
-                    setTopicSearch(topicSearch);
+                if (inputTopicSearch.trim() !== '') {
+                    setInputTopicSearch(inputTopicSearch);
                 } else {
                     setSearchTopicResults([]);
                 }
             } else if (activeInput === 'subtopic') {
-                if (subtopicSearch.trim() !== '') {
-                    setSubtopicSearch(subtopicSearch);
+                if (inputSubtopicSearch.trim() !== '') {
+                    setInputSubtopicSearch(inputSubtopicSearch);
                 } else {
                     setSearchSubtopicResults([]);
                 }
             } else if (activeInput === 'author') {
-                if (authorSearch.trim() !== '') {
-                    setAuthorSearch(authorSearch);
+                if (inputAuthorSearch.trim() !== '') {
+                    setInputAuthorSearch(inputAuthorSearch);
                 } else {
                     setSearchAuthorResults([]);
                 }
             } else if (activeInput === 'source') {
-                if (sourceSearch.trim() !== '') {
-                    setSourceSearch(sourceSearch);
+                if (inputSourceSearch.trim() !== '') {
+                    setInputSourceSearch(inputSourceSearch);
                 } else {
                     setSearchSourceResults([]);
                 }
@@ -104,16 +108,7 @@ export default function LetterIndexSearch(){
 
         return () => clearTimeout(timeoutId);
 
-    }, [disciplineSearch, topicSearch, subtopicSearch, authorSearch, sourceSearch]);
-
-    const performSearch = async (searchTerm: string) => {
-        try {
-            const results = await console.log(searchTerm);
-            // setSearchDisciplineResults(results);
-        } catch (error) {
-            console.error('Erro na busca:', error);
-        }
-    };
+    }, [inputDisciplineSearch, inputTopicSearch, inputSubtopicSearch, inputAuthorSearch, inputSourceSearch]);
 
     const firstChoice = () => {
         const positionOne = levels?.find((item: Level) => item.position === 1);
@@ -125,19 +120,24 @@ export default function LetterIndexSearch(){
         
     }
 
-        useEffect(() => {
+    useEffect(() => {
         const handleScroll = () => {
-            const container = document.getElementById('ul-disciplines');
+            const container = document.getElementById('container-ul-section');
             if (!container) return;
     
             const { scrollTop, clientHeight, scrollHeight } = container;
-            if (scrollTop + clientHeight >= scrollHeight && !loadingDisciplines) {
-                setDisciplinePage(disciplinePage + 1);
+
+            if (scrollTop + clientHeight >= scrollHeight - 1 && !loadingDisciplines) {
+                (inputDisciplineSearch.length === 0 ? 
+                    setDisciplinePage(disciplinePage + 1)
+                 :
+                    setDisciplineSearchPage(disciplineSearchPage + 1)
+            );
             }
         };
     
         setTimeout(() => {
-            const container = document.getElementById('container-ul-group-posts');
+            const container = document.getElementById('container-ul-section');
             if (container){
                 container.addEventListener('scroll', handleScroll);
                 return () => container.removeEventListener('scroll', handleScroll);
@@ -175,9 +175,9 @@ export default function LetterIndexSearch(){
                                     id='search-discipline-input'
                                     type="text"
                                     placeholder="Search..."
-                                    value={disciplineSearch}
+                                    value={inputDisciplineSearch}
                                     ref={inputDisciplineRef}
-                                    onChange={(e) => setDisciplineSearch(e.target.value)}
+                                    onChange={(e) => setInputDisciplineSearch(e.target.value)}
                                     onFocus={() => setActiveInput('discipline')}
                                     onBlur={() => setActiveInput(null)}
                                 />
@@ -185,15 +185,19 @@ export default function LetterIndexSearch(){
                         </div>
                         <div id='container-ul-section'>
                             <ul id='ul-disciplines'>
-                                {disciplines.length > 0 && disciplines.map((discipline, index) => (
+                                {inputDisciplineSearch.length === 0 ? disciplines.length > 0 && disciplines.map((discipline, index) => (
                                     <li key={index}>
                                         <a>{discipline.name}</a>
                                     </li>
-                                ))}
+                                )) : disciplinesSearch && disciplinesSearch.length > 0 && disciplinesSearch.map((discipline, index) => (
+                                    <li key={index}>
+                                        <a>{discipline.name}</a>
+                                    </li>)) 
+                                }
                             
                                 {loadingDisciplines ? 
                                     <div>
-                                        <CircularProgress color='secondary' sx={{ color: 'brown' }}/>
+                                        <CircularProgress color='secondary' sx={{ color: 'rgba(50,50,50)' }}/>
                                     </div>
                                     :
                                     null
@@ -212,9 +216,9 @@ export default function LetterIndexSearch(){
                                     id='search-topic-input'
                                     type="text"
                                     placeholder="Search..."
-                                    value={topicSearch}
+                                    value={inputTopicSearch}
                                     ref={inputTopicRef}
-                                    onChange={(e) => setTopicSearch(e.target.value)}
+                                    onChange={(e) => setInputTopicSearch(e.target.value)}
                                     onFocus={() => setActiveInput('topic')}
                                     onBlur={() => setActiveInput(null)}
                                 />
@@ -242,9 +246,9 @@ export default function LetterIndexSearch(){
                                     id='search-subtopic-input'
                                     type="text"
                                     placeholder="Search..."
-                                    value={disciplineSearch}
+                                    value={inputDisciplineSearch}
                                     ref={inputSubtopicTopicRef}
-                                    onChange={(e) => setTopicSearch(e.target.value)}
+                                    onChange={(e) => setInputTopicSearch(e.target.value)}
                                     onFocus={() => setActiveInput('subtopic')}
                                     onBlur={() => setActiveInput(null)}
                                 />
@@ -264,7 +268,6 @@ export default function LetterIndexSearch(){
                 </div>
             </div>
 
-
             <div id='container-sections'>
                 <div id='section-index'>
                     <div id='container-title-section'>
@@ -276,9 +279,9 @@ export default function LetterIndexSearch(){
                                     id='search-author-input'
                                     type="text"
                                     placeholder="Search..."
-                                    value={authorSearch}
+                                    value={inputAuthorSearch}
                                     ref={inputAuthorRef}
-                                    onChange={(e) => setAuthorSearch(e.target.value)}
+                                    onChange={(e) => setInputAuthorSearch(e.target.value)}
                                     onFocus={() => setActiveInput('author')}
                                     onBlur={() => setActiveInput(null)}
                                 />
@@ -305,9 +308,9 @@ export default function LetterIndexSearch(){
                                     id='search-source-input'
                                     type="text"
                                     placeholder="Search..."
-                                    value={sourceSearch}
+                                    value={inputSourceSearch}
                                     ref={inputSourceRef}
-                                    onChange={(e) => setSourceSearch(e.target.value)}
+                                    onChange={(e) => setInputSourceSearch(e.target.value)}
                                     onFocus={() => setActiveInput('source')}
                                     onBlur={() => setActiveInput(null)}
                                 />
