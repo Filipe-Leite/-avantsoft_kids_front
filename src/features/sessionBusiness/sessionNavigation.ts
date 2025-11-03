@@ -1,15 +1,18 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { Level, NavigationState } from "../../app/#interfaces/slicesInterfaces";
 import { AuthHeaders } from "../../app/#interfaces/interfaces";
-import { getDisciplinesByPage, getSearchWithQuertTypeAndPage } from "../../app/api/sessionAPI";
+import { getDisciplinesByPage, getSearchWithQuertTypeAndPage, getTopicsByPage } from "../../app/api/sessionAPI";
 import { convertKeysToCamelCase } from "../../genericFunctions";
 
 const initialState: NavigationState = {
     levels: [],
     disciplines: [],
     disciplinesSearch: [],
+    topics: [],
+    topicsSearch: [],
     errors: [],
-    loadingDisciplines: false
+    loadingDisciplines: false,
+    loadingTopics: false
 };
 
 interface GetSearch{
@@ -26,6 +29,11 @@ interface GetDisciplines{
   letter?: string;
 }
 
+interface GetTopics{
+  authHeaders?: AuthHeaders;
+  page: number;
+  letter?: string;
+}
 
 export const getSearch = createAsyncThunk(
     'sessionNavigation/getSearch',
@@ -49,6 +57,22 @@ export const getDisciplines = createAsyncThunk(
     'sessionNavigation/getDisciplines',
     async (payload: GetDisciplines, {rejectWithValue}) => {
         const response = await getDisciplinesByPage(
+            payload.authHeaders,
+            payload.page,
+            payload.letter
+        )
+        if (response.status >= 200 && response.status < 300) {
+            return response.data 
+        } else {
+          return rejectWithValue(response.data)
+        }
+    }
+)
+
+export const getTopics = createAsyncThunk(
+    'sessionNavigation/getTopics',
+    async (payload: GetTopics, {rejectWithValue}) => {
+        const response = await getTopicsByPage(
             payload.authHeaders,
             payload.page,
             payload.letter
@@ -98,7 +122,13 @@ const sessionNavigationSlice = createSlice({
             state.loadingDisciplines = false;
           }
         } else if ((action.meta.arg.queryType === 'topic')){
-          console.log("getSearch.fulfilled 'topic' >>>>>")
+          if (action.meta.arg.page === 1){
+            state.topicsSearch = convertKeysToCamelCase(action.payload);
+            state.loadingTopics = false;
+          } else {
+            state.topicsSearch = [...state.topicsSearch,...convertKeysToCamelCase(action.payload)];
+            state.loadingTopics = false;
+          }
         } else if ((action.meta.arg.queryType === 'subtopic')){
           console.log("getSearch.fulfilled 'subtopic' >>>>>")
         } else if ((action.meta.arg.queryType === 'author')){
@@ -127,6 +157,21 @@ const sessionNavigationSlice = createSlice({
       })
       .addCase(getDisciplines.rejected, (state) => {
         state.loadingDisciplines = false;
+      })
+      .addCase(getTopics.pending, (state, action: any) => {
+
+        if (action.meta.arg.page === 1){
+          state.topics = []
+        }
+        state.loadingTopics = true;
+      })
+      .addCase(getTopics.fulfilled, (state, action: any) => {
+        state.topics = [...state.topics,...convertKeysToCamelCase(action.payload)];
+
+        state.loadingTopics = false;
+      })
+      .addCase(getTopics.rejected, (state) => {
+        state.loadingTopics = false;
       })
     }
 });

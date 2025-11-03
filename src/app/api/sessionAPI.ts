@@ -102,11 +102,27 @@ export async function getSearchWithQuertTypeAndPage(authHeaders: AuthHeaders | u
 
 export async function getDisciplinesByPage(authHeaders: AuthHeaders | undefined, page: number, letter: string | undefined){
 
-
     const PRIVATE_ROUTES = REQUEST_REQUIREMENTS.handlePrivateRoutes({ROUTE_PARAMS: { page: page , letter: letter}});
 
     return api
         .get(PRIVATE_ROUTES.GET_DISCIPLINES, {
+            headers: convertKeysToSnakeCase(authHeaders)
+        })
+        .then((response: any) => {
+            return response;
+        })
+        .catch((error: any) => {
+            return error.response.data;
+        });
+}
+
+export async function getTopicsByPage(authHeaders: AuthHeaders | undefined, page: number, letter: string | undefined){
+
+
+    const PRIVATE_ROUTES = REQUEST_REQUIREMENTS.handlePrivateRoutes({ROUTE_PARAMS: { page: page , letter: letter}});
+
+    return api
+        .get(PRIVATE_ROUTES.GET_TOPICS, {
             headers: convertKeysToSnakeCase(authHeaders)
         })
         .then((response: any) => {

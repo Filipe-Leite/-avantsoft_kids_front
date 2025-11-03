@@ -56,6 +56,7 @@ export function handlePrivateRoutes({ROUTE_PARAMS}: PrivateRoutesParams){
             SEARCH: `/search/${ROUTE_PARAMS.queryType}/page/${ROUTE_PARAMS.page}/?q=${ROUTE_PARAMS?.searchTerm}
                     ${ROUTE_PARAMS?.letter ? `&letter=${ROUTE_PARAMS.letter}` : ''}`,
             GET_DISCIPLINES: `/disciplines/page/${ROUTE_PARAMS.page}?${ROUTE_PARAMS.letter ? `letter=${ROUTE_PARAMS.letter}` : ''}`,
+            GET_TOPICS: `/topics/page/${ROUTE_PARAMS.page}?${ROUTE_PARAMS.letter ? `letter=${ROUTE_PARAMS.letter}` : ''}`
         }
 
     return ENDPOINTS
