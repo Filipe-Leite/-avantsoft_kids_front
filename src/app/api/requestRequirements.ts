@@ -58,6 +58,8 @@ export function handlePrivateRoutes({ROUTE_PARAMS}: PrivateRoutesParams){
             GET_DISCIPLINES: `/disciplines/page/${ROUTE_PARAMS.page}?${ROUTE_PARAMS.letter ? `letter=${ROUTE_PARAMS.letter}` : ''}`,
             GET_TOPICS: `/topics/page/${ROUTE_PARAMS.page}?${ROUTE_PARAMS.letter ? `letter=${ROUTE_PARAMS.letter}` : ''}`,
             GET_SUBTOPICS: `/subtopics/page/${ROUTE_PARAMS.page}?${ROUTE_PARAMS.letter ? `letter=${ROUTE_PARAMS.letter}` : ''}`,
+            GET_AUTHORS: `/authors/page/${ROUTE_PARAMS.page}?${ROUTE_PARAMS.letter ? `letter=${ROUTE_PARAMS.letter}` : ''}`,
+            GET_SOURCES: `/sources/page/${ROUTE_PARAMS.page}?${ROUTE_PARAMS.letter ? `letter=${ROUTE_PARAMS.letter}` : ''}`
         }
 
     return ENDPOINTS

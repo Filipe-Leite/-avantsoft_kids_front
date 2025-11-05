@@ -94,7 +94,7 @@ export default function SubtopicsComponent(){
                     />
                 </div>
             </div>
-            <div className='container-ul-section-subtopic'>
+            <div id='container-ul-section-subtopic'>
                 <ul className='ul-subtopics'>
                     {inputSubtopicSearch.length === 0 && subtopics ? subtopics.length > 0 && subtopics.map((subtopic, index) => (
                         <li key={index}>

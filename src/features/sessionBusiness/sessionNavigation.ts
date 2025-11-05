@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { Level, NavigationState } from "../../app/#interfaces/slicesInterfaces";
 import { AuthHeaders } from "../../app/#interfaces/interfaces";
-import { getDisciplinesByPage, getSearchWithQuertTypeAndPage, getSubtopicsByPage, getTopicsByPage } from "../../app/api/sessionAPI";
+import { getAuthorsByPage, getDisciplinesByPage, getSearchWithQuertTypeAndPage, getSourcesByPage, getSubtopicsByPage, getTopicsByPage } from "../../app/api/sessionAPI";
 import { convertKeysToCamelCase } from "../../genericFunctions";
 
 const initialState: NavigationState = {
@@ -12,10 +12,16 @@ const initialState: NavigationState = {
     topicsSearch: [],
     subtopicsSearch: [],
     subtopics: [],
+    authors: [],
+    authorsSearch: [],
+    sources: [],
+    sourcesSearch: [],
     errors: [],
     loadingDisciplines: false,
     loadingTopics: false,
-    loadingSubtopics: false
+    loadingSubtopics: false,
+    loadingAuthors: false,
+    loadingSources: false,
 };
 
 interface GetSearch{
@@ -104,6 +110,38 @@ export const getSubtopics = createAsyncThunk(
     }
 )
 
+export const getAuthors = createAsyncThunk(
+    'sessionNavigation/getAuthors',
+    async (payload: GetTopics, {rejectWithValue}) => {
+        const response = await getAuthorsByPage(
+            payload.authHeaders,
+            payload.page,
+            payload.letter
+        )
+        if (response.status >= 200 && response.status < 300) {
+            return response.data 
+        } else {
+          return rejectWithValue(response.data)
+        }
+    }
+)
+
+export const getSources = createAsyncThunk(
+    'sessionNavigation/getSources',
+    async (payload: GetTopics, {rejectWithValue}) => {
+        const response = await getSourcesByPage(
+            payload.authHeaders,
+            payload.page,
+            payload.letter
+        )
+        if (response.status >= 200 && response.status < 300) {
+            return response.data 
+        } else {
+          return rejectWithValue(response.data)
+        }
+    }
+)
+
 const sessionNavigationSlice = createSlice({
   name: 'sessionNavigation',
   initialState,
@@ -124,7 +162,6 @@ const sessionNavigationSlice = createSlice({
   extraReducers: (builder) => {
       builder
       .addCase(getSearch.pending, (state, action: any) => {
-          console.log("getSearch.fulfilled topic >>>>",action)
         
         if (action.meta.arg.queryType === 'discipline' && action.meta.arg.page === 1 ){
           state.disciplinesSearch = [];
@@ -134,9 +171,20 @@ const sessionNavigationSlice = createSlice({
           state.topicsSearch = [];
           state.loadingTopics = true;
         }
+        if (action.meta.arg.queryType === 'subtopic' && action.meta.arg.page === 1 ){
+          state.topicsSearch = [];
+          state.loadingTopics = true;
+        }
+        if (action.meta.arg.queryType === 'author' && action.meta.arg.page === 1 ){
+          state.authorsSearch = [];
+          state.loadingAuthors = true;
+        }
+        if (action.meta.arg.queryType === 'source' && action.meta.arg.page === 1 ){
+          state.sourcesSearch = [];
+          state.loadingSources = true;
+        }
       })
       .addCase(getSearch.fulfilled, (state, action: any) => {
-          console.log("getSearch.fulfilled topic >>>>",action)
 
         if (action.meta.arg.queryType === 'discipline'){
           if (action.meta.arg.page === 1){
@@ -147,7 +195,6 @@ const sessionNavigationSlice = createSlice({
             state.loadingDisciplines = false;
           }
         } else if ((action.meta.arg.queryType === 'topic')){
-          console.log("action.meta.arg.queryType topic >>>>")
           if (action.meta.arg.page === 1){
             state.topicsSearch = convertKeysToCamelCase(action.payload);
             state.loadingTopics = false;
@@ -156,12 +203,28 @@ const sessionNavigationSlice = createSlice({
             state.loadingTopics = false;
           }
         } else if ((action.meta.arg.queryType === 'subtopic')){
-          console.log("getSearch.fulfilled 'subtopic' >>>>>")
+          if (action.meta.arg.page === 1){
+            state.subtopicsSearch = convertKeysToCamelCase(action.payload);
+            state.loadingSubtopics = false;
+          } else {
+            state.subtopicsSearch = [...state.subtopicsSearch,...convertKeysToCamelCase(action.payload)];
+            state.loadingSubtopics = false;
+          }
         } else if ((action.meta.arg.queryType === 'author')){
-          console.log("getSearch.fulfilled 'author' >>>>>")
+          if (action.meta.arg.page === 1){
+            state.authorsSearch = convertKeysToCamelCase(action.payload);
+            state.loadingAuthors = false;
+          } else {
+            state.authorsSearch = [...state.authorsSearch,...convertKeysToCamelCase(action.payload)];
+            state.loadingAuthors = false;
+          }
         } else if ((action.meta.arg.queryType === 'source')){
-          console.log("getSearch.fulfilled 'source' >>>>>")
-        }
+            state.sourcesSearch = convertKeysToCamelCase(action.payload);
+            state.loadingSources = false;
+          } else {
+            state.sourcesSearch = [...state.sourcesSearch,...convertKeysToCamelCase(action.payload)];
+            state.loadingSources = false;
+          }
       })
       .addCase(getSearch.rejected, (state, action: any) => {
         if (action.meta.arg.queryType === 'discipline'){
@@ -171,6 +234,18 @@ const sessionNavigationSlice = createSlice({
         if (action.meta.arg.queryType === 'topic'){
           state.errors = ['Error on disciplines search']
           state.loadingTopics = false;
+        }
+        if (action.meta.arg.queryType === 'subtopic'){
+          state.errors = ['Error on disciplines search']
+          state.loadingSubtopics = false;
+        }
+        if (action.meta.arg.queryType === 'author'){
+          state.errors = ['Error on disciplines search']
+          state.loadingAuthors = false;
+        }
+        if (action.meta.arg.queryType === 'source'){
+          state.errors = ['Error on disciplines search']
+          state.loadingSources = false;
         }
       })
       .addCase(getDisciplines.pending, (state, action: any) => {
@@ -212,13 +287,44 @@ const sessionNavigationSlice = createSlice({
       })
       .addCase(getSubtopics.fulfilled, (state, action: any) => {
 
-        console.log("action >>>> ", action)
         state.subtopics = [...state.subtopics,...convertKeysToCamelCase(action.payload)];
 
         state.loadingSubtopics = false;
       })
       .addCase(getSubtopics.rejected, (state) => {
         state.loadingSubtopics = false;
+      })
+      .addCase(getAuthors.pending, (state, action: any) => {
+
+        if (action.meta.arg.page === 1){
+          state.authors = []
+        }
+        state.loadingAuthors = true;
+      })
+      .addCase(getAuthors.fulfilled, (state, action: any) => {
+
+        state.authors = [...state.authors,...convertKeysToCamelCase(action.payload)];
+
+        state.loadingAuthors = false;
+      })
+      .addCase(getAuthors.rejected, (state) => {
+        state.loadingAuthors = false;
+      })
+      .addCase(getSources.pending, (state, action: any) => {
+
+        if (action.meta.arg.page === 1){
+          state.sources = []
+        }
+        state.loadingSources = true;
+      })
+      .addCase(getSources.fulfilled, (state, action: any) => {
+
+        state.sources = [...state.sources,...convertKeysToCamelCase(action.payload)];
+
+        state.loadingSources = false;
+      })
+      .addCase(getSources.rejected, (state) => {
+        state.loadingSources = false;
       })
     }
 });

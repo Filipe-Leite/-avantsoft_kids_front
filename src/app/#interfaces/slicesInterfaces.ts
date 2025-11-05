@@ -1,15 +1,21 @@
 export interface NavigationState {
     levels?: Level[];
     disciplines: Discipline[];
-    topics: Topic[];
-    subtopics: Subtopic[];
     disciplinesSearch: Discipline[];
+    topics: Topic[];
     topicsSearch: Topic[];
+    subtopics: Subtopic[];
     subtopicsSearch: Topic[];
+    authors: Author[];
+    authorsSearch: Author[];
+    sources: Source[];
+    sourcesSearch: Source[];
     errors: string[];
     loadingDisciplines: boolean;
     loadingTopics: boolean;
     loadingSubtopics: boolean;
+    loadingAuthors: boolean;
+    loadingSources: boolean;
 }
 
 export interface Level {
@@ -35,6 +41,20 @@ export interface Topic {
 export interface Subtopic {
   id: number;
   name: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Author {
+  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Source {
+  id: number;
+  title: string;
   createdAt: string;
   updatedAt: string;
 }

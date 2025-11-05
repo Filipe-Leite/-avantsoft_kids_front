@@ -8,6 +8,8 @@ import { getDisciplines, getSearch, getTopics } from '../../../../features/sessi
 import DisciplinesComponent from './DisciplinesComponent';
 import TopicsComponent from './TopicsComponent';
 import SubtopicsComponent from './SubtopicsComponent';
+import AuthorsComponent from './AuthorsComponent';
+import SourcesComponent from './SourcesComponent';
 
 export default function LetterIndexSearch(){
     const dispatch = useDispatch<AppDispatch>();
@@ -86,63 +88,10 @@ export default function LetterIndexSearch(){
 
                 <div id='container-sections'>
                     <div id='section-index'>
-                        <div id='container-title-section'>
-                            <div id='container-title'>
-                                <h2>Author</h2>
-
-                                <div id='container-search-field-add-button'>
-                                    <input 
-                                        id='search-author-input'
-                                        type="text"
-                                        placeholder="Search..."
-                                        value={inputAuthorSearch}
-                                        ref={inputAuthorRef}
-                                        onChange={(e) => setInputAuthorSearch(e.target.value)}
-                                        onFocus={() => setActiveInput('author')}
-                                        onBlur={() => setActiveInput(null)}
-                                    />
-                                </div>
-                            </div>
-                            <div id='container-ul-section-author'>
-                                <ul>
-                                    {disciplines.length > 0 && disciplines.map((discipline, index) => (
-                                        <li key={index}>
-                                            <a>{discipline.name}</a>
-                                        </li>
-                                        
-                                    ))}
-                                </ul>
-                            </div>
-                        </div>
+                        <AuthorsComponent/>
                     </div>
                     <div id='section-index'>
-                        <div id='container-title-section'>
-                            <div id='container-title'>
-                                <h2>Source</h2>
-                                <div id='container-search-field-add-button'>
-                                    <input 
-                                        id='search-source-input'
-                                        type="text"
-                                        placeholder="Search..."
-                                        value={inputSourceSearch}
-                                        ref={inputSourceRef}
-                                        onChange={(e) => setInputSourceSearch(e.target.value)}
-                                        onFocus={() => setActiveInput('source')}
-                                        onBlur={() => setActiveInput(null)}
-                                    />
-                                </div>
-                            </div>
-                            <div id='container-ul-section-source'>
-                                <ul>
-                                    {disciplines.length > 0 && disciplines.map((discipline, index) => (
-                                        <li key={index}>
-                                            <a>{discipline.name}</a>
-                                        </li>
-                                        
-                                    ))}
-                                </ul>
-                            </div>
-                        </div>
+                        <SourcesComponent/>
                     </div>
                 </div>
             </div>

@@ -103,7 +103,7 @@ export default function DisciplinesComponent(){
                     />
                 </div>
             </div>
-            <div className='container-ul-section-discipline'>
+            <div id='container-ul-section-discipline'>
                 <ul className='ul-disciplines'>
                     {inputDisciplineSearch.length === 0 && disciplines ? disciplines.length > 0 && disciplines.map((discipline, index) => (
                         <li key={index}>

@@ -54,7 +54,7 @@ export default function TopicsComponent(){
 
     useEffect((): (() => void) => {
         const handleTopicScroll = (): void => {
-            const container = document.getElementById('container-ul-section-topic'); // ✅ ID correto
+            const container = document.getElementById('container-ul-section-topic');
             if (!container) return;
 
             const { scrollTop, clientHeight, scrollHeight } = container;
@@ -105,7 +105,7 @@ export default function TopicsComponent(){
                     />
                 </div>
             </div>
-            <div className='container-ul-section-topic'>
+            <div id='container-ul-section-topic'>
                 <ul className='ul-topics'>
                     {inputTopicSearch.length === 0 && topics ? topics.length > 0 && topics.map((topic, index) => (
                         <li key={index}>
