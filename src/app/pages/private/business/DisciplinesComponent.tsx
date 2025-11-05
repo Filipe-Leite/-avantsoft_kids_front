@@ -47,7 +47,7 @@ export default function DisciplinesComponent(){
             
             }
 
-    },[disciplinePage, disciplineSearchPage])
+    },[disciplinePage, disciplineSearchPage, inputDisciplineSearch])
 
     useEffect((): (() => void) => {
         const handleDisciplineScroll = (): void => {
@@ -86,13 +86,13 @@ export default function DisciplinesComponent(){
         ]);
 
     return(
-        <div id='container-title-section'>
-            <div id='container-title'>
+        <div className='container-title-section'>
+            <div className='container-title'>
                 <h2>Discipline</h2>
 
-                <div id='container-search-field-add-button'>
+                <div className='container-search-field'>
                     <input 
-                        id='search-discipline-input'
+                        className='search-discipline-input'
                         type="text"
                         placeholder="Search..."
                         value={inputDisciplineSearch}
@@ -103,8 +103,8 @@ export default function DisciplinesComponent(){
                     />
                 </div>
             </div>
-            <div id='container-ul-section-discipline'>
-                <ul id='ul-disciplines'>
+            <div className='container-ul-section-discipline'>
+                <ul className='ul-disciplines'>
                     {inputDisciplineSearch.length === 0 && disciplines ? disciplines.length > 0 && disciplines.map((discipline, index) => (
                         <li key={index}>
                             <a>{discipline.name}</a>

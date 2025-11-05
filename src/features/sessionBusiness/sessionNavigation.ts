@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { Level, NavigationState } from "../../app/#interfaces/slicesInterfaces";
 import { AuthHeaders } from "../../app/#interfaces/interfaces";
-import { getDisciplinesByPage, getSearchWithQuertTypeAndPage, getTopicsByPage } from "../../app/api/sessionAPI";
+import { getDisciplinesByPage, getSearchWithQuertTypeAndPage, getSubtopicsByPage, getTopicsByPage } from "../../app/api/sessionAPI";
 import { convertKeysToCamelCase } from "../../genericFunctions";
 
 const initialState: NavigationState = {
@@ -10,9 +10,12 @@ const initialState: NavigationState = {
     disciplinesSearch: [],
     topics: [],
     topicsSearch: [],
+    subtopicsSearch: [],
+    subtopics: [],
     errors: [],
     loadingDisciplines: false,
-    loadingTopics: false
+    loadingTopics: false,
+    loadingSubtopics: false
 };
 
 interface GetSearch{
@@ -85,6 +88,22 @@ export const getTopics = createAsyncThunk(
     }
 )
 
+export const getSubtopics = createAsyncThunk(
+    'sessionNavigation/getSubtopics',
+    async (payload: GetTopics, {rejectWithValue}) => {
+        const response = await getSubtopicsByPage(
+            payload.authHeaders,
+            payload.page,
+            payload.letter
+        )
+        if (response.status >= 200 && response.status < 300) {
+            return response.data 
+        } else {
+          return rejectWithValue(response.data)
+        }
+    }
+)
+
 const sessionNavigationSlice = createSlice({
   name: 'sessionNavigation',
   initialState,
@@ -105,13 +124,19 @@ const sessionNavigationSlice = createSlice({
   extraReducers: (builder) => {
       builder
       .addCase(getSearch.pending, (state, action: any) => {
+          console.log("getSearch.fulfilled topic >>>>",action)
         
         if (action.meta.arg.queryType === 'discipline' && action.meta.arg.page === 1 ){
           state.disciplinesSearch = [];
           state.loadingDisciplines = true;
         }
+        if (action.meta.arg.queryType === 'topic' && action.meta.arg.page === 1 ){
+          state.topicsSearch = [];
+          state.loadingTopics = true;
+        }
       })
       .addCase(getSearch.fulfilled, (state, action: any) => {
+          console.log("getSearch.fulfilled topic >>>>",action)
 
         if (action.meta.arg.queryType === 'discipline'){
           if (action.meta.arg.page === 1){
@@ -122,6 +147,7 @@ const sessionNavigationSlice = createSlice({
             state.loadingDisciplines = false;
           }
         } else if ((action.meta.arg.queryType === 'topic')){
+          console.log("action.meta.arg.queryType topic >>>>")
           if (action.meta.arg.page === 1){
             state.topicsSearch = convertKeysToCamelCase(action.payload);
             state.loadingTopics = false;
@@ -141,6 +167,10 @@ const sessionNavigationSlice = createSlice({
         if (action.meta.arg.queryType === 'discipline'){
           state.errors = ['Error on disciplines search']
           state.loadingDisciplines = false;
+        }
+        if (action.meta.arg.queryType === 'topic'){
+          state.errors = ['Error on disciplines search']
+          state.loadingTopics = false;
         }
       })
       .addCase(getDisciplines.pending, (state, action: any) => {
@@ -172,6 +202,23 @@ const sessionNavigationSlice = createSlice({
       })
       .addCase(getTopics.rejected, (state) => {
         state.loadingTopics = false;
+      })
+      .addCase(getSubtopics.pending, (state, action: any) => {
+
+        if (action.meta.arg.page === 1){
+          state.subtopics = []
+        }
+        state.loadingSubtopics = true;
+      })
+      .addCase(getSubtopics.fulfilled, (state, action: any) => {
+
+        console.log("action >>>> ", action)
+        state.subtopics = [...state.subtopics,...convertKeysToCamelCase(action.payload)];
+
+        state.loadingSubtopics = false;
+      })
+      .addCase(getSubtopics.rejected, (state) => {
+        state.loadingSubtopics = false;
       })
     }
 });

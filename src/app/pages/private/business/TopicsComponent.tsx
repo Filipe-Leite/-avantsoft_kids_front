@@ -22,6 +22,9 @@ export default function TopicsComponent(){
 
 
     useEffect(() => {
+
+        console.log("useEffect(() => {")
+
         async function fetchTopics(){
                     await dispatch(getTopics({authHeaders: authHeaders, 
                                                    page: topicPage, 
@@ -47,7 +50,7 @@ export default function TopicsComponent(){
             
             }
 
-    },[topicPage, topicSearchPage])
+    },[topicPage, topicSearchPage,inputTopicSearch])
 
     useEffect((): (() => void) => {
         const handleTopicScroll = (): void => {
@@ -85,13 +88,13 @@ export default function TopicsComponent(){
     ]);
 
     return(
-        <div id='container-title-section'>
-            <div id='container-title'>
+        <div className='container-title-section'>
+            <div className='container-title'>
                 <h2>Topic</h2>
 
-                <div id='container-search-field-add-button'>
+                <div className='container-search-field'>
                     <input 
-                        id='search-topic-input'
+                        className='search-topic-input'
                         type="text"
                         placeholder="Search..."
                         value={inputTopicSearch}
@@ -102,8 +105,8 @@ export default function TopicsComponent(){
                     />
                 </div>
             </div>
-            <div id='container-ul-section-topic'>
-                <ul id='ul-topics'>
+            <div className='container-ul-section-topic'>
+                <ul className='ul-topics'>
                     {inputTopicSearch.length === 0 && topics ? topics.length > 0 && topics.map((topic, index) => (
                         <li key={index}>
                             <a>{topic.name}</a>

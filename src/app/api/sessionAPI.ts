@@ -133,6 +133,23 @@ export async function getTopicsByPage(authHeaders: AuthHeaders | undefined, page
         });
 }
 
+export async function getSubtopicsByPage(authHeaders: AuthHeaders | undefined, page: number, letter: string | undefined){
+
+
+    const PRIVATE_ROUTES = REQUEST_REQUIREMENTS.handlePrivateRoutes({ROUTE_PARAMS: { page: page , letter: letter}});
+
+    return api
+        .get(PRIVATE_ROUTES.GET_SUBTOPICS, {
+            headers: convertKeysToSnakeCase(authHeaders)
+        })
+        .then((response: any) => {
+            return response;
+        })
+        .catch((error: any) => {
+            return error.response.data;
+        });
+}
+
 function convertKeysToSnakeCase(obj: any): any {
     if (typeof obj === 'object' && obj !== null) {
       if (Array.isArray(obj)) {
