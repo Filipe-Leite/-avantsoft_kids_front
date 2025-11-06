@@ -4,10 +4,11 @@ import PublicOnlyRoute from './PublicOnlyRoute';
 import * as URL from '../app/api/requestRequirements';
 import SignIn from '../app/pages/public/authentication/SignIn';
 import SignUp from '../app/pages/public/authentication/SignUp';
-import Home from '../app/pages/private/business/Home';
 import PersistLogin from '../features/session/PersistLogin';
 import ResponsiveAppBar from '../app/components/appbar/ResponsiveAppBar';
-import LetterIndexSearch from '../app/pages/private/business/LetterIndexSearch';
+import FirstLevelIndexSearch from '../app/pages/private/business/FirstLevelIndexSearch';
+import SecondLevelIndexSearch from '../app/pages/private/business/SecondLevelIndexSearch';
+import ThirdLevelIndexSearch from '../app/pages/private/business/ThirdLevelIndexSearch';
 
 function RoutesApp() {
 
@@ -28,24 +29,33 @@ function RoutesApp() {
               } />
 
               <Route element={<PersistLogin/>}>
-                <Route path={URL.HOME} element={
+                <Route path={URL.THIRD_LEVEL_INDEX_SEARCH_ENDPOINT} element={
                   <PrivateRoute>
-                        <Home />
+                      <ThirdLevelIndexSearch />
+                  </PrivateRoute>
+                } />
+              </Route> 
+
+
+              <Route element={<PersistLogin/>}>
+                <Route path={URL.SECOND_LEVEL_INDEX_SEARCH_ENDPOINT} element={
+                  <PrivateRoute>
+                        <SecondLevelIndexSearch />
                   </PrivateRoute>
                 } />
               </Route> 
 
               <Route element={<PersistLogin/>}>
-                <Route path={URL.LETTER_INDEX_SEARCH_ENDPOINT} element={
+                <Route path={URL.FIRST_LEVEL_INDEX_SEARCH_ENDPOINT} element={
                   <PrivateRoute>
-                    <LetterIndexSearch />
+                    <FirstLevelIndexSearch />
                   </PrivateRoute>
                 } />
               </Route> 
 
               <Route path={'/'} element={
                   <PrivateRoute>
-                    <Home/>
+                    <FirstLevelIndexSearch/>
                   </PrivateRoute>
                 } />
               </Routes>

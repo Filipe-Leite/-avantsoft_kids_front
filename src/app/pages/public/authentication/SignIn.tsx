@@ -39,7 +39,7 @@ export default function SignIn(){
 
         if (response.meta.requestStatus === 'fulfilled') {
       
-            navigate(ROUTES.HOME);
+            navigate(ROUTES.FIRST_LEVEL_INDEX_SEARCH_ENDPOINT);
             
         } else if (response.meta.requestStatus === 'rejected' && errorsMessages ) {
             errorsMessages.forEach((item: string) => {

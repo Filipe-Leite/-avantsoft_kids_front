@@ -1,15 +1,14 @@
 import { useNavigate } from 'react-router-dom';
-import './home.css';
+import './firstLevelIndexSearch.css';
 import { handlePrivateRoutes } from '../../../api/requestRequirements';
 import { setLevelSearch } from '../../../../features/sessionBusiness/sessionNavigation';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../../store';
 
-export default function Home() {
+export default function FirstLevelIndexSearch() {
     const letters = ["#","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","X","Z"];
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
-
 
     return (
         <div id='page-letters-index'>
@@ -24,7 +23,7 @@ export default function Home() {
                                                                             }));
                                            navigate(handlePrivateRoutes({ROUTE_PARAMS: 
                                                                             {letter: letter}
-                                                                        }).SEARCH_INDEX)}}>
+                                                                        }).SECOND_LEVEL)}}>
 
                         {letter}
                     </button>

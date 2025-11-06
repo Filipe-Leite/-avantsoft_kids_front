@@ -4,11 +4,13 @@ import { AppDispatch, RootState } from "../../../store";
 import { CircularProgress } from "@mui/material";
 import { getDisciplines, getSearch } from "../../../../features/sessionBusiness/sessionNavigation";
 import './categoriesListing.css';
+import { handlePrivateRoutes } from '../../../api/requestRequirements';
+import { setLevelSearch } from '../../../../features/sessionBusiness/sessionNavigation';
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function DisciplinesComponent(){
     const [inputDisciplineSearch, setInputDisciplineSearch] = useState('');
     const inputDisciplineRef = useRef<HTMLInputElement | null>(null);
-    const [activeInput, setActiveInput] = useState<string | null>(null);
     const disciplinesSearch = useSelector((state: RootState) => state.sessionNavigation.disciplinesSearch);
     const disciplines = useSelector((state: RootState) => state.sessionNavigation.disciplines);
     const loadingDisciplines = useSelector((state: RootState) => state.sessionNavigation.loadingDisciplines);
@@ -18,8 +20,8 @@ export default function DisciplinesComponent(){
     const levels = useSelector((state: RootState) => state.sessionNavigation.levels);
     const letterchoice = ( levels && levels.length > 0 ? levels.find(obj => obj.position === 1 && obj.key === 'letter')?.choice : undefined )
     const [disciplineSearchPage, setDisciplineSearchPage] = useState(1);
-
-
+    const navigate = useNavigate();
+    const { letter } = useParams();
 
     useEffect(() => {
         async function fetchDisciplines(){
@@ -98,15 +100,23 @@ export default function DisciplinesComponent(){
                         value={inputDisciplineSearch}
                         ref={inputDisciplineRef}
                         onChange={(e) => setInputDisciplineSearch(e.target.value)}
-                        onFocus={() => setActiveInput('discipline')}
-                        onBlur={() => setActiveInput(null)}
                     />
                 </div>
             </div>
             <div id='container-ul-section-discipline'>
                 <ul className='ul-disciplines'>
                     {inputDisciplineSearch.length === 0 && disciplines ? disciplines.length > 0 && disciplines.map((discipline, index) => (
-                        <li key={index}>
+                        <li key={index}
+                         onClick={() => {dispatch(setLevelSearch({ 
+                                                                    position: 2,
+                                                                    key: 'discipline',
+                                                                    choice: discipline.name 
+                                                                            }));
+                                        navigate(handlePrivateRoutes({ROUTE_PARAMS: 
+                                                                            {letter: letter,
+                                                                             secondLevel: discipline.name
+                                                                            }
+                                                                        }).THIRD_LEVEL)}}>
                             <a>{discipline.name}</a>
                         </li>
                     )) : disciplinesSearch && disciplinesSearch.length > 0 && disciplinesSearch.map((discipline, index) => (

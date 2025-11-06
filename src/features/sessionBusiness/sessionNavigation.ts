@@ -148,6 +148,7 @@ const sessionNavigationSlice = createSlice({
   reducers: {
     setLevelSearch: (state, action: PayloadAction<Level>) => {
 
+        console.log("action >>> ", action)
         const index = state.levels?.findIndex(item => item?.position === action.payload.position);
         
         if (index !== undefined && index !== -1) {
@@ -155,6 +156,8 @@ const sessionNavigationSlice = createSlice({
         } else if( state.levels?.length === 0 ){
           state.levels = [];
           state.levels[0] = action.payload;
+        } else if( state.levels !== undefined && state.levels?.length === 1 ){
+          state.levels = [...state.levels,convertKeysToCamelCase(action.payload)]
         }
 
     }

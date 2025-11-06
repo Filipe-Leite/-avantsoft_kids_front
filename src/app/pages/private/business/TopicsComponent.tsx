@@ -23,8 +23,6 @@ export default function TopicsComponent(){
 
     useEffect(() => {
 
-        console.log("useEffect(() => {")
-
         async function fetchTopics(){
                     await dispatch(getTopics({authHeaders: authHeaders, 
                                                    page: topicPage, 

@@ -25,8 +25,8 @@ function PublicOnlyRoute({ children  } : any) {
     }
 
           
-    if (userValidated && PRIVATE_ROUTES?.HOME) {
-      navigate(PRIVATE_ROUTES?.HOME);
+    if (userValidated && PRIVATE_ROUTES?.FIRST_LEVEL) {
+      navigate(PRIVATE_ROUTES?.FIRST_LEVEL);
     }
   }, [currentUser])
 
@@ -35,8 +35,8 @@ function PublicOnlyRoute({ children  } : any) {
   }
   else if (!currentUser) {
       return children;
-  } else if (currentUser && PRIVATE_ROUTES && PRIVATE_ROUTES.HOME !== undefined ) {
-    return <Navigate to={PRIVATE_ROUTES.HOME} state={{from: location}} replace/>;
+  } else if (currentUser && PRIVATE_ROUTES && PRIVATE_ROUTES.FIRST_LEVEL !== undefined ) {
+    return <Navigate to={PRIVATE_ROUTES.FIRST_LEVEL} state={{from: location}} replace/>;
   } else {
       return <p>Something went wrong</p>;
   }

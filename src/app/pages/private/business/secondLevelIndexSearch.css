@@ -7,7 +7,7 @@
     overflow-x: hidden;
     align-items: center;
     
-    #top-page {
+    .top-page {
         display: flex;
         background-color: RGB(255, 251, 237);
         margin-top: 100px;
@@ -17,10 +17,10 @@
         align-items: center;
         justify-content: center;
 
-        #container-index {
+        .container-index {
             display: flex;
 
-            #container-sign {
+            .container-sign {
                 h1 {
                     font-size: 60px;
                     color: RGB(50, 50, 50);
@@ -31,7 +31,7 @@
                 }
             }
 
-            #container-choice-index {
+            .container-choice-index {
                 display: flex;
                 flex-direction: column;
                 height: fit-content;
