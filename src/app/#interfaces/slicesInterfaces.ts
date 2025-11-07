@@ -22,6 +22,7 @@ export interface Level {
     position?: number; 
     key?: string; 
     choice?: string;
+    id?: number;
 }
 
 export interface Discipline {

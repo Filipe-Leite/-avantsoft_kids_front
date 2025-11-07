@@ -116,10 +116,13 @@ export async function getDisciplinesByPage(authHeaders: AuthHeaders | undefined,
         });
 }
 
-export async function getTopicsByPage(authHeaders: AuthHeaders | undefined, page: number, letter: string | undefined){
+export async function getTopicsByPage(authHeaders: AuthHeaders | undefined, 
+                                      page: number, 
+                                      letter: string | undefined,
+                                      discipline: number | undefined){
 
 
-    const PRIVATE_ROUTES = REQUEST_REQUIREMENTS.handlePrivateRoutes({ROUTE_PARAMS: { page: page , letter: letter}});
+    const PRIVATE_ROUTES = REQUEST_REQUIREMENTS.handlePrivateRoutes({ROUTE_PARAMS: { page: page , letter: letter, discipline: discipline}});
 
     return api
         .get(PRIVATE_ROUTES.GET_TOPICS, {

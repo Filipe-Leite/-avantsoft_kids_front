@@ -39,6 +39,7 @@ export interface RouteParams {
     queryType?: string;
     page?: number;
     searchTerm?: string;
+    discipline?: number;
 }
 
 export interface EndPoints {
@@ -59,7 +60,9 @@ export function handlePrivateRoutes({ROUTE_PARAMS}: PrivateRoutesParams){
             SEARCH: `/search/${ROUTE_PARAMS.queryType}/page/${ROUTE_PARAMS.page}/?q=${ROUTE_PARAMS?.searchTerm}
                     ${ROUTE_PARAMS?.letter ? `&letter=${ROUTE_PARAMS.letter}` : ''}`,
             GET_DISCIPLINES: `/disciplines/page/${ROUTE_PARAMS.page}?${ROUTE_PARAMS.letter ? `letter=${ROUTE_PARAMS.letter}` : ''}`,
-            GET_TOPICS: `/topics/page/${ROUTE_PARAMS.page}?${ROUTE_PARAMS.letter ? `letter=${ROUTE_PARAMS.letter}` : ''}`,
+            GET_TOPICS: `/topics/page/${ROUTE_PARAMS.page}?${ROUTE_PARAMS.letter ? 
+                        `letter=${ROUTE_PARAMS.letter}` : ''}&${ROUTE_PARAMS.discipline ? 
+                        `discipline=${ROUTE_PARAMS.discipline}` : ''}`,
             GET_SUBTOPICS: `/subtopics/page/${ROUTE_PARAMS.page}?${ROUTE_PARAMS.letter ? `letter=${ROUTE_PARAMS.letter}` : ''}`,
             GET_AUTHORS: `/authors/page/${ROUTE_PARAMS.page}?${ROUTE_PARAMS.letter ? `letter=${ROUTE_PARAMS.letter}` : ''}`,
             GET_SOURCES: `/sources/page/${ROUTE_PARAMS.page}?${ROUTE_PARAMS.letter ? `letter=${ROUTE_PARAMS.letter}` : ''}`

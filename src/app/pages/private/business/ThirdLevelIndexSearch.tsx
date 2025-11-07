@@ -1,18 +1,49 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import './thirdLevelIndexSearch.css';
-import { RootState } from '../../../store';
+import { AppDispatch, RootState } from '../../../store';
 import { Level } from '../../../#interfaces/slicesInterfaces';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { getSearch, getTopics } from '../../../../features/sessionBusiness/sessionNavigation';
 
 export default function ThirdLevelIndexSearch(){
     const levels = useSelector((state: RootState) => state.sessionNavigation.levels);
-
-    useEffect(()=>{
-
-        console.log("levels >> ", levels)
-    }
+    const dispatch = useDispatch<AppDispatch>();
+    const authHeaders = useSelector((state: RootState) => state.session.authHeaders);
+    const topics = useSelector((state: RootState) => state.sessionNavigation.topics);
+    const [inputTopicSearch, setInputTopicSearch] = useState('');
+    const [topicPage, setTopicPage] = useState(1);
+    const letterchoice = ( levels && levels.length > 0 ? levels.find(obj => obj.position === 1 && obj.key === 'letter')?.choice : undefined )
+    const [topicSearchPage, setTopicSearchPage] = useState(1);
+    const disciplineChoice = ( levels && levels.length > 0 ? levels.find(obj => obj.position === 2 && obj.key === 'discipline')?.id : undefined )
+    
+    useEffect(() => {
+        async function fetchTopics(){
+                    await dispatch(getTopics({authHeaders: authHeaders, 
+                                                    page: topicPage, 
+                                                    letter: undefined,
+                                                    discipline: disciplineChoice}))
+                }
+                
+        async function fetchTopicsSearch(){
+            await dispatch(getSearch({authHeaders: authHeaders,
+                                                    queryType: 'topic',
+                                                    page: topicPage,
+                                                    searchTerm: inputTopicSearch.trim(),
+                                                    letter: letterchoice}))
         
-        ,[])
+    
+                                                            }
+        if (inputTopicSearch.length === 0){
+
+            fetchTopics()
+
+        } else {
+
+            fetchTopicsSearch()
+        
+        }
+
+    },[topicPage, topicSearchPage, inputTopicSearch])
 
     const firstChoice = () => {
         const positionOne = levels?.find((item: Level) => item.position === 1);

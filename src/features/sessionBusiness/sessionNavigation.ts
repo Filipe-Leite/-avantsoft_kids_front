@@ -42,6 +42,7 @@ interface GetTopics{
   authHeaders?: AuthHeaders;
   page: number;
   letter?: string;
+  discipline?: number;
 }
 
 export const getSearch = createAsyncThunk(
@@ -84,7 +85,8 @@ export const getTopics = createAsyncThunk(
         const response = await getTopicsByPage(
             payload.authHeaders,
             payload.page,
-            payload.letter
+            payload.letter,
+            payload.discipline
         )
         if (response.status >= 200 && response.status < 300) {
             return response.data 
@@ -148,7 +150,6 @@ const sessionNavigationSlice = createSlice({
   reducers: {
     setLevelSearch: (state, action: PayloadAction<Level>) => {
 
-        console.log("action >>> ", action)
         const index = state.levels?.findIndex(item => item?.position === action.payload.position);
         
         if (index !== undefined && index !== -1) {
@@ -267,7 +268,6 @@ const sessionNavigationSlice = createSlice({
         state.loadingDisciplines = false;
       })
       .addCase(getTopics.pending, (state, action: any) => {
-
         if (action.meta.arg.page === 1){
           state.topics = []
         }

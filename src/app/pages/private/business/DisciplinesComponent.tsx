@@ -110,7 +110,8 @@ export default function DisciplinesComponent(){
                          onClick={() => {dispatch(setLevelSearch({ 
                                                                     position: 2,
                                                                     key: 'discipline',
-                                                                    choice: discipline.name 
+                                                                    choice: discipline.name,
+                                                                    id: discipline.id 
                                                                             }));
                                         navigate(handlePrivateRoutes({ROUTE_PARAMS: 
                                                                             {letter: letter,
