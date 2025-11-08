@@ -4,6 +4,10 @@ import { AppDispatch, RootState } from '../../../store';
 import { Level } from '../../../#interfaces/slicesInterfaces';
 import { useEffect, useState } from 'react';
 import { getSearch, getTopics } from '../../../../features/sessionBusiness/sessionNavigation';
+import TopicsComponent from './TopicsComponent';
+import SubtopicsComponent from './SubtopicsComponent';
+import AuthorsComponent from './AuthorsComponent';
+import SourcesComponent from './SourcesComponent';
 
 export default function ThirdLevelIndexSearch(){
     const levels = useSelector((state: RootState) => state.sessionNavigation.levels);
@@ -67,28 +71,42 @@ export default function ThirdLevelIndexSearch(){
     return (
             <div id='page-third-level-index'>
                 <div className='top-page'>
-                <div className='container-index'>
-                    {firstChoice()?.key && firstChoice()?.choice && (
-                    <div className='container-choice-index'> 
-                        <h1>{firstChoice()?.key}</h1>
-                        <h2>{firstChoice()?.choice}</h2>
-                    </div>
-                    )}
-                    <div className='container-sign'>
-                    <h1>{' >'}</h1>
-                    </div>
-                </div>
-                <div className='container-index'>
-                    {secondChoice()?.key && secondChoice()?.choice && (
-                    <div className='container-choice-index'> 
-                        <h1>{secondChoice()?.key}</h1>
-                        <h2>{secondChoice()?.choice}</h2>
-                    </div>
-                    )}
-                    <div className='container-sign'>
-                    <h1>{' >'}</h1>
+                    <div className='container-index'>
+                        {firstChoice()?.key && firstChoice()?.choice && (
+                            <div className='container-choice-index'> 
+                                <h1>{firstChoice()?.key}</h1>
+                                <h2>{firstChoice()?.choice}</h2>
+                            </div>
+                        )}
+                        <div className='container-sign'>
+                            <h1>{' >'}</h1>
+                        </div>
+                        {secondChoice()?.key && secondChoice()?.choice && (
+                            <div className='container-choice-index'> 
+                                <h1>{secondChoice()?.key}</h1>
+                                <h2>{secondChoice()?.choice}</h2>
+                            </div>
+                        )}
                     </div>
                 </div>
+                <div id='container-sections-lines'>
+                    <div id='container-sections'>
+                        <div id='section-index'>
+                            <TopicsComponent discipline={disciplineChoice}/>
+                        </div>
+                        <div id='section-index'>
+                            <SubtopicsComponent discipline={disciplineChoice}/>
+                        </div>
+                        <div id='section-index'>
+                            <AuthorsComponent/>
+                        </div>
+                    </div>
+                    <div id='container-sections'>
+                    
+                        <div id='section-index'>
+                            <SourcesComponent/>
+                        </div>
+                    </div>
                 </div>
             </div>
     );

@@ -5,7 +5,11 @@ import { CircularProgress } from "@mui/material";
 import { getTopics, getSearch } from "../../../../features/sessionBusiness/sessionNavigation";
 import './categoriesListing.css';
 
-export default function TopicsComponent(){
+interface TopicsComponentProps {
+  discipline?: number;
+}
+
+export default function TopicsComponent({discipline}: TopicsComponentProps){
     const [inputTopicSearch, setInputTopicSearch] = useState('');
     const inputTopicRef = useRef<HTMLInputElement | null>(null);
     const [activeInput, setActiveInput] = useState<string | null>(null);
@@ -18,15 +22,16 @@ export default function TopicsComponent(){
     const levels = useSelector((state: RootState) => state.sessionNavigation.levels);
     const letterchoice = ( levels && levels.length > 0 ? levels.find(obj => obj.position === 1 && obj.key === 'letter')?.choice : undefined )
     const [topicSearchPage, setTopicSearchPage] = useState(1);
-
+    const disciplineChoice = ( levels && levels.length > 0 ? levels.find(obj => obj.position === 2 && obj.key === 'discipline')?.id : undefined )
 
 
     useEffect(() => {
 
         async function fetchTopics(){
                     await dispatch(getTopics({authHeaders: authHeaders, 
-                                                   page: topicPage, 
-                                                   letter: letterchoice}))
+                                              page: topicPage, 
+                                              letter: letterchoice,
+                                              discipline: disciplineChoice}))
                 }
                 
         async function fetchTopicsSearch(){

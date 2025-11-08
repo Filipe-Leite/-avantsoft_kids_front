@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import './secondLevelIndexSearch.css';
 import { RootState } from '../../../store';
 import { Level } from '../../../#interfaces/slicesInterfaces';
@@ -7,9 +7,17 @@ import TopicsComponent from './TopicsComponent';
 import SubtopicsComponent from './SubtopicsComponent';
 import AuthorsComponent from './AuthorsComponent';
 import SourcesComponent from './SourcesComponent';
+import { useEffect } from 'react';
+import { setLevelSearch } from '../../../../features/sessionBusiness/sessionNavigation';
 
 export default function SecondLevelIndexSearch(){
     const levels = useSelector((state: RootState) => state.sessionNavigation.levels);
+    const dispatch = useDispatch();
+
+    // useEffect(()=>{
+    //     dispatch(setLevelSearch({ position: 1}));
+    // },[])
+
 
     const firstChoice = () => {
         const positionOne = levels?.find((item: Level) => item.position === 1);
@@ -46,7 +54,7 @@ export default function SecondLevelIndexSearch(){
                         <DisciplinesComponent/>
                     </div>
                     <div id='section-index'>
-                        <TopicsComponent/>
+                        <TopicsComponent discipline={undefined}/>
                     </div>
                     <div id='section-index'>
                         <SubtopicsComponent/>

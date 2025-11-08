@@ -45,6 +45,27 @@ interface GetTopics{
   discipline?: number;
 }
 
+interface GetSubtopics{
+  authHeaders?: AuthHeaders;
+  page: number;
+  letter?: string;
+  discipline?: number;
+}
+
+interface GetAuthors{
+  authHeaders?: AuthHeaders;
+  page: number;
+  letter?: string;
+  discipline?: number;
+}
+
+interface GetSources{
+  authHeaders?: AuthHeaders;
+  page: number;
+  letter?: string;
+  discipline?: number;
+}
+
 export const getSearch = createAsyncThunk(
     'sessionNavigation/getSearch',
     async (payload: GetSearch, {rejectWithValue}) => {
@@ -98,11 +119,12 @@ export const getTopics = createAsyncThunk(
 
 export const getSubtopics = createAsyncThunk(
     'sessionNavigation/getSubtopics',
-    async (payload: GetTopics, {rejectWithValue}) => {
+    async (payload: GetSubtopics, {rejectWithValue}) => {
         const response = await getSubtopicsByPage(
             payload.authHeaders,
             payload.page,
-            payload.letter
+            payload.letter,
+            payload.discipline
         )
         if (response.status >= 200 && response.status < 300) {
             return response.data 
@@ -114,7 +136,7 @@ export const getSubtopics = createAsyncThunk(
 
 export const getAuthors = createAsyncThunk(
     'sessionNavigation/getAuthors',
-    async (payload: GetTopics, {rejectWithValue}) => {
+    async (payload: GetAuthors, {rejectWithValue}) => {
         const response = await getAuthorsByPage(
             payload.authHeaders,
             payload.page,
@@ -130,7 +152,7 @@ export const getAuthors = createAsyncThunk(
 
 export const getSources = createAsyncThunk(
     'sessionNavigation/getSources',
-    async (payload: GetTopics, {rejectWithValue}) => {
+    async (payload: GetSources, {rejectWithValue}) => {
         const response = await getSourcesByPage(
             payload.authHeaders,
             payload.page,
@@ -150,8 +172,13 @@ const sessionNavigationSlice = createSlice({
   reducers: {
     setLevelSearch: (state, action: PayloadAction<Level>) => {
 
+        console.log("action >> ", action);
+        console.log("state >> ", state);
+        
         const index = state.levels?.findIndex(item => item?.position === action.payload.position);
         
+        
+
         if (index !== undefined && index !== -1) {
             state.levels![index] = action.payload;
         } else if( state.levels?.length === 0 ){
@@ -159,6 +186,10 @@ const sessionNavigationSlice = createSlice({
           state.levels[0] = action.payload;
         } else if( state.levels !== undefined && state.levels?.length === 1 ){
           state.levels = [...state.levels,convertKeysToCamelCase(action.payload)]
+          
+          if (action.payload.position === 1){
+              state.levels = state.levels.filter(level => level.position === 1);
+          }
         }
 
     }

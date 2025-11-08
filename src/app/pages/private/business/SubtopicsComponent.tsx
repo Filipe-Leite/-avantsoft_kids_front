@@ -5,7 +5,10 @@ import { CircularProgress } from "@mui/material";
 import { getSubtopics, getSearch } from "../../../../features/sessionBusiness/sessionNavigation";
 import './categoriesListing.css';
 
-export default function SubtopicsComponent(){
+interface SubtopicsComponentProps {
+  discipline?: number;
+}
+export default function SubtopicsComponent({discipline}: SubtopicsComponentProps){
     const [inputSubtopicSearch, setInputSubtopicSearch] = useState('');
     const inputSubtopicRef = useRef<HTMLInputElement | null>(null);
     const subtopicsSearch = useSelector((state: RootState) => state.sessionNavigation.subtopicsSearch);
@@ -17,6 +20,7 @@ export default function SubtopicsComponent(){
     const levels = useSelector((state: RootState) => state.sessionNavigation.levels);
     const letterchoice = ( levels && levels.length > 0 ? levels.find(obj => obj.position === 1 && obj.key === 'letter')?.choice : undefined )
     const [subtopicSearchPage, setSubtopicSearchPage] = useState(1);
+    const disciplineChoice = ( levels && levels.length > 0 ? levels.find(obj => obj.position === 2 && obj.key === 'discipline')?.id : undefined )
 
     useEffect(() => {
         const timeoutId = setTimeout(() => {
@@ -25,7 +29,8 @@ export default function SubtopicsComponent(){
                     await dispatch(getSubtopics({
                         authHeaders: authHeaders, 
                         page: subtopicPage, 
-                        letter: letterchoice
+                        letter: letterchoice,
+                        discipline: disciplineChoice
                     }));
                 } else {
                     await dispatch(getSearch({

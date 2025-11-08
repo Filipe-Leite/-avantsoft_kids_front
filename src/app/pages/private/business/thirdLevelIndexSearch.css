@@ -1,12 +1,13 @@
-#page-third-level-index{
+#page-third-level-index {
     display: flex;
+    flex-direction: column;
     background-color: RGB(255, 251, 237);
     height: 100vh;
     width: 100vw;
-    justify-content: center;
-}
-
-#page-third-level-index .top-page {
+    overflow-x: hidden;
+    align-items: center;
+    
+    .top-page {
         display: flex;
         background-color: RGB(255, 251, 237);
         margin-top: 100px;
@@ -38,10 +39,8 @@
                 align-items: center;
                 margin-right: 5px;
                 margin-left: 5px;
-                justify-content: center;
     
                 h1 {
-                    display: flex;
                     font-size: 60px;
                     color: RGB(50, 50, 50);
                     user-select: none;
@@ -51,7 +50,6 @@
                 }
     
                 h2 {
-                    display: flex;
                     font-size: 32px;
                     color: RGB(50, 50, 50);
                     user-select: none;
@@ -62,3 +60,19 @@
             }
         }     
     }
+
+    #container-sections-lines{
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        width: fit-content;
+
+        #container-sections {
+            display: flex;
+            flex-direction: row;
+            margin-left: 10px;
+            margin-bottom: 10px;
+            width: auto;
+        }
+    }
+}
