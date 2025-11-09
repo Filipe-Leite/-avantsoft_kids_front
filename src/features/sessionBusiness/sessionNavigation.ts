@@ -171,25 +171,29 @@ const sessionNavigationSlice = createSlice({
   initialState,
   reducers: {
     setLevelSearch: (state, action: PayloadAction<Level>) => {
-
-        console.log("action >> ", action);
-        console.log("state >> ", state);
         
         const index = state.levels?.findIndex(item => item?.position === action.payload.position);
         
-        
 
-        if (index !== undefined && index !== -1) {
-            state.levels![index] = action.payload;
-        } else if( state.levels?.length === 0 ){
-          state.levels = [];
+        if (action.payload.position === 1){
           state.levels[0] = action.payload;
-        } else if( state.levels !== undefined && state.levels?.length === 1 ){
-          state.levels = [...state.levels,convertKeysToCamelCase(action.payload)]
-          
-          if (action.payload.position === 1){
-              state.levels = state.levels.filter(level => level.position === 1);
-          }
+
+          state.levels = state.levels?.filter(level => 
+            level?.position !== undefined && level.position <= 1
+          );
+        } 
+        else if (action.payload.position === 2){
+          state.levels[1] = action.payload;
+
+          state.levels = state.levels?.filter(level => 
+            level?.position !== undefined && level.position <= 2
+          );
+        } else if (action.payload.position === 3){
+          state.levels[2] = action.payload;
+
+          state.levels = state.levels?.filter(level => 
+            level?.position !== undefined && level.position <= 3
+          );
         }
 
     }

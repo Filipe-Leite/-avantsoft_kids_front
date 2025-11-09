@@ -144,7 +144,6 @@ export async function getSubtopicsByPage(authHeaders: AuthHeaders | undefined,
 
     const PRIVATE_ROUTES = REQUEST_REQUIREMENTS.handlePrivateRoutes({ROUTE_PARAMS: { page: page , letter: letter, discipline: discipline}});
 
-    console.log("PRIVATE_ROUTES.GET_SUBTOPICS >>> ", PRIVATE_ROUTES.GET_SUBTOPICS)
     return api
         .get(PRIVATE_ROUTES.GET_SUBTOPICS, {
             headers: convertKeysToSnakeCase(authHeaders)

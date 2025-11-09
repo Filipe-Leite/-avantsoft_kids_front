@@ -1,5 +1,5 @@
 export interface NavigationState {
-    levels?: Level[];
+    levels: Level[];
     disciplines: Discipline[];
     disciplinesSearch: Discipline[];
     topics: Topic[];

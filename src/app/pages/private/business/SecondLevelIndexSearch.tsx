@@ -13,10 +13,15 @@ import { setLevelSearch } from '../../../../features/sessionBusiness/sessionNavi
 export default function SecondLevelIndexSearch(){
     const levels = useSelector((state: RootState) => state.sessionNavigation.levels);
     const dispatch = useDispatch();
+    const letterchoice = ( levels && levels.length > 0 ? levels.find(obj => obj.position === 1 && obj.key === 'letter')?.choice : undefined )
 
-    // useEffect(()=>{
-    //     dispatch(setLevelSearch({ position: 1}));
-    // },[])
+    useEffect(()=>{
+        dispatch(setLevelSearch({ 
+                                                                     position: 1,
+                                                                     key: 'letter',
+                                                                     choice: letterchoice 
+                                                                            }));
+    },[])
 
 
     const firstChoice = () => {

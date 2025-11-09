@@ -28,11 +28,11 @@ export default function TopicsComponent({discipline}: TopicsComponentProps){
     useEffect(() => {
 
         async function fetchTopics(){
-                    await dispatch(getTopics({authHeaders: authHeaders, 
-                                              page: topicPage, 
-                                              letter: letterchoice,
-                                              discipline: disciplineChoice}))
-                }
+            await dispatch(getTopics({authHeaders: authHeaders, 
+                                        page: topicPage, 
+                                        letter: letterchoice,
+                                        discipline: disciplineChoice}))
+        }
                 
         async function fetchTopicsSearch(){
             await dispatch(getSearch({authHeaders: authHeaders,
