@@ -5,10 +5,7 @@ import { CircularProgress } from "@mui/material";
 import { getSubtopics, getSearch } from "../../../../features/sessionBusiness/sessionNavigation";
 import './categoriesListing.css';
 
-interface SubtopicsComponentProps {
-  discipline?: number;
-}
-export default function SubtopicsComponent({discipline}: SubtopicsComponentProps){
+export default function SubtopicsComponent(){
     const [inputSubtopicSearch, setInputSubtopicSearch] = useState('');
     const inputSubtopicRef = useRef<HTMLInputElement | null>(null);
     const subtopicsSearch = useSelector((state: RootState) => state.sessionNavigation.subtopicsSearch);

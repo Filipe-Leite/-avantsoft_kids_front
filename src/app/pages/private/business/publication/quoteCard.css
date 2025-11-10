@@ -1,0 +1,49 @@
+li{
+    #container-quote-card-first-line{
+        background-color: yellow;
+        width: max-content;
+        height: fit-content;
+        margin: 5px 10px 5px 10px;
+
+        h3{
+            margin: 0px;
+        }
+
+    }
+
+    #container-quote-card-second-line{
+        background-color: yellow;
+        width: max-content;
+        height: fit-content;
+        margin: 5px 10px 5px 10px;
+
+        #container-quote-card-second-line{
+            display: flex;
+
+            #container-quote-card-second-line-left{
+                display: flex;
+                width: 50px;
+
+                background-color: blue;
+                p{
+                    margin: 0px;
+                    overflow-wrap: break-word;
+                    white-space: normal;
+                }
+            }
+
+            #container-quote-card-second-line-right{
+                display: flex;
+                width: 50%;
+
+                p{
+                    margin: 0px;
+                    overflow-wrap: break-word;
+                    white-space: normal;
+                }
+
+            }
+        }
+
+    }
+}

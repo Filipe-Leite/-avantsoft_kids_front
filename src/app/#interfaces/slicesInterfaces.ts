@@ -59,3 +59,20 @@ export interface Source {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface Card {
+  subject: string;
+  quote: string;
+  cardType: number;
+  comment: string;
+  edition: string;
+  city: string;
+  year: Date;
+  internetAccessDate: Date;
+  internetAccessLink: string;
+  userId: number;
+  resourceId: number;
+  authorId: number;
+  createdAt?: Date;
+  updatedAt?: Date;
+}

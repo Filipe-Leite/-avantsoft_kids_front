@@ -1,53 +1,20 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import './thirdLevelIndexSearch.css';
-import { AppDispatch, RootState } from '../../../store';
+import { RootState } from '../../../store';
 import { Level } from '../../../#interfaces/slicesInterfaces';
-import { useEffect, useState } from 'react';
-import { getSearch, getTopics } from '../../../../features/sessionBusiness/sessionNavigation';
+import { useState } from 'react';
 import TopicsComponent from './TopicsComponent';
 import SubtopicsComponent from './SubtopicsComponent';
 import AuthorsComponent from './AuthorsComponent';
 import SourcesComponent from './SourcesComponent';
+import digIcon from '../../../../assets/dig-icon-white-32.png'
+import publhishIcon from '../../../../assets/publish-icon-white-32.png'
+import CurrentCardsComponent from './publication/CurrentCardsComponent';
 
 export default function ThirdLevelIndexSearch(){
     const levels = useSelector((state: RootState) => state.sessionNavigation.levels);
-    const dispatch = useDispatch<AppDispatch>();
-    const authHeaders = useSelector((state: RootState) => state.session.authHeaders);
-    const topics = useSelector((state: RootState) => state.sessionNavigation.topics);
-    const [inputTopicSearch, setInputTopicSearch] = useState('');
-    const [topicPage, setTopicPage] = useState(1);
-    const letterchoice = ( levels && levels.length > 0 ? levels.find(obj => obj.position === 1 && obj.key === 'letter')?.choice : undefined )
-    const [topicSearchPage, setTopicSearchPage] = useState(1);
-    const disciplineChoice = ( levels && levels.length > 0 ? levels.find(obj => obj.position === 2 && obj.key === 'discipline')?.id : undefined )
-    
-    useEffect(() => {
-        async function fetchTopics(){
-                    await dispatch(getTopics({authHeaders: authHeaders, 
-                                                    page: topicPage, 
-                                                    letter: undefined,
-                                                    discipline: disciplineChoice}))
-                }
-                
-        async function fetchTopicsSearch(){
-            await dispatch(getSearch({authHeaders: authHeaders,
-                                                    queryType: 'topic',
-                                                    page: topicPage,
-                                                    searchTerm: inputTopicSearch.trim(),
-                                                    letter: letterchoice}))
-        
-    
-                                                            }
-        if (inputTopicSearch.length === 0){
-
-            fetchTopics()
-
-        } else {
-
-            fetchTopicsSearch()
-        
-        }
-
-    },[topicPage, topicSearchPage, inputTopicSearch])
+    const [digButtonClicked, setDigButtonClicked] = useState(false);
+    const [publishButtonClicked, setPublishButtonClicked] = useState(true);
 
     const firstChoice = () => {
         const positionOne = levels?.find((item: Level) => item.position === 1);
@@ -89,13 +56,33 @@ export default function ThirdLevelIndexSearch(){
                         )}
                     </div>
                 </div>
+                <button className='publish-button' onClick={() => setPublishButtonClicked(!publishButtonClicked)}>
+                    <img alt='dig-icon' src={publhishIcon}/>
+                    Publish
+                </button>
+                <button className='dig-button' onClick={() => setDigButtonClicked(!digButtonClicked)}>
+                    <img alt='dig-icon' src={digIcon}/>
+                    Dig
+                </button>
+
+                {   publishButtonClicked ?
+
+                    <CurrentCardsComponent/>
+
+                    :
+
+                    null
+                }
+                {
+                    digButtonClicked ?
+
                 <div id='container-sections-lines'>
                     <div id='container-sections'>
                         <div id='section-index'>
-                            <TopicsComponent discipline={disciplineChoice}/>
+                            <TopicsComponent/>
                         </div>
                         <div id='section-index'>
-                            <SubtopicsComponent discipline={disciplineChoice}/>
+                            <SubtopicsComponent/>
                         </div>
                         <div id='section-index'>
                             <AuthorsComponent/>
@@ -108,6 +95,12 @@ export default function ThirdLevelIndexSearch(){
                         </div>
                     </div>
                 </div>
+
+                :
+
+                null
+
+                }
             </div>
     );
 }

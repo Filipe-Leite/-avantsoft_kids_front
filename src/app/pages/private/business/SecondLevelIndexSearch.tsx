@@ -59,7 +59,7 @@ export default function SecondLevelIndexSearch(){
                         <DisciplinesComponent/>
                     </div>
                     <div id='section-index'>
-                        <TopicsComponent discipline={undefined}/>
+                        <TopicsComponent/>
                     </div>
                     <div id='section-index'>
                         <SubtopicsComponent/>

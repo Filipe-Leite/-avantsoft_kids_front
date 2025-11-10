@@ -1,0 +1,29 @@
+#container-current-cards-component{
+    background-color: aqua;
+    width: 100vw;
+    
+    #container-ul-current-cards{
+        display: flex;
+        
+        ul{
+            margin: 0px;
+            list-style: none;
+            display: flex;
+            overflow-x: scroll;
+            padding: 0px;
+            margin: 0px;
+
+            #container-li-card{
+                background-color: rgb(255, 0, 0);
+                height: 450px;
+                width: 600px;
+                border: 1px solid black;
+
+                li{
+                    width: max-content;
+                    font-size: 30px;
+                }
+            }
+        }
+    }
+}

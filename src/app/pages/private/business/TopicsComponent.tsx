@@ -5,14 +5,9 @@ import { CircularProgress } from "@mui/material";
 import { getTopics, getSearch } from "../../../../features/sessionBusiness/sessionNavigation";
 import './categoriesListing.css';
 
-interface TopicsComponentProps {
-  discipline?: number;
-}
-
-export default function TopicsComponent({discipline}: TopicsComponentProps){
+export default function TopicsComponent(){
     const [inputTopicSearch, setInputTopicSearch] = useState('');
     const inputTopicRef = useRef<HTMLInputElement | null>(null);
-    const [activeInput, setActiveInput] = useState<string | null>(null);
     const topicsSearch = useSelector((state: RootState) => state.sessionNavigation.topicsSearch);
     const topics = useSelector((state: RootState) => state.sessionNavigation.topics);
     const loadingTopics = useSelector((state: RootState) => state.sessionNavigation.loadingTopics);
@@ -103,8 +98,6 @@ export default function TopicsComponent({discipline}: TopicsComponentProps){
                         value={inputTopicSearch}
                         ref={inputTopicRef}
                         onChange={(e) => setInputTopicSearch(e.target.value)}
-                        onFocus={() => setActiveInput('topic')}
-                        onBlur={() => setActiveInput(null)}
                     />
                 </div>
             </div>
