@@ -1,49 +1,330 @@
 li{
+    /* display: flex; */
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    border: 1px solid rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
+    /* width: max-content; */
+    height: 500px;
+    width: 1000px;
+
     #container-quote-card-first-line{
-        background-color: yellow;
-        width: max-content;
+        background-color: rgb(255, 255, 255);
+        border: 1px solid rgb(0, 0, 0);
+        width: 100%;
         height: fit-content;
-        margin: 5px 10px 5px 10px;
+        box-sizing: border-box;
+        overflow: hidden;
+        padding: 5px;
 
         h3{
             margin: 0px;
+            overflow-wrap: anywhere; 
+            word-break: break-all;
+            hyphens: auto;
+            white-space: normal;
+            width: 100%;
+            box-sizing: border-box;
         }
-
     }
 
     #container-quote-card-second-line{
-        background-color: yellow;
-        width: max-content;
-        height: fit-content;
-        margin: 5px 10px 5px 10px;
+        display: flex;
+        border: 1px solid rgb(0, 0, 0);
+        flex-direction: row;
+        background-color: rgb(255, 255, 255);
+        width: 100%;
+        height: 45%;
+        box-sizing: border-box;
+        overflow: hidden;
 
-        #container-quote-card-second-line{
-            display: flex;
+        #container-quote-card-second-line-left{
+            min-width: 50%;
+            border: 1px solid rgb(0, 0, 0);
+            width: 50%;
+            overflow: hidden;
 
-            #container-quote-card-second-line-left{
-                display: flex;
-                width: 50px;
-
-                background-color: blue;
-                p{
-                    margin: 0px;
-                    overflow-wrap: break-word;
-                    white-space: normal;
-                }
-            }
-
-            #container-quote-card-second-line-right{
-                display: flex;
-                width: 50%;
-
-                p{
-                    margin: 0px;
-                    overflow-wrap: break-word;
-                    white-space: normal;
-                }
-
+            p{
+                margin: 0px;
+                background-color: rgb(255, 255, 255);
+                word-break: break-all;
+                hyphens: auto;
+                white-space: normal;
+                box-sizing: border-box;
+                overflow: hidden;
+                display: block;
+                padding: 5px;
             }
         }
 
+        #container-quote-card-second-line-right{
+            min-width: 50%;
+            width: 50%;
+            border: 1px solid rgb(0, 0, 0);
+            overflow: hidden;
+
+            p{
+                width: 100%;
+                margin: 0px;
+                overflow-wrap: anywhere;
+                word-break: break-all;
+                hyphens: auto;
+                white-space: normal;
+                box-sizing: border-box;
+                overflow: hidden;
+                display: block;
+                padding: 5px;
+            }
+        }
+    }
+
+    #container-quote-card-third-line{
+        display: flex;
+        flex-direction: row;
+        background-color: rgb(255, 255, 255);
+        width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+
+        #container-quote-card-third-line-left{
+            min-width: 50%;
+            width: 50%;
+            overflow: hidden;
+            display: flex;
+            border: 1px solid rgb(0, 0, 0);
+            flex-direction: column;
+
+            p{
+                margin: 0px;
+                background-color: rgb(255, 255, 255);
+                word-break: break-all;
+                hyphens: auto;
+                white-space: normal;
+                box-sizing: border-box;
+                overflow: hidden;
+                display: block;
+                padding: 5px;
+            }
+        }
+
+        #container-quote-card-third-line-right{
+            min-width: 50%;
+            width: 50%;
+            overflow: hidden;
+            border: 1px solid rgb(0, 0, 0);
+
+            p{
+                width: 100%;
+                margin: 0px;
+                overflow-wrap: anywhere;
+                word-break: break-all;
+                hyphens: auto;
+                white-space: normal;
+                box-sizing: border-box;
+                overflow: hidden;
+                display: block;
+                padding: 5px;
+            } 
+        }
+    }
+
+    #container-quote-card-forth-line{
+        display: flex;
+        flex-direction: row;
+        background-color: rgb(255, 255, 255);
+        width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+        border: 1px solid rgb(0, 0, 0);
+        
+        #container-quote-card-forth-line-left-left{
+            min-width: 25%;
+            width: 25%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgb(0, 0, 0);
+
+            p{
+                margin: 0px;
+                background-color: rgb(255, 255, 255);
+                word-break: break-all;
+                hyphens: auto;
+                white-space: normal;
+                box-sizing: border-box;
+                overflow: hidden;
+                display: block;
+                padding: 5px;
+            }
+        }
+
+        #container-quote-card-forth-line-right-left{
+            min-width: 25%;
+            width: 25%;
+            overflow: hidden;
+            border: 1px solid rgb(0, 0, 0);
+
+            p{
+                width: 100%;
+                margin: 0px;
+                overflow-wrap: anywhere;
+                word-break: break-all;
+                hyphens: auto;
+                white-space: normal;
+                box-sizing: border-box;
+                overflow: hidden;
+                display: block;
+                padding: 5px;
+            } 
+        }
+
+        #container-quote-card-forth-line-left-right{
+            min-width: 25%;
+            width: 25%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgb(0, 0, 0);
+
+            p{
+                margin: 0px;
+                background-color: rgb(255, 255, 255);
+                word-break: break-all;
+                hyphens: auto;
+                white-space: normal;
+                box-sizing: border-box;
+                overflow: hidden;
+                display: block;
+                padding: 5px;
+            }
+        }
+
+        #container-quote-card-forth-line-right-right{
+            min-width: 25%;
+            width: 25%;
+            overflow: hidden;
+            border: 1px solid rgb(0, 0, 0);
+
+            p{
+                width: 100%;
+                margin: 0px;
+                overflow-wrap: anywhere;
+                word-break: break-all;
+                hyphens: auto;
+                white-space: normal;
+                box-sizing: border-box;
+                overflow: hidden;
+                display: block;
+                padding: 5px;
+            } 
+        }
+    }
+
+    #container-quote-card-five-line{
+        display: flex;
+        flex-direction: row;
+        background-color: rgb(255, 255, 255);
+        width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+        
+        #container-quote-card-five-line-left{
+            min-width: 50%;
+            width: 50%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgb(0, 0, 0);
+
+            p{
+                margin: 0px;
+                background-color: rgb(255, 255, 255);
+                word-break: break-all;
+                hyphens: auto;
+                white-space: normal;
+                box-sizing: border-box;
+                overflow: hidden;
+                display: block;
+                padding: 5px;
+            }
+        }
+
+        #container-quote-card-five-line-right{
+            min-width: 50%;
+            width: 50%;
+            overflow: hidden;
+            border: 1px solid rgb(0, 0, 0);
+
+            p{
+                width: 100%;
+                margin: 0px;
+                overflow-wrap: anywhere;
+                word-break: break-all;
+                hyphens: auto;
+                white-space: normal;
+                box-sizing: border-box;
+                overflow: hidden;
+                display: block;
+                padding: 5px;
+            } 
+        }
+
+        #container-quote-card-forth-line-left-right{
+            min-width: 25%;
+            width: 25%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgb(0, 0, 0);
+
+            p{
+                margin: 0px;
+                background-color: rgb(255, 255, 255); 
+                word-break: break-all;
+                hyphens: auto;
+                white-space: normal;
+                box-sizing: border-box;
+                overflow: hidden;
+                display: block;
+                padding: 5px;
+            }
+        }
+
+        #container-quote-card-forth-line-right-right{
+            min-width: 25%;
+            width: 25%;
+            overflow: hidden;
+            border: 1px solid rgb(0, 0, 0);
+
+            p{
+                width: 100%;
+                margin: 0px;
+                overflow-wrap: anywhere;
+                word-break: break-all;
+                hyphens: auto;
+                white-space: normal;
+                box-sizing: border-box;
+                overflow: hidden;
+                display: block;
+                padding: 5px;
+            } 
+        }
+        
+    }
+
+    #container-quote-card-six-line{
+        display: flex;
+        flex-direction: column;
+        background-color: rgb(255, 255, 255);
+        width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+        border: 1px solid rgb(0, 0, 0);
+
+        p{
+            margin: 0px;
+        }
     }
 }

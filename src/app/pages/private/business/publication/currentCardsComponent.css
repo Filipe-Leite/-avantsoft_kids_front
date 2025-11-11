@@ -14,15 +14,10 @@
             margin: 0px;
 
             #container-li-card{
+                display: flex;
                 background-color: rgb(255, 0, 0);
-                height: 450px;
-                width: 600px;
                 border: 1px solid black;
-
-                li{
-                    width: max-content;
-                    font-size: 30px;
-                }
+                margin-right: 5px;
             }
         }
     }

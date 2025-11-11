@@ -17,8 +17,29 @@ export default function CurrentCardsComponent(){
         internetAccessDate: new Date("2024-01-10"),
         internetAccessLink: "https://exemplo.com/ia-etica",
         userId: 1,
-        resourceId: 1,
+        sourceId: 1,
+        source:{
+            id: 1,
+            title: "Memórias póstumas de Brás Cubas",
+            createdAt: "2024-01-10",
+            updatedAt: "2024-01-10"
+        },
         authorId: 1,
+        authors:[{
+            id: 1,
+            name: "Machado de Assis",
+            reference: "ASSIS, Marchado de"
+        }],
+        publisherId: 1,
+        publisher:{
+            id: 1,
+            name: "Brasilienne"
+        },
+        locationId: 1,
+        location: {
+            id: 1,
+            name: "Biblioteca Nacional do Rio de Janeiro"
+        },
         createdAt: new Date("2024-01-15"),
         updatedAt: new Date("2024-01-15")
     },
@@ -33,8 +54,29 @@ export default function CurrentCardsComponent(){
         internetAccessDate: new Date("2024-01-08"),
         internetAccessLink: "https://exemplo.com/mudancas-climaticas",
         userId: 2,
-        resourceId: 3,
+        sourceId: 3,
         authorId: 5,
+        authors:[{
+            id: 1,
+            name: "Machado de Assis",
+            reference: "ASSIS, Marchado de"
+        }],
+        source:{
+            id: 1,
+            title: "Memórias póstumas de Brás Cubas",
+            createdAt: "2024-01-10",
+            updatedAt: "2024-01-10"
+        },
+        publisherId: 1,
+        publisher:{
+            id: 1,
+            name: "Brasilienne"
+        },
+        locationId: 1,
+        location: {
+            id: 1,
+            name: "Biblioteca Nacional do Rio de Janeiro"
+        },
         createdAt: new Date("2024-01-12"),
         updatedAt: new Date("2024-01-14")
     },
@@ -49,8 +91,29 @@ export default function CurrentCardsComponent(){
         internetAccessDate: new Date("2024-01-05"),
         internetAccessLink: "https://exemplo.com/blockchain-defi",
         userId: 3,
-        resourceId: 7,
+        sourceId: 7,
         authorId: 12,
+        authors:[{
+            id: 1,
+            name: "Machado de Assis",
+            reference: "ASSIS, Marchado de"
+        }],
+        source:{
+            id: 1,
+            title: "Memórias póstumas de Brás Cubas",
+            createdAt: "2024-01-10",
+            updatedAt: "2024-01-10"
+        },
+        publisherId: 1,
+        publisher:{
+            id: 1,
+            name: "Brasilienne"
+        },
+        locationId: 1,
+        location: {
+            id: 1,
+            name: "Biblioteca Nacional do Rio de Janeiro"
+        },
         createdAt: new Date("2024-01-10"),
         updatedAt: new Date("2024-01-10")
     },
@@ -65,8 +128,29 @@ export default function CurrentCardsComponent(){
         internetAccessDate: new Date("2024-01-03"),
         internetAccessLink: "https://exemplo.com/psicologia-cognitiva",
         userId: 1,
-        resourceId: 15,
+        sourceId: 15,
         authorId: 8,
+        authors:[{
+            id: 1,
+            name: "Machado de Assis",
+            reference: "ASSIS, Marchado de"
+        }],
+        source:{
+            id: 1,
+            title: "Memórias póstumas de Brás Cubas",
+            createdAt: "2024-01-10",
+            updatedAt: "2024-01-10"
+        },
+        publisherId: 1,
+        publisher:{
+            id: 1,
+            name: "Brasilienne"
+        },
+        locationId: 1,
+        location: {
+            id: 1,
+            name: "Biblioteca Nacional do Rio de Janeiro"
+        },
         createdAt: new Date("2024-01-08"),
         updatedAt: new Date("2024-01-09")
     },
@@ -81,8 +165,29 @@ export default function CurrentCardsComponent(){
         internetAccessDate: new Date("2024-01-01"),
         internetAccessLink: "https://exemplo.com/arquitetura-sustentavel",
         userId: 4,
-        resourceId: 22,
+        sourceId: 22,
         authorId: 3,
+        authors:[{
+            id: 1,
+            name: "Machado de Assis",
+            reference: "ASSIS, Marchado de"
+        }],
+        source:{
+            id: 1,
+            title: "Memórias póstumas de Brás Cubas",
+            createdAt: "2024-01-10",
+            updatedAt: "2024-01-10"
+        },
+        publisherId: 1,
+        publisher:{
+            id: 1,
+            name: "Brasilienne"
+        },
+        locationId: 1,
+        location: {
+            id: 1,
+            name: "Biblioteca Nacional do Rio de Janeiro"
+        },
         createdAt: new Date("2024-01-05"),
         updatedAt: new Date("2024-01-07")
     },
@@ -97,8 +202,29 @@ export default function CurrentCardsComponent(){
         internetAccessDate: new Date("2023-12-28"),
         internetAccessLink: "https://exemplo.com/economia-comportamental",
         userId: 2,
-        resourceId: 9,
+        sourceId: 9,
         authorId: 17,
+        authors:[{
+            id: 1,
+            name: "Machado de Assis",
+            reference: "ASSIS, Marchado de"
+        }],
+        source:{
+            id: 1,
+            title: "Memórias póstumas de Brás Cubas",
+            createdAt: "2024-01-10",
+            updatedAt: "2024-01-10"
+        },
+        publisherId: 1,
+        publisher:{
+            id: 1,
+            name: "Brasilienne"
+        },
+        locationId: 1,
+        location: {
+            id: 1,
+            name: "Biblioteca Nacional do Rio de Janeiro"
+        },
         createdAt: new Date("2024-01-03"),
         updatedAt: new Date("2024-01-04")
     },
@@ -113,8 +239,29 @@ export default function CurrentCardsComponent(){
         internetAccessDate: new Date("2023-12-25"),
         internetAccessLink: "https://exemplo.com/medicina-personalizada",
         userId: 5,
-        resourceId: 31,
+        sourceId: 31,
         authorId: 6,
+        authors:[{
+            id: 1,
+            name: "Machado de Assis",
+            reference: "ASSIS, Marchado de"
+        }],
+        source:{
+            id: 1,
+            title: "Memórias póstumas de Brás Cubas",
+            createdAt: "2024-01-10",
+            updatedAt: "2024-01-10"
+        },
+        publisherId: 1,
+        publisher:{
+            id: 1,
+            name: "Brasilienne"
+        },
+        locationId: 1,
+        location: {
+            id: 1,
+            name: "Biblioteca Nacional do Rio de Janeiro"
+        },
         createdAt: new Date("2024-01-01"),
         updatedAt: new Date("2024-01-02")
     },
@@ -129,8 +276,29 @@ export default function CurrentCardsComponent(){
         internetAccessDate: new Date("2023-12-25"),
         internetAccessLink: "https://exemplo.com/medicina-personalizada",
         userId: 5,
-        resourceId: 31,
+        sourceId: 31,
         authorId: 6,
+        authors:[{
+            id: 1,
+            name: "Machado de Assis",
+            reference: "ASSIS, Marchado de"
+        }],
+        source:{
+            id: 1,
+            title: "Memórias póstumas de Brás Cubas",
+            createdAt: "2024-01-10",
+            updatedAt: "2024-01-10"
+        },
+        publisherId: 1,
+        publisher:{
+            id: 1,
+            name: "Brasilienne"
+        },
+        locationId: 1,
+        location: {
+            id: 1,
+            name: "Biblioteca Nacional do Rio de Janeiro"
+        },
         createdAt: new Date("2024-01-01"),
         updatedAt: new Date("2024-01-02")
     },
@@ -145,8 +313,29 @@ export default function CurrentCardsComponent(){
         internetAccessDate: new Date("2023-12-25"),
         internetAccessLink: "https://exemplo.com/medicina-personalizada",
         userId: 5,
-        resourceId: 31,
+        sourceId: 31,
         authorId: 6,
+        authors:[{
+            id: 1,
+            name: "Machado de Assis",
+            reference: "ASSIS, Marchado de"
+        }],
+        source:{
+            id: 1,
+            title: "Memórias póstumas de Brás Cubas",
+            createdAt: "2024-01-10",
+            updatedAt: "2024-01-10"
+        },
+        publisherId: 1,
+        publisher:{
+            id: 1,
+            name: "Brasilienne"
+        },
+        locationId: 1,
+        location: {
+            id: 1,
+            name: "Biblioteca Nacional do Rio de Janeiro"
+        },
         createdAt: new Date("2024-01-01"),
         updatedAt: new Date("2024-01-02")
     },
@@ -161,8 +350,29 @@ export default function CurrentCardsComponent(){
         internetAccessDate: new Date("2023-12-25"),
         internetAccessLink: "https://exemplo.com/medicina-personalizada",
         userId: 5,
-        resourceId: 31,
+        sourceId: 31,
         authorId: 6,
+        authors:[{
+            id: 1,
+            name: "Machado de Assis",
+            reference: "ASSIS, Marchado de"
+        }],
+        source:{
+            id: 1,
+            title: "Memórias póstumas de Brás Cubas",
+            createdAt: "2024-01-10",
+            updatedAt: "2024-01-10"
+        },
+        publisherId: 1,
+        publisher:{
+            id: 1,
+            name: "Brasilienne"
+        },
+        locationId: 1,
+        location: {
+            id: 1,
+            name: "Biblioteca Nacional do Rio de Janeiro"
+        },
         createdAt: new Date("2024-01-01"),
         updatedAt: new Date("2024-01-02")
     }
@@ -187,8 +397,11 @@ export default function CurrentCardsComponent(){
                                     internetAccessDate={card.internetAccessDate}
                                     internetAccessLink={card.internetAccessLink}
                                     userId={card.userId}
-                                    resourceId={card.resourceId}
-                                    authorId={card.authorId}
+                                    sourceId={card.sourceId}
+                                    source={card.source}
+                                    authors={card.authors}
+                                    publisher={card.publisher}
+                                    location={card.location}
                                 />
                             </div>
                         ) : null

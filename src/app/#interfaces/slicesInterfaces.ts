@@ -49,8 +49,7 @@ export interface Subtopic {
 export interface Author {
   id: number;
   name: string;
-  createdAt: string;
-  updatedAt: string;
+  reference: string;
 }
 
 export interface Source {
@@ -71,8 +70,24 @@ export interface Card {
   internetAccessDate: Date;
   internetAccessLink: string;
   userId: number;
-  resourceId: number;
+  sourceId: number;
+  source: Source;
+  publisherId: number;
+  publisher: Publisher;
+  locationId: number;
+  location: Location;
   authorId: number;
+  authors: Author[];
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface Publisher{
+  id: number;
+  name: string;
+}
+
+export interface Location{
+  id: number;
+  name: string;
 }
