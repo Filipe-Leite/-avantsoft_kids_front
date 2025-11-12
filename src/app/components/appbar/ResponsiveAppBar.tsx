@@ -8,7 +8,7 @@ import SearchBar from './SeachBar';
 // import * as REQUEST_REQUIREMENTS from '../../api/requestRequirements';
 import menuIcon from '../../../assets/menu-icon-white.svg';
 import apiceLogo from '../../../assets/apice_logo_white_backgroud_transparent.png';
-import SearchIcon from '../../../assets/icon-blank-50-white.png'
+import SearchIcon from '../../../assets/icon-blank-50-white.png';
 // import useSocketSetup from './useSocketSetup';
 import './responsiveAppBar.css';
 

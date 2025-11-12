@@ -40,10 +40,10 @@ export interface Topic {
 }
 
 export interface Subtopic {
-  id: number;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
+  id?: number;
+  name?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Author {
@@ -60,7 +60,7 @@ export interface Source {
 }
 
 export interface Card {
-  subject: string;
+  id?: number;
   quote: string;
   cardType: number;
   comment: string;
@@ -71,6 +71,8 @@ export interface Card {
   internetAccessLink: string;
   userId: number;
   sourceId: number;
+  subtopicId?: number,
+  subtopic?: Subtopic,
   source: Source;
   publisherId: number;
   publisher: Publisher;

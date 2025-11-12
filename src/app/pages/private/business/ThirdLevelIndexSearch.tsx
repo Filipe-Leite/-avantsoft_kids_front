@@ -60,10 +60,6 @@ export default function ThirdLevelIndexSearch(){
                     <img alt='dig-icon' src={publhishIcon}/>
                     Publish
                 </button>
-                <button className='dig-button' onClick={() => setDigButtonClicked(!digButtonClicked)}>
-                    <img alt='dig-icon' src={digIcon}/>
-                    Dig
-                </button>
 
                 {   publishButtonClicked ?
 
@@ -73,6 +69,12 @@ export default function ThirdLevelIndexSearch(){
 
                     null
                 }
+                
+                <button className='dig-button' onClick={() => setDigButtonClicked(!digButtonClicked)}>
+                    <img alt='dig-icon' src={digIcon}/>
+                    Dig
+                </button>
+
                 {
                     digButtonClicked ?
 

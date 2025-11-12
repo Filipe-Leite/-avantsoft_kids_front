@@ -2,19 +2,20 @@
     display: flex;
     flex-direction: column;
     background-color: RGB(255, 251, 237);
-    height: 120vh;
+    height: fit-content;
     width: 100vw;
     overflow-x: hidden;
+    overflow-y: hidden;
     align-items: center;
 
     .publish-button{
         display: flex;
         background-color: rgb(47, 47, 47);;
         color: rgb(255,255,255);;
-        width: 300px;
+        width: 250px;
         height: 50px;
-        border-radius: 20px;
-        font-size: 40px;
+        border-radius: 10px;
+        font-size: 30px;
         cursor: pointer;
         transition: 0.3s;
         align-content: center;
@@ -39,8 +40,8 @@
         color: rgb(255,255,255);;
         width: 200px;
         height: 50px;
-        border-radius: 20px;
-        font-size: 40px;
+        border-radius: 10px;
+        font-size: 30px;    
         cursor: pointer;
         transition: 0.3s;
         align-content: center;
@@ -120,7 +121,9 @@
         align-items: start;
         width: fit-content;
 
+
         #container-sections {
+            margin-top: 50px;
             display: flex;
             flex-direction: row;
             margin-left: 10px;

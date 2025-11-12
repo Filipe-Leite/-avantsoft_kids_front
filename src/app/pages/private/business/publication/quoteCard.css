@@ -1,330 +1,233 @@
-li{
-    /* display: flex; */
+#li-quote-card{
     flex-direction: column;
     width: 100%;
     box-sizing: border-box;
     overflow: hidden;
     border: 1px solid rgb(0, 0, 0);
-    background-color: rgb(255, 255, 255);
-    /* width: max-content; */
+    background-color: transparent;
     height: 500px;
     width: 1000px;
+    position: relative;
+
+    .button-close-new-quote-card{
+        display: flex;
+        background-color: rgb(255, 0, 0);
+        border: none;
+        border-radius: 50%;
+        padding: 5px;
+        align-items: center;
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        opacity: 60%;
+        z-index: 3;
+        cursor: pointer;
+        
+        &:hover{
+            opacity: 100%;
+        }
+
+        img{
+            width: 30px;
+            height: 30px;
+        }
+    }
+
+    .button-erase-new-quote-card{
+        display: flex;
+        background-color: rgb(255, 0, 179);
+        border: none;
+        border-radius: 50%;
+        padding: 5px;
+        align-items: center;
+        position: absolute;
+        top: 5px;
+        right: 50px;
+        opacity: 60%;
+        z-index: 3;
+        cursor: pointer;
+
+        &:hover{
+            opacity: 100%;
+        }
+
+        img{
+            width: 30px;
+            height: 30px;
+        }
+    }
+
+    .quote-card-logo{
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        width: 80px;
+        height: auto;
+        opacity: 60%;
+        z-index: 1;
+    }
+
+    .p-quote-card-description {
+        margin: 0px;
+        background-color: transparent;
+        hyphens: auto;
+        white-space: normal;
+        box-sizing: border-box;
+        overflow: hidden;
+        display: block;
+        padding: 2px;
+        font-weight: bold; 
+        position: relative;
+        z-index: 2;
+    }
+
+    .p-quote-card {
+        margin: 0px;
+        background-color: transparent;
+        hyphens: auto;
+        white-space: normal;
+        box-sizing: border-box;
+        overflow: hidden;
+        display: block;
+        padding: 0px 2px 2px 2px;
+        position: relative;
+        z-index: 2;
+    }
 
     #container-quote-card-first-line{
-        background-color: rgb(255, 255, 255);
-        border: 1px solid rgb(0, 0, 0);
+        background-color: transparent;
+        border-bottom: 1px solid rgb(0, 0, 0);
         width: 100%;
         height: fit-content;
         box-sizing: border-box;
         overflow: hidden;
-        padding: 5px;
+        position: relative;
+        z-index: 2;
 
         h3{
             margin: 0px;
             overflow-wrap: anywhere; 
-            word-break: break-all;
             hyphens: auto;
             white-space: normal;
             width: 100%;
             box-sizing: border-box;
+            padding: 2px;
         }
     }
 
     #container-quote-card-second-line{
         display: flex;
-        border: 1px solid rgb(0, 0, 0);
         flex-direction: row;
-        background-color: rgb(255, 255, 255);
+        background-color: transparent;
         width: 100%;
-        height: 45%;
+        height: 55%;
         box-sizing: border-box;
         overflow: hidden;
+        position: relative;
+        z-index: 2;
 
         #container-quote-card-second-line-left{
-            min-width: 50%;
-            border: 1px solid rgb(0, 0, 0);
-            width: 50%;
+            flex: 1; 
+            min-width: 0;
+            border-right: 1px solid rgb(0, 0, 0);
             overflow: hidden;
-
-            p{
-                margin: 0px;
-                background-color: rgb(255, 255, 255);
-                word-break: break-all;
-                hyphens: auto;
-                white-space: normal;
-                box-sizing: border-box;
-                overflow: hidden;
-                display: block;
-                padding: 5px;
-            }
         }
 
         #container-quote-card-second-line-right{
-            min-width: 50%;
-            width: 50%;
-            border: 1px solid rgb(0, 0, 0);
+            flex: 1; 
+            min-width: 0;
             overflow: hidden;
-
-            p{
-                width: 100%;
-                margin: 0px;
-                overflow-wrap: anywhere;
-                word-break: break-all;
-                hyphens: auto;
-                white-space: normal;
-                box-sizing: border-box;
-                overflow: hidden;
-                display: block;
-                padding: 5px;
-            }
         }
     }
 
     #container-quote-card-third-line{
         display: flex;
         flex-direction: row;
-        background-color: rgb(255, 255, 255);
+        border-top: 1px solid rgb(0, 0, 0);
+        background-color: transparent;
         width: 100%;
         box-sizing: border-box;
         overflow: hidden;
+        position: relative;
+        z-index: 2;
 
         #container-quote-card-third-line-left{
-            min-width: 50%;
-            width: 50%;
+            flex: 1;
+            min-width: 0;
             overflow: hidden;
             display: flex;
-            border: 1px solid rgb(0, 0, 0);
             flex-direction: column;
-
-            p{
-                margin: 0px;
-                background-color: rgb(255, 255, 255);
-                word-break: break-all;
-                hyphens: auto;
-                white-space: normal;
-                box-sizing: border-box;
-                overflow: hidden;
-                display: block;
-                padding: 5px;
-            }
+            border-right: 1px solid rgb(0, 0, 0);
         }
 
         #container-quote-card-third-line-right{
-            min-width: 50%;
-            width: 50%;
+            flex: 1;
+            min-width: 0;
             overflow: hidden;
-            border: 1px solid rgb(0, 0, 0);
-
-            p{
-                width: 100%;
-                margin: 0px;
-                overflow-wrap: anywhere;
-                word-break: break-all;
-                hyphens: auto;
-                white-space: normal;
-                box-sizing: border-box;
-                overflow: hidden;
-                display: block;
-                padding: 5px;
-            } 
         }
     }
 
     #container-quote-card-forth-line{
         display: flex;
         flex-direction: row;
-        background-color: rgb(255, 255, 255);
+        background-color: transparent;
         width: 100%;
         box-sizing: border-box;
         overflow: hidden;
-        border: 1px solid rgb(0, 0, 0);
+        border-top: 1px solid rgb(0, 0, 0);
+        position: relative;
+        z-index: 2;
         
-        #container-quote-card-forth-line-left-left{
-            min-width: 25%;
-            width: 25%;
+        .container-quote-card-forth-line-item {
+            flex: 1;
+            min-width: 0;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            border: 1px solid rgb(0, 0, 0);
+            border-right: 1px solid rgb(0, 0, 0);
 
-            p{
-                margin: 0px;
-                background-color: rgb(255, 255, 255);
-                word-break: break-all;
-                hyphens: auto;
-                white-space: normal;
-                box-sizing: border-box;
-                overflow: hidden;
-                display: block;
-                padding: 5px;
+            &:last-child {
+                border-right: none;
             }
-        }
-
-        #container-quote-card-forth-line-right-left{
-            min-width: 25%;
-            width: 25%;
-            overflow: hidden;
-            border: 1px solid rgb(0, 0, 0);
-
-            p{
-                width: 100%;
-                margin: 0px;
-                overflow-wrap: anywhere;
-                word-break: break-all;
-                hyphens: auto;
-                white-space: normal;
-                box-sizing: border-box;
-                overflow: hidden;
-                display: block;
-                padding: 5px;
-            } 
-        }
-
-        #container-quote-card-forth-line-left-right{
-            min-width: 25%;
-            width: 25%;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            border: 1px solid rgb(0, 0, 0);
-
-            p{
-                margin: 0px;
-                background-color: rgb(255, 255, 255);
-                word-break: break-all;
-                hyphens: auto;
-                white-space: normal;
-                box-sizing: border-box;
-                overflow: hidden;
-                display: block;
-                padding: 5px;
-            }
-        }
-
-        #container-quote-card-forth-line-right-right{
-            min-width: 25%;
-            width: 25%;
-            overflow: hidden;
-            border: 1px solid rgb(0, 0, 0);
-
-            p{
-                width: 100%;
-                margin: 0px;
-                overflow-wrap: anywhere;
-                word-break: break-all;
-                hyphens: auto;
-                white-space: normal;
-                box-sizing: border-box;
-                overflow: hidden;
-                display: block;
-                padding: 5px;
-            } 
         }
     }
 
     #container-quote-card-five-line{
         display: flex;
         flex-direction: row;
-        background-color: rgb(255, 255, 255);
         width: 100%;
         box-sizing: border-box;
         overflow: hidden;
+        border-top: 1px solid rgb(0, 0, 0);
+        border-bottom: 1px solid rgb(0, 0, 0);
+        position: relative;
+        z-index: 2;
         
         #container-quote-card-five-line-left{
-            min-width: 50%;
-            width: 50%;
+            flex: 1;
+            min-width: 0;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            border: 1px solid rgb(0, 0, 0);
-
-            p{
-                margin: 0px;
-                background-color: rgb(255, 255, 255);
-                word-break: break-all;
-                hyphens: auto;
-                white-space: normal;
-                box-sizing: border-box;
-                overflow: hidden;
-                display: block;
-                padding: 5px;
-            }
+            border-right: 1px solid rgb(0, 0, 0);
         }
 
         #container-quote-card-five-line-right{
-            min-width: 50%;
-            width: 50%;
+            flex: 1;
+            min-width: 0;
             overflow: hidden;
-            border: 1px solid rgb(0, 0, 0);
-
-            p{
-                width: 100%;
-                margin: 0px;
-                overflow-wrap: anywhere;
-                word-break: break-all;
-                hyphens: auto;
-                white-space: normal;
-                box-sizing: border-box;
-                overflow: hidden;
-                display: block;
-                padding: 5px;
-            } 
         }
-
-        #container-quote-card-forth-line-left-right{
-            min-width: 25%;
-            width: 25%;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            border: 1px solid rgb(0, 0, 0);
-
-            p{
-                margin: 0px;
-                background-color: rgb(255, 255, 255); 
-                word-break: break-all;
-                hyphens: auto;
-                white-space: normal;
-                box-sizing: border-box;
-                overflow: hidden;
-                display: block;
-                padding: 5px;
-            }
-        }
-
-        #container-quote-card-forth-line-right-right{
-            min-width: 25%;
-            width: 25%;
-            overflow: hidden;
-            border: 1px solid rgb(0, 0, 0);
-
-            p{
-                width: 100%;
-                margin: 0px;
-                overflow-wrap: anywhere;
-                word-break: break-all;
-                hyphens: auto;
-                white-space: normal;
-                box-sizing: border-box;
-                overflow: hidden;
-                display: block;
-                padding: 5px;
-            } 
-        }
-        
     }
 
     #container-quote-card-six-line{
         display: flex;
         flex-direction: column;
-        background-color: rgb(255, 255, 255);
+        background-color: transparent;
         width: 100%;
         box-sizing: border-box;
         overflow: hidden;
-        border: 1px solid rgb(0, 0, 0);
-
-        p{
-            margin: 0px;
+        position: relative; 
+        z-index: 2; 
+        p {
+            background-color: transparent;
         }
     }
 }

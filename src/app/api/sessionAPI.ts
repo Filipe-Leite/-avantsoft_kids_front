@@ -190,6 +190,37 @@ export async function getSourcesByPage(authHeaders: AuthHeaders | undefined, pag
         });
 }
 
+export async function postCurrentCard(authHeaders: AuthHeaders | undefined){
+
+
+    const PRIVATE_ROUTES = REQUEST_REQUIREMENTS.handlePrivateRoutes({ROUTE_PARAMS: {}});
+
+    const emptyCard = {currentCard: {
+                        quote: "",
+                        comment: "",
+                        edition: "",
+                        city: "",
+                        year: "",
+                        internet_access_date: "",
+                        internet_access_link: "",
+                        user_id: "",
+                        source_id: "",
+                        author_id: "",
+                        subtopic_id: ""
+                        }};
+
+    return api
+        .post(PRIVATE_ROUTES.POST_CURRENT_CARD,
+             convertKeysToSnakeCase(emptyCard),
+             {headers: convertKeysToSnakeCase(authHeaders)})
+        .then((response: any) => {
+            return response;
+        })
+        .catch((error: any) => {
+            return error.response.data;
+        });
+}
+
 function convertKeysToSnakeCase(obj: any): any {
     if (typeof obj === 'object' && obj !== null) {
       if (Array.isArray(obj)) {

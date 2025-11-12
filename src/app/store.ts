@@ -3,6 +3,7 @@ import { sessionAuthSliceReducer } from '../features/session/sessionSlice';
 import { navigationSliceReducers } from '../features/sessionBusiness/sessionNavigation';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import { cardsSliceReducers } from '../features/sessionBusiness/sessionCards';
 
 const persistConfig = {
   key: 'root',
@@ -12,7 +13,8 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   session: sessionAuthSliceReducer,
-  sessionNavigation: navigationSliceReducers
+  sessionNavigation: navigationSliceReducers,
+  sessionCards: cardsSliceReducers
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
