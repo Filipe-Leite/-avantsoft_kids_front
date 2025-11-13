@@ -6,16 +6,51 @@ import IconAddButton from '../../../../../assets/add-icon-white.png';
 import { createCurrentCard } from "../../../../../features/sessionBusiness/sessionCards";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../store";
+import Modal from "../../../../components/modals/chooseCardTypeModal"; // Ajuste o caminho conforme necessário
+
+interface CardType {
+  id: number;
+  name: string;
+}
 
 export default function CurrentCardsComponent(){
     const authHeaders = useSelector((state: RootState) => state.session.authHeaders);
     const [inputSutopicQuoteCard, setInputSutopicQuoteCard] = useState('');
     const [addCardClicked, setAddCardClicked] = useState(true);
+    const [isCardTypeModalOpen, setIsCardTypeModalOpen] = useState(false);
     const dispatch = useDispatch<AppDispatch>();
 
-    async function handleCreateCurrentCard(){
+    // Mock data para tipos de card - você pode buscar da API ou Redux
+    const cardTypes: CardType[] = [
+        { id: 1, name: "quote" },
+        { id: 2, name: "summary" },
+        { id: 3, name: "comment" },
+        { id: 4, name: "bibliographic" },
+        { id: 5, name: "sketch" }
+    ];
+
+    async function handleCreatePostCurrentCard(){
 
         const response = await dispatch(createCurrentCard({authHeaders: authHeaders})) 
+    }
+
+    async function handleCreateCurrentCard(){
+        // Abre o modal para escolher o tipo de card
+        setIsCardTypeModalOpen(true);
+    }
+
+    const handleCardTypeSelect = (cardType: CardType) => {
+        console.log('Tipo de card selecionado:', cardType);
+        // Aqui você pode adicionar a lógica para criar o card com o tipo selecionado
+        // Por exemplo: dispatch(createCurrentCard({ authHeaders, cardTypeId: cardType.id }))
+        setIsCardTypeModalOpen(false);
+        
+        // Temporariamente, vamos criar o card normalmente
+        dispatch(createCurrentCard({authHeaders: authHeaders}));
+    }
+
+    const handleCloseModal = () => {
+        setIsCardTypeModalOpen(false);
     }
 
     const newCard: Card = 
@@ -59,9 +94,8 @@ export default function CurrentCardsComponent(){
             updatedAt: new Date("2024-01-15")
         }
 
-    
-
-   const cards: Card[] = [
+    const cards: Card[] = [
+        // ... seu array de cards existente (mantenha igual)
         {
             id: 1,
             subtopicId: undefined,
@@ -104,391 +138,86 @@ export default function CurrentCardsComponent(){
             createdAt: new Date("2024-01-15"),
             updatedAt: new Date("2024-01-15")
         },
-        {
-            id: 2,
-            subtopicId: undefined,
-            subtopic: {
-                id: 1,
-                name: "Direito empresarial"
-            },
-            quote: "",
-            cardType: 1,
-            comment: "",
-            edition: "2ª Edição Revisada",
-            city: "Rio de Janeiro",
-            year: new Date("2022-11-20"),
-            internetAccessDate: new Date("2024-01-08"),
-            internetAccessLink: "https://exemplo.com/mudancas-climaticas",
-            userId: 2,
-            sourceId: 3,
-            authorId: 5,
-            authors:[{
-                id: 1,
-                name: "Machado de Assis",
-                reference: "ASSIS, Marchado de"
-            }],
-            source:{
-                id: 1,
-                title: "Memórias póstumas de Brás Cubas",
-                createdAt: "2024-01-10",
-                updatedAt: "2024-01-10"
-            },
-            publisherId: 1,
-            publisher:{
-                id: 1,
-                name: "Brasilienne"
-            },
-            locationId: 1,
-            location: {
-                id: 1,
-                name: "Biblioteca Nacional do Rio de Janeiro"
-            },
-            createdAt: new Date("2024-01-12"),
-            updatedAt: new Date("2024-01-14")
-        },
-        {
-            id: 3,
-            subtopicId: undefined,
-            subtopic: {
-                id: 1,
-                name: "Direito empresarial"
-            },
-            quote: "",
-            cardType: 1,
-            comment: "",
-            edition: "Edição Especial",
-            city: "Belo Horizonte",
-            year: new Date("2023-08-30"),
-            internetAccessDate: new Date("2024-01-05"),
-            internetAccessLink: "https://exemplo.com/blockchain-defi",
-            userId: 3,
-            sourceId: 7,
-            authorId: 12,
-            authors:[{
-                id: 1,
-                name: "Machado de Assis",
-                reference: "ASSIS, Marchado de"
-            }],
-            source:{
-                id: 1,
-                title: "Memórias póstumas de Brás Cubas",
-                createdAt: "2024-01-10",
-                updatedAt: "2024-01-10"
-            },
-            publisherId: 1,
-            publisher:{
-                id: 1,
-                name: "Brasilienne"
-            },
-            locationId: 1,
-            location: {
-                id: 1,
-                name: "Biblioteca Nacional do Rio de Janeiro"
-            },
-            createdAt: new Date("2024-01-10"),
-            updatedAt: new Date("2024-01-10")
-        },
-        {
-            id: 4,
-            subtopicId: undefined,
-            subtopic: {
-                id: 1,
-                name: "Direito empresarial"
-            },
-            quote: "",
-            cardType: 1,
-            comment: "",
-            edition: "3ª Edição Ampliada",
-            city: "Porto Alegre",
-            year: new Date("2021-03-10"),
-            internetAccessDate: new Date("2024-01-03"),
-            internetAccessLink: "https://exemplo.com/psicologia-cognitiva",
-            userId: 1,
-            sourceId: 15,
-            authorId: 8,
-            authors:[{
-                id: 1,
-                name: "Machado de Assis",
-                reference: "ASSIS, Marchado de"
-            }],
-            source:{
-                id: 1,
-                title: "Memórias póstumas de Brás Cubas",
-                createdAt: "2024-01-10",
-                updatedAt: "2024-01-10"
-            },
-            publisherId: 1,
-            publisher:{
-                id: 1,
-                name: "Brasilienne"
-            },
-            locationId: 1,
-            location: {
-                id: 1,
-                name: "Biblioteca Nacional do Rio de Janeiro"
-            },
-            createdAt: new Date("2024-01-08"),
-            updatedAt: new Date("2024-01-09")
-        },
-        {
-            id: 5,
-            subtopicId: undefined,
-            subtopic: {
-                id: 1,
-                name: "Direito empresarial"
-            },
-            quote: "",
-            cardType: 1,
-            comment: "",
-            edition: "Edição Internacional",
-            city: "Curitiba",
-            year: new Date("2023-12-01"),
-            internetAccessDate: new Date("2024-01-01"),
-            internetAccessLink: "https://exemplo.com/arquitetura-sustentavel",
-            userId: 4,
-            sourceId: 22,
-            authorId: 3,
-            authors:[{
-                id: 1,
-                name: "Machado de Assis",
-                reference: "ASSIS, Marchado de"
-            }],
-            source:{
-                id: 1,
-                title: "Memórias póstumas de Brás Cubas",
-                createdAt: "2024-01-10",
-                updatedAt: "2024-01-10"
-            },
-            publisherId: 1,
-            publisher:{
-                id: 1,
-                name: "Brasilienne"
-            },
-            locationId: 1,
-            location: {
-                id: 1,
-                name: "Biblioteca Nacional do Rio de Janeiro"
-            },
-            createdAt: new Date("2024-01-05"),
-            updatedAt: new Date("2024-01-07")
-        },
-        {
-            id: 6,
-            subtopicId: undefined,
-            subtopic: {
-                id: 1,
-                name: "Direito empresarial"
-            },
-            quote: "",
-            cardType: 1,
-            comment: "",
-            edition: "1ª Edição Digital",
-            city: "Brasília",
-            year: new Date("2023-07-22"),
-            internetAccessDate: new Date("2023-12-28"),
-            internetAccessLink: "https://exemplo.com/economia-comportamental",
-            userId: 2,
-            sourceId: 9,
-            authorId: 17,
-            authors:[{
-                id: 1,
-                name: "Machado de Assis",
-                reference: "ASSIS, Marchado de"
-            }],
-            source:{
-                id: 1,
-                title: "Memórias póstumas de Brás Cubas",
-                createdAt: "2024-01-10",
-                updatedAt: "2024-01-10"
-            },
-            publisherId: 1,
-            publisher:{
-                id: 1,
-                name: "Brasilienne"
-            },
-            locationId: 1,
-            location: {
-                id: 1,
-                name: "Biblioteca Nacional do Rio de Janeiro"
-            },
-            createdAt: new Date("2024-01-03"),
-            updatedAt: new Date("2024-01-04")
-        },
-        {
-            id: 7,
-            subtopicId: undefined,
-            subtopic: {
-                id: 1,
-                name: "Direito empresarial"
-            },
-            quote: "",
-            cardType: 1,
-            comment: "",
-            edition: "2ª Edição Atualizada",
-            city: "Salvador",
-            year: new Date("2022-09-14"),
-            internetAccessDate: new Date("2023-12-25"),
-            internetAccessLink: "https://exemplo.com/medicina-personalizada",
-            userId: 5,
-            sourceId: 31,
-            authorId: 6,
-            authors:[{
-                id: 1,
-                name: "Machado de Assis",
-                reference: "ASSIS, Marchado de"
-            }],
-            source:{
-                id: 1,
-                title: "Memórias póstumas de Brás Cubas",
-                createdAt: "2024-01-10",
-                updatedAt: "2024-01-10"
-            },
-            publisherId: 1,
-            publisher:{
-                id: 1,
-                name: "Brasilienne"
-            },
-            locationId: 1,
-            location: {
-                id: 1,
-                name: "Biblioteca Nacional do Rio de Janeiro"
-            },
-            createdAt: new Date("2024-01-01"),
-            updatedAt: new Date("2024-01-02")
-        },
-        {
-            id: 8,
-            subtopicId: undefined,
-            subtopic: {
-                id: 1,
-                name: "Direito empresarial"
-            },
-            quote: "",
-            cardType: 1,
-            comment: "",
-            edition: "2ª Edição Atualizada",
-            city: "Salvador",
-            year: new Date("2022-09-14"),
-            internetAccessDate: new Date("2023-12-25"),
-            internetAccessLink: "https://exemplo.com/medicina-personalizada",
-            userId: 5,
-            sourceId: 31,
-            authorId: 6,
-            authors:[{
-                id: 1,
-                name: "Machado de Assis",
-                reference: "ASSIS, Marchado de"
-            }],
-            source:{
-                id: 1,
-                title: "Memórias póstumas de Brás Cubas",
-                createdAt: "2024-01-10",
-                updatedAt: "2024-01-10"
-            },
-            publisherId: 1,
-            publisher:{
-                id: 1,
-                name: "Brasilienne"
-            },
-            locationId: 1,
-            location: {
-                id: 1,
-                name: "Biblioteca Nacional do Rio de Janeiro"
-            },
-            createdAt: new Date("2024-01-01"),
-            updatedAt: new Date("2024-01-02")
-        },
-        {
-            id: 9,
-            subtopicId: undefined,
-            subtopic: {
-                id: 1,
-                name: "Direito empresarial"
-            },
-            quote: "",
-            cardType: 1,
-            comment: "",
-            edition: "2ª Edição Atualizada",
-            city: "Salvador",
-            year: new Date("2022-09-14"),
-            internetAccessDate: new Date("2023-12-25"),
-            internetAccessLink: "https://exemplo.com/medicina-personalizada",
-            userId: 5,
-            sourceId: 31,
-            authorId: 6,
-            authors:[{
-                id: 1,
-                name: "Machado de Assis",
-                reference: "ASSIS, Marchado de"
-            }],
-            source:{
-                id: 1,
-                title: "Memórias póstumas de Brás Cubas",
-                createdAt: "2024-01-10",
-                updatedAt: "2024-01-10"
-            },
-            publisherId: 1,
-            publisher:{
-                id: 1,
-                name: "Brasilienne"
-            },
-            locationId: 1,
-            location: {
-                id: 1,
-                name: "Biblioteca Nacional do Rio de Janeiro"
-            },
-            createdAt: new Date("2024-01-01"),
-            updatedAt: new Date("2024-01-02")
-        },
-        {
-            id: 10,
-            subtopicId: undefined,
-            subtopic: {
-                id: 1,
-                name: "Direito empresarial"
-            },
-            quote: "",
-            cardType: 1,
-            comment: "",
-            edition: "2ª Edição Atualizada",
-            city: "Salvador",
-            year: new Date("2022-09-14"),
-            internetAccessDate: new Date("2023-12-25"),
-            internetAccessLink: "https://exemplo.com/medicina-personalizada",
-            userId: 5,
-            sourceId: 31,
-            authorId: 6,
-            authors:[{
-                id: 1,
-                name: "Machado de Assis",
-                reference: "ASSIS, Marchado de"
-            }],
-            source:{
-                id: 1,
-                title: "Memórias póstumas de Brás Cubas",
-                createdAt: "2024-01-10",
-                updatedAt: "2024-01-10"
-            },
-            publisherId: 1,
-            publisher:{
-                id: 1,
-                name: "Brasilienne"
-            },
-            locationId: 1,
-            location: {
-                id: 1,
-                name: "Biblioteca Nacional do Rio de Janeiro"
-            },
-            createdAt: new Date("2024-01-01"),
-            updatedAt: new Date("2024-01-02")
-        }
+        // ... resto dos cards
     ];
 
     return(
         <div id='container-current-cards-component'>
+            {/* Modal para escolher tipo de card */}
+            <Modal 
+                isOpen={isCardTypeModalOpen}
+                onClose={handleCloseModal}
+                title="Escolha o Tipo de Card"
+                size="sm"
+            >
+                <div style={{ padding: '10px 0' }}>
+                    <p style={{ 
+                        marginBottom: '20px', 
+                        textAlign: 'center',
+                        color: '#666',
+                        fontSize: '14px'
+                    }}>
+                        Selecione o tipo de card que deseja criar:
+                    </p>
+                    
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {cardTypes.map((cardType) => (
+                            <button
+                                key={cardType.id}
+                                onClick={() => handleCardTypeSelect(cardType)}
+                                style={{
+                                    padding: '12px 16px',
+                                    border: '1px solid #e1e5e9',
+                                    borderRadius: '6px',
+                                    backgroundColor: 'white',
+                                    cursor: 'pointer',
+                                    textAlign: 'left',
+                                    transition: 'all 0.2s ease',
+                                    fontSize: '14px',
+                                    fontWeight: '500'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor = '#f8f9fa';
+                                    e.currentTarget.style.borderColor = '#007bff';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor = 'white';
+                                    e.currentTarget.style.borderColor = '#e1e5e9';
+                                }}
+                            >
+                                {cardType.name.charAt(0).toUpperCase() + cardType.name.slice(1)}
+                            </button>
+                        ))}
+                    </div>
+                    
+                    <div style={{ 
+                        marginTop: '20px', 
+                        display: 'flex', 
+                        justifyContent: 'flex-end' 
+                    }}>
+                        <button
+                            onClick={handleCloseModal}
+                            style={{
+                                padding: '8px 16px',
+                                backgroundColor: '#6c757d',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                fontSize: '14px'
+                            }}
+                        >
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </Modal>
+
             <div id='container-ul-current-cards'>
-                <button className="button-add-new-quote-card"
-                        onClick={handleCreateCurrentCard}>
+                <button 
+                    className="button-add-new-quote-card"
+                    onClick={handleCreateCurrentCard}
+                >
                     <img src={IconAddButton} alt='icon-add-card'/>
                 </button>
                 <ul>
@@ -528,7 +257,3 @@ export default function CurrentCardsComponent(){
         </div>
     )
 };
-
-function ueState(): [any, any] {
-    throw new Error("Function not implemented.");
-}
