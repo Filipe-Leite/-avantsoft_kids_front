@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card } from "../../../../#interfaces/slicesInterfaces";
 import './currentCardsComponent.css';
 import QuoteCard from "./QuoteCard";
 import IconAddButton from '../../../../../assets/add-icon-white.png';
-import { createCurrentCard } from "../../../../../features/sessionBusiness/sessionCards";
+import { createCurrentCard, getUserCurrentCards } from "../../../../../features/sessionBusiness/sessionCards";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../store";
 import Modal from "../../../../components/modals/chooseCardTypeModal";
@@ -15,11 +15,38 @@ interface CardType {
 
 export default function CurrentCardsComponent(){
     const authHeaders = useSelector((state: RootState) => state.session.authHeaders);
+    const currentUser = useSelector((state: RootState) => state.session.currentUser);
     const currentCards = useSelector((state: RootState) => state.sessionCards.currentCards);
     const [inputSutopicQuoteCard, setInputSutopicQuoteCard] = useState('');
     const [addCardClicked, setAddCardClicked] = useState(true);
     const [isCardTypeModalOpen, setIsCardTypeModalOpen] = useState(false);
     const dispatch = useDispatch<AppDispatch>();
+
+    // DEBUG: Verifique o que está chegando
+    console.log('currentCards:', currentCards);
+    console.log('typeof currentCards:', typeof currentCards);
+    console.log('Array.isArray(currentCards):', Array.isArray(currentCards));
+
+    // Garantir que sempre temos um array
+    const safeCurrentCards = Array.isArray(currentCards) ? currentCards : [];
+
+    useEffect(() => {
+        async function handleGetUserCurrentCards(){
+            if(authHeaders && currentUser?.id){
+                try {
+                    const response = await dispatch(getUserCurrentCards({
+                        authHeaders: authHeaders,
+                        userId: currentUser.id
+                    })).unwrap();
+                    console.log('Cards carregados:', response);
+                } catch (error) {
+                    console.error('Erro ao carregar cards:', error);
+                }
+            } 
+        }
+
+        handleGetUserCurrentCards();
+    }, [dispatch, authHeaders, currentUser?.id]);
 
     const cardTypes: CardType[] = [
         { id: 1, name: "quote" },
@@ -30,13 +57,24 @@ export default function CurrentCardsComponent(){
     ];
 
     async function handleCreatePostCurrentCard(cardTypeId: number){
+        try {
+            const response = await dispatch(createCurrentCard({
+                authHeaders: authHeaders,
+                cardTypeId: cardTypeId
+            })).unwrap();
 
-        const response = await dispatch(createCurrentCard({authHeaders: authHeaders,
-                                                           cardTypeId: cardTypeId
-        })) 
-
-        if (response.meta.requestStatus === 'fulfilled'){
-            handleCloseModal()
+            if (response) {
+                handleCloseModal();
+                // Recarregar os cards
+                if (authHeaders && currentUser?.id) {
+                    await dispatch(getUserCurrentCards({
+                        authHeaders: authHeaders,
+                        userId: currentUser.id
+                    }));
+                }
+            }
+        } catch (error) {
+            console.error('Erro ao criar card:', error);
         }
     }
 
@@ -47,92 +85,6 @@ export default function CurrentCardsComponent(){
     const handleCloseModal = () => {
         setIsCardTypeModalOpen(false);
     }
-
-    const newCard: Card = 
-        {
-            id: undefined,
-            subtopicId: undefined,
-            subtopic: undefined,
-            quote: "",
-            cardTypeId: 1,
-            comment: "",
-            edition: "",
-            city: "",
-            year: new Date("2023-05-15"),
-            internetAccessDate: new Date("2024-01-10"),
-            internetAccessLink: "",
-            userId: 1,
-            sourceId: 1,
-            source: {
-                id: 1,
-                title: "",
-                createdAt: "2024-01-10",
-                updatedAt: "2024-01-10"
-            },
-            authorId: 1,
-            authors: [{
-                id: 1,
-                name: "",
-                reference: ""
-            }],
-            publisherId: 1,
-            publisher: {
-                id: 1,
-                name: ""
-            },
-            locationId: 1,
-            location: {
-                id: 1,
-                name: ""
-            },
-            createdAt: new Date("2024-01-15"),
-            updatedAt: new Date("2024-01-15")
-        }
-
-    const cards: Card[] = [
-        {
-            id: 1,
-            subtopicId: undefined,
-            subtopic: {
-                id: 1,
-                name: "Direito empresarial"
-            },
-            quote: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-            cardTypeId: 1,
-            comment: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-            edition: "1ª Edição",
-            city: "São Paulo",
-            year: new Date("2023-05-15"),
-            internetAccessDate: new Date("2024-01-10"),
-            internetAccessLink: "https://exemplo.com/ia-etica",
-            userId: 1,
-            sourceId: 1,
-            source:{
-                id: 1,
-                title: "Memórias póstumas de Brás Cubas",
-                createdAt: "2024-01-10",
-                updatedAt: "2024-01-10"
-            },
-            authorId: 1,
-            authors:[{
-                id: 1,
-                name: "Machado de Assis",
-                reference: "ASSIS, Marchado de"
-            }],
-            publisherId: 1,
-            publisher:{
-                id: 1,
-                name: "Brasilienne"
-            },
-            locationId: 1,
-            location: {
-                id: 1,
-                name: "Biblioteca Nacional do Rio de Janeiro"
-            },
-            createdAt: new Date("2024-01-15"),
-            updatedAt: new Date("2024-01-15")
-        }
-    ];
 
     return(
         <div id='container-current-cards-component'>
@@ -158,8 +110,7 @@ export default function CurrentCardsComponent(){
                         {cardTypes.map((cardType) => (
                             <button
                                 key={cardType.id}
-                                onClick={() => handleCreatePostCurrentCard(cardType.id)
-                                }
+                                onClick={() => handleCreatePostCurrentCard(cardType.id)}
                                 style={{
                                     padding: '12px 16px',
                                     border: '1px solid #e1e5e9',
@@ -215,40 +166,50 @@ export default function CurrentCardsComponent(){
                 >
                     <img src={IconAddButton} alt='icon-add-card'/>
                 </button>
+                
                 <ul>
-                    {currentCards.length !== 0 ? (
-                        cards.map((card, index) => (
-                        card.cardTypeId === 1 ? (
-                            <div id='container-li-card' key={index}>
-                                <QuoteCard
-                                    id={card.id}
-                                    subtopicId={card.subtopicId}
-                                    subtopic={card.subtopic}
-                                    quote={card.quote}
-                                    cardType={card.cardTypeId}
-                                    comment={card.comment}
-                                    edition={card.edition}
-                                    city={card.city}
-                                    year={card.year}
-                                    internetAccessDate={card.internetAccessDate}
-                                    internetAccessLink={card.internetAccessLink}
-                                    userId={card.userId}
-                                    sourceId={card.sourceId}
-                                    source={card.source}
-                                    authors={card.authors}
-                                    publisher={card.publisher}
-                                    location={card.location}
-                                    inputSutopicQuoteCard={inputSutopicQuoteCard}
-                                    setInputSutopicQuoteCard={setInputSutopicQuoteCard}
-                                    addCardClicked={addCardClicked}
-                                    setAddCardClicked={setAddCardClicked}
-                                />
-                            </div>
-                        ) : null
+                    {safeCurrentCards.length > 0 ? (
+                        safeCurrentCards.map((card, index) => (
+                            card.cardTypeId === 1 ? (
+                                <div id='container-li-card' key={card.id || index}>
+                                    <QuoteCard
+                                        id={card.id}
+                                        subtopicId={card.subtopicId}
+                                        subtopic={card.subtopic}
+                                        quote={card.quote}
+                                        cardType={card.cardTypeId}
+                                        comment={card.comment}
+                                        edition={card.edition}
+                                        city={card.city}
+                                        year={card.year}
+                                        internetAccessDate={card.internetAccessDate}
+                                        internetAccessLink={card.internetAccessLink}
+                                        userId={card.userId}
+                                        sourceId={card.sourceId}
+                                        source={card.source}
+                                        authors={card.authors}
+                                        publisher={card.publisher}
+                                        location={card.location}
+                                        inputSutopicQuoteCard={inputSutopicQuoteCard}
+                                        setInputSutopicQuoteCard={setInputSutopicQuoteCard}
+                                        addCardClicked={addCardClicked}
+                                        setAddCardClicked={setAddCardClicked}
+                                    />
+                                </div>
+                            ) : null
                         ))
-                    ) : null}
+                    ) : (
+                        <div style={{ 
+                            textAlign: 'center', 
+                            padding: '40px', 
+                            color: '#666',
+                            fontSize: '16px'
+                        }}>
+                            Nenhum card encontrado
+                        </div>
+                    )}
                 </ul>
             </div>
         </div>
-    )
-};
+    );
+}

@@ -195,13 +195,38 @@ export async function postCurrentCard(authHeaders: AuthHeaders | undefined, card
 
     const PRIVATE_ROUTES = REQUEST_REQUIREMENTS.handlePrivateRoutes({ROUTE_PARAMS: {}});
 
-    const emptyCard = {currentCard: {
-                        cardTypeId: cardTypeId
-                        }};
+    const emptyCard = { currentCard: {
+                                    cardTypeId: cardTypeId,
+                                    quote: "", 
+                                    comment: "", 
+                                    edition: "", 
+                                    city: "", 
+                                    year: "",
+                                    internetAccessLink: "", 
+                        }
+                    };
 
     return api
         .post(PRIVATE_ROUTES.POST_CURRENT_CARD,
              convertKeysToSnakeCase(emptyCard),
+             {headers: convertKeysToSnakeCase(authHeaders)})
+        .then((response: any) => {
+            return response;
+        })
+        .catch((error: any) => {
+            return error.response.data;
+        });
+}
+
+export async function getUserCurrentCardsWithUserId(authHeaders: AuthHeaders, userId: number){
+
+    const PRIVATE_ROUTES = REQUEST_REQUIREMENTS
+                            .handlePrivateRoutes({ROUTE_PARAMS: {
+                                                    userId: userId
+                                                }});
+
+    return api
+        .get(PRIVATE_ROUTES.GET_CURRENT_CARDS,
              {headers: convertKeysToSnakeCase(authHeaders)})
         .then((response: any) => {
             return response;
@@ -217,7 +242,7 @@ function convertKeysToSnakeCase(obj: any): any {
         return obj.map(item => convertKeysToSnakeCase(item));
       } else {
         if (obj.constructor === Object) {
-          const newObj: { [key: string]: any } = {}; // Novo objeto tipado
+          const newObj: { [key: string]: any } = {};
           for (const key in obj) {
             if (Object.prototype.hasOwnProperty.call(obj, key)) {
               const snakeCaseKey =

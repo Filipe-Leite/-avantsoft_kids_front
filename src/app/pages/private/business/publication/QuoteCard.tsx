@@ -93,14 +93,14 @@ export default function QuoteCards({
             <div id='container-quote-card-third-line'>
                 <div id='container-quote-card-third-line-left'>
                     <p className='p-quote-card-description'><strong>Author:</strong></p>
-                    <p className='p-quote-card'>{authors.length !== 0 ? (
-                            authors.map((author, index) => (
+                    <p className='p-quote-card'>{authors?.length !== 0 ? (
+                            authors?.map((author, index) => (
                             author.reference))) : null}
                     </p>
                 </div>
                 <div id='container-quote-card-third-line-right'>
                     <p className='p-quote-card-description'><strong>Source:</strong></p> 
-                    <p className='p-quote-card'>{source.title}</p>
+                    {source && source.title ? <p className='p-quote-card'>{source.title}</p> : null}
                 </div>
             </div>
             <div id='container-quote-card-forth-line'>
@@ -114,26 +114,38 @@ export default function QuoteCards({
                 </div>
                 <div className='container-quote-card-forth-line-item'>
                     <p className='p-quote-card-description'><strong>Publisher:</strong></p>
-                    <p className='p-quote-card'>{publisher.name}</p>
+                    {publisher && publisher.name ? <p className='p-quote-card'>{publisher.name}</p> : null}
                 </div>
                 <div className='container-quote-card-forth-line-item'>
                     <p className='p-quote-card-description'><strong>Year:</strong></p> 
-                    <p className='p-quote-card'>{year.toLocaleDateString()}</p>
+                    {internetAccessDate ?
+                        <p className='p-quote-card'>{year.toLocaleDateString()}</p>
+                        :
+                    null
+                    }
                 </div>
             </div>
             <div id='container-quote-card-five-line'>
                 <div id='container-quote-card-five-line-left'>
                     <p className='p-quote-card-description'><strong>Access Date:</strong></p>
-                    <p className='p-quote-card'>{internetAccessDate.toLocaleDateString()}</p>
+                    {internetAccessDate ? 
+                        <p className='p-quote-card'>{internetAccessDate.toLocaleDateString()}</p>
+                        :
+                    null
+                    }
                 </div>
                 <div id='container-quote-card-five-line-right'>
                     <p className='p-quote-card-description'><strong>Source:</strong></p> 
-                    <p className='p-quote-card'>{source.title}</p>
+                    {source && source.title ? <p className='p-quote-card'>{source.title}</p> : null}
                 </div>
             </div>
             <div id='container-quote-card-six-line'>
                 <p className='p-quote-card-description'><strong>Location:</strong></p>
-                <p className='p-quote-card'>{location.name}</p>
+                {location ?
+                    <p className='p-quote-card'>{location.name}</p>
+                :
+                null
+                }
             </div>
             <img className='quote-card-logo' src={logoBorderBlack} alt='logo-yellow-border-black'/>
         </li>

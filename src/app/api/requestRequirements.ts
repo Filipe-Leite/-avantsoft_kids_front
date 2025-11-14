@@ -64,7 +64,8 @@ export function handlePrivateRoutes({ROUTE_PARAMS}: PrivateRoutesParams){
             GET_SUBTOPICS: `/subtopics/page/${ROUTE_PARAMS.page}?${ROUTE_PARAMS.letter ? `letter=${ROUTE_PARAMS.letter}` : ''}&${ROUTE_PARAMS.discipline ? `discipline=${ROUTE_PARAMS.discipline}` : ''}`,
             GET_AUTHORS: `/authors/page/${ROUTE_PARAMS.page}?${ROUTE_PARAMS.letter ? `letter=${ROUTE_PARAMS.letter}` : ''}`,
             GET_SOURCES: `/sources/page/${ROUTE_PARAMS.page}?${ROUTE_PARAMS.letter ? `letter=${ROUTE_PARAMS.letter}` : ''}`,
-            POST_CURRENT_CARD: `/current_cards`
+            POST_CURRENT_CARD: `/current_cards`,
+            GET_CURRENT_CARDS: `user/${ROUTE_PARAMS.userId}/current_cards`
         }
 
     return ENDPOINTS
