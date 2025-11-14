@@ -14,13 +14,15 @@ const initialState: CardsState = {
 
 interface PostCurrentCard{
   authHeaders?: AuthHeaders;
+  cardTypeId: number;
 }
 
 export const createCurrentCard = createAsyncThunk(
     'sessionCardsSlice/createCard',
     async (payload: PostCurrentCard, {rejectWithValue}) => {
         const response = await postCurrentCard(
-            payload.authHeaders
+            payload.authHeaders,
+            payload.cardTypeId
         )
         if (response.status >= 200 && response.status < 300) {
             return response.data 
@@ -40,7 +42,7 @@ const sessionCardsSlice = createSlice({
         
       })
       .addCase(createCurrentCard.fulfilled, (state, action: any) => {
-        console.log("action >>> ", action)
+        state.currentCards = [convertKeysToCamelCase(action),...state.currentCards]
       })
       .addCase(createCurrentCard.rejected, (state, action: any) => {
        

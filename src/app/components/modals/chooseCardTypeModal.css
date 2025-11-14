@@ -11,6 +11,7 @@
   z-index: 1000;
   animation: fadeIn 0.3s ease-in-out;
   padding: 20px;
+  font-family: 'Times New Roman', Times, serif;
 }
 
 .modal-content {
@@ -80,7 +81,12 @@
 }
 
 .modal-body {
-  padding: 24px;
+  padding: 0 24px 24px 24px;
+}
+
+
+.container-chose-type-buttons button{
+  width: 200px;
 }
 
 @keyframes fadeIn {

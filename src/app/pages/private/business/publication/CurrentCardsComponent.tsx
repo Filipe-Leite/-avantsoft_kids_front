@@ -6,7 +6,7 @@ import IconAddButton from '../../../../../assets/add-icon-white.png';
 import { createCurrentCard } from "../../../../../features/sessionBusiness/sessionCards";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../store";
-import Modal from "../../../../components/modals/chooseCardTypeModal"; // Ajuste o caminho conforme necessário
+import Modal from "../../../../components/modals/chooseCardTypeModal";
 
 interface CardType {
   id: number;
@@ -15,12 +15,12 @@ interface CardType {
 
 export default function CurrentCardsComponent(){
     const authHeaders = useSelector((state: RootState) => state.session.authHeaders);
+    const currentCards = useSelector((state: RootState) => state.sessionCards.currentCards);
     const [inputSutopicQuoteCard, setInputSutopicQuoteCard] = useState('');
     const [addCardClicked, setAddCardClicked] = useState(true);
     const [isCardTypeModalOpen, setIsCardTypeModalOpen] = useState(false);
     const dispatch = useDispatch<AppDispatch>();
 
-    // Mock data para tipos de card - você pode buscar da API ou Redux
     const cardTypes: CardType[] = [
         { id: 1, name: "quote" },
         { id: 2, name: "summary" },
@@ -29,24 +29,19 @@ export default function CurrentCardsComponent(){
         { id: 5, name: "sketch" }
     ];
 
-    async function handleCreatePostCurrentCard(){
+    async function handleCreatePostCurrentCard(cardTypeId: number){
 
-        const response = await dispatch(createCurrentCard({authHeaders: authHeaders})) 
+        const response = await dispatch(createCurrentCard({authHeaders: authHeaders,
+                                                           cardTypeId: cardTypeId
+        })) 
+
+        if (response.meta.requestStatus === 'fulfilled'){
+            handleCloseModal()
+        }
     }
 
     async function handleCreateCurrentCard(){
-        // Abre o modal para escolher o tipo de card
         setIsCardTypeModalOpen(true);
-    }
-
-    const handleCardTypeSelect = (cardType: CardType) => {
-        console.log('Tipo de card selecionado:', cardType);
-        // Aqui você pode adicionar a lógica para criar o card com o tipo selecionado
-        // Por exemplo: dispatch(createCurrentCard({ authHeaders, cardTypeId: cardType.id }))
-        setIsCardTypeModalOpen(false);
-        
-        // Temporariamente, vamos criar o card normalmente
-        dispatch(createCurrentCard({authHeaders: authHeaders}));
     }
 
     const handleCloseModal = () => {
@@ -59,7 +54,7 @@ export default function CurrentCardsComponent(){
             subtopicId: undefined,
             subtopic: undefined,
             quote: "",
-            cardType: 1,
+            cardTypeId: 1,
             comment: "",
             edition: "",
             city: "",
@@ -95,7 +90,6 @@ export default function CurrentCardsComponent(){
         }
 
     const cards: Card[] = [
-        // ... seu array de cards existente (mantenha igual)
         {
             id: 1,
             subtopicId: undefined,
@@ -104,7 +98,7 @@ export default function CurrentCardsComponent(){
                 name: "Direito empresarial"
             },
             quote: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-            cardType: 1,
+            cardTypeId: 1,
             comment: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
             edition: "1ª Edição",
             city: "São Paulo",
@@ -137,34 +131,35 @@ export default function CurrentCardsComponent(){
             },
             createdAt: new Date("2024-01-15"),
             updatedAt: new Date("2024-01-15")
-        },
-        // ... resto dos cards
+        }
     ];
 
     return(
         <div id='container-current-cards-component'>
-            {/* Modal para escolher tipo de card */}
             <Modal 
                 isOpen={isCardTypeModalOpen}
                 onClose={handleCloseModal}
-                title="Escolha o Tipo de Card"
-                size="sm"
+                title="Chose the card type"
+                size="lg"
             >
                 <div style={{ padding: '10px 0' }}>
                     <p style={{ 
-                        marginBottom: '20px', 
+                        margin: '0px', 
                         textAlign: 'center',
                         color: '#666',
                         fontSize: '14px'
                     }}>
-                        Selecione o tipo de card que deseja criar:
+                        Select the card type:
                     </p>
                     
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div className='container-chose-type-buttons'  
+                         style={{ display: 'flex', flexDirection: 'row', gap: '8px' }}>
+                        
                         {cardTypes.map((cardType) => (
                             <button
                                 key={cardType.id}
-                                onClick={() => handleCardTypeSelect(cardType)}
+                                onClick={() => handleCreatePostCurrentCard(cardType.id)
+                                }
                                 style={{
                                     padding: '12px 16px',
                                     border: '1px solid #e1e5e9',
@@ -178,7 +173,7 @@ export default function CurrentCardsComponent(){
                                 }}
                                 onMouseEnter={(e) => {
                                     e.currentTarget.style.backgroundColor = '#f8f9fa';
-                                    e.currentTarget.style.borderColor = '#007bff';
+                                    e.currentTarget.style.borderColor = '#000000ff';
                                 }}
                                 onMouseLeave={(e) => {
                                     e.currentTarget.style.backgroundColor = 'white';
@@ -191,15 +186,15 @@ export default function CurrentCardsComponent(){
                     </div>
                     
                     <div style={{ 
-                        marginTop: '20px', 
-                        display: 'flex', 
-                        justifyContent: 'flex-end' 
-                    }}>
+                                 marginTop: '20px', 
+                                 display: 'flex', 
+                                 justifyContent: 'flex-end' 
+                                }}>
                         <button
                             onClick={handleCloseModal}
                             style={{
                                 padding: '8px 16px',
-                                backgroundColor: '#6c757d',
+                                backgroundColor: 'rgb(47,47,47)',
                                 color: 'white',
                                 border: 'none',
                                 borderRadius: '4px',
@@ -207,7 +202,7 @@ export default function CurrentCardsComponent(){
                                 fontSize: '14px'
                             }}
                         >
-                            Cancelar
+                            Cancel
                         </button>
                     </div>
                 </div>
@@ -221,16 +216,16 @@ export default function CurrentCardsComponent(){
                     <img src={IconAddButton} alt='icon-add-card'/>
                 </button>
                 <ul>
-                    {cards.length !== 0 ? (
+                    {currentCards.length !== 0 ? (
                         cards.map((card, index) => (
-                        card.cardType === 1 ? (
+                        card.cardTypeId === 1 ? (
                             <div id='container-li-card' key={index}>
                                 <QuoteCard
                                     id={card.id}
                                     subtopicId={card.subtopicId}
                                     subtopic={card.subtopic}
                                     quote={card.quote}
-                                    cardType={card.cardType}
+                                    cardType={card.cardTypeId}
                                     comment={card.comment}
                                     edition={card.edition}
                                     city={card.city}

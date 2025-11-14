@@ -190,23 +190,13 @@ export async function getSourcesByPage(authHeaders: AuthHeaders | undefined, pag
         });
 }
 
-export async function postCurrentCard(authHeaders: AuthHeaders | undefined){
+export async function postCurrentCard(authHeaders: AuthHeaders | undefined, cardTypeId: number){
 
 
     const PRIVATE_ROUTES = REQUEST_REQUIREMENTS.handlePrivateRoutes({ROUTE_PARAMS: {}});
 
     const emptyCard = {currentCard: {
-                        quote: "",
-                        comment: "",
-                        edition: "",
-                        city: "",
-                        year: "",
-                        internet_access_date: "",
-                        internet_access_link: "",
-                        user_id: "",
-                        source_id: "",
-                        author_id: "",
-                        subtopic_id: ""
+                        cardTypeId: cardTypeId
                         }};
 
     return api

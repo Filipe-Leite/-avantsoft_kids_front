@@ -62,7 +62,7 @@ export interface Source {
 export interface Card {
   id?: number;
   quote: string;
-  cardType: number;
+  cardTypeId: number;
   comment: string;
   edition: string;
   city: string;
