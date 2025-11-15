@@ -22,12 +22,6 @@ export default function CurrentCardsComponent(){
     const [isCardTypeModalOpen, setIsCardTypeModalOpen] = useState(false);
     const dispatch = useDispatch<AppDispatch>();
 
-    // DEBUG: Verifique o que está chegando
-    console.log('currentCards:', currentCards);
-    console.log('typeof currentCards:', typeof currentCards);
-    console.log('Array.isArray(currentCards):', Array.isArray(currentCards));
-
-    // Garantir que sempre temos um array
     const safeCurrentCards = Array.isArray(currentCards) ? currentCards : [];
 
     useEffect(() => {

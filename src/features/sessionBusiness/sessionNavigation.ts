@@ -211,7 +211,7 @@ const sessionNavigationSlice = createSlice({
           state.loadingTopics = true;
         }
         if (action.meta.arg.queryType === 'subtopic' && action.meta.arg.page === 1 ){
-          state.topicsSearch = [];
+          state.subtopicsSearch = [];
           state.loadingTopics = true;
         }
         if (action.meta.arg.queryType === 'author' && action.meta.arg.page === 1 ){

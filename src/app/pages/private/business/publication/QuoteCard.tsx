@@ -3,6 +3,10 @@ import './quoteCard.css';
 import logoBorderBlack from '../../../../../assets/apice_logo_white_backgroud_transparent_border_black.png'
 import closeIcon from '../../../../../assets/close-icon-white-24.png';
 import eraseIcon from '../../../../../assets/erase-icon-white-50.png';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../../../store';
+import { getSearch, getSubtopics } from '../../../../../features/sessionBusiness/sessionNavigation';
 
 interface QuoteCardsProps {
     id?: number;
@@ -51,6 +55,29 @@ export default function QuoteCards({
     addCardClicked,
     setAddCardClicked
 }: QuoteCardsProps) {
+    const [inputSubtopicCard, setInputSubtopicCard] = useState('');
+    const dispatch = useDispatch<AppDispatch>();
+    const authHeaders = useSelector((state: RootState) => state.session.authHeaders);
+    const [subtopicSearchPage, setSubtopicSearchPage] = useState(1);
+    const suptopicsSearch = useSelector((state: RootState) => state.sessionNavigation.subtopicsSearch);
+    // const suptopicsSearch = [{title: "aefafafaef"}, {title: "aefafafaef"}, {title: "aefafafaef"}]
+    
+        useEffect(() => {
+            const timeoutId = setTimeout(() => {
+                async function fetchData() {
+                    
+                    await dispatch(getSearch({
+                        authHeaders: authHeaders,
+                        queryType: 'subtopic',
+                        page: subtopicSearchPage,
+                        searchTerm: inputSubtopicCard.trim()
+                    }));
+                }
+                fetchData();
+            }, 500);
+    
+            return () => clearTimeout(timeoutId);
+        }, [inputSubtopicCard, subtopicSearchPage, subtopicSearchPage]);
 
     return(
         <li id='li-quote-card'>
@@ -64,22 +91,33 @@ export default function QuoteCards({
             </button>
 
             <div id='container-quote-card-first-line'>
-                {addCardClicked
-                
-                ?
-
-                <h3>{subtopic?.name}</h3>
-                
-                :
-
-                <input
-                    className='input-sutopic-quote-card'
+                <input 
+                    className='input-subtopic-card'
                     type="text"
-                    placeholder="Subtopic"
-                    value={inputSutopicQuoteCard}
-                    onChange={(e) => setInputSutopicQuoteCard(e.target.value)}
-                />}
+                    value={inputSubtopicCard}
+                    onChange={(e) => setInputSubtopicCard(e.target.value)}
+                />
+                {
+                    inputSubtopicCard.length > 0 ? (
+                        <ul className='ul-subtopics-card'>
+                            {suptopicsSearch.length > 0 ? (
+                                suptopicsSearch.map((subtopic, index) => 
+                                    subtopic.name.length > 0 ? (
+                                        <li key={index}>
+                                            {subtopic.name}
+                                        </li>
+                                    ) : null
+                                )
+                            ) : (
+                                <li className="add-new-subtopic">
+                                    Add "{inputSubtopicCard}"
+                                </li>
+                            )}
+                        </ul>
+                    ) : null
+                }
             </div>
+                
             <div id='container-quote-card-second-line'>
                 <div id='container-quote-card-second-line-left'>
                     <p className='p-quote-card-description'><strong>Quote:</strong></p> 
