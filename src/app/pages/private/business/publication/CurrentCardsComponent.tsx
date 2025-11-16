@@ -59,7 +59,6 @@ export default function CurrentCardsComponent(){
 
             if (response) {
                 handleCloseModal();
-                // Recarregar os cards
                 if (authHeaders && currentUser?.id) {
                     await dispatch(getUserCurrentCards({
                         authHeaders: authHeaders,

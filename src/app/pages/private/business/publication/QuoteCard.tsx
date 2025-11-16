@@ -3,7 +3,7 @@ import './quoteCard.css';
 import logoBorderBlack from '../../../../../assets/apice_logo_white_backgroud_transparent_border_black.png'
 import closeIcon from '../../../../../assets/close-icon-white-24.png';
 import eraseIcon from '../../../../../assets/erase-icon-white-50.png';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../../store';
 import { getSearch, getSubtopics } from '../../../../../features/sessionBusiness/sessionNavigation';
@@ -55,29 +55,83 @@ export default function QuoteCards({
     addCardClicked,
     setAddCardClicked
 }: QuoteCardsProps) {
-    const [inputSubtopicCard, setInputSubtopicCard] = useState('');
     const dispatch = useDispatch<AppDispatch>();
     const authHeaders = useSelector((state: RootState) => state.session.authHeaders);
     const [subtopicSearchPage, setSubtopicSearchPage] = useState(1);
     const suptopicsSearch = useSelector((state: RootState) => state.sessionNavigation.subtopicsSearch);
-    // const suptopicsSearch = [{title: "aefafafaef"}, {title: "aefafafaef"}, {title: "aefafafaef"}]
-    
-        useEffect(() => {
-            const timeoutId = setTimeout(() => {
-                async function fetchData() {
-                    
-                    await dispatch(getSearch({
-                        authHeaders: authHeaders,
-                        queryType: 'subtopic',
-                        page: subtopicSearchPage,
-                        searchTerm: inputSubtopicCard.trim()
-                    }));
-                }
-                fetchData();
-            }, 500);
-    
-            return () => clearTimeout(timeoutId);
-        }, [inputSubtopicCard, subtopicSearchPage, subtopicSearchPage]);
+    const [subtopicSelected, setSubtopicSelected] = useState<Subtopic | null>(subtopic || null);
+    const [inputSubtopicCard, setInputSubtopicCard] = useState<string>(
+        subtopic?.name?.trim() || ''
+    );
+    const [showSubtopicDropdown, setShowSubtopicDropdown] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (subtopicSelected) {
+            setInputSubtopicCard(subtopicSelected.name);
+            setShowSubtopicDropdown(false);
+        }
+    }, [subtopicSelected]);
+
+    useEffect(() => {
+        if (!inputSubtopicCard.trim()) {
+            setShowSubtopicDropdown(false);
+            return;
+        }
+
+        const timeoutId = setTimeout(() => {
+            async function fetchData() {
+                await dispatch(getSearch({
+                    authHeaders: authHeaders,
+                    queryType: 'subtopic',
+                    page: subtopicSearchPage,
+                    searchTerm: inputSubtopicCard
+                }));
+                setShowSubtopicDropdown(true);
+            }
+            fetchData();
+        }, 500);
+
+        return () => clearTimeout(timeoutId);
+    }, [inputSubtopicCard, subtopicSearchPage, authHeaders, dispatch]);
+
+    const handleSubtopicInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setInputSubtopicCard(value);
+        setSubtopicSelected(null);
+        
+        if (value.trim()) {
+            setShowSubtopicDropdown(true);
+        } else {
+            setShowSubtopicDropdown(false);
+        }
+    };
+
+    const handleSubtopicSelect = (selectedSubtopic: Subtopic) => {
+        setSubtopicSelected(selectedSubtopic);
+        setInputSubtopicCard(selectedSubtopic.name);
+        setShowSubtopicDropdown(false);
+    };
+
+    const handleAddNewSubtopic = () => {
+        setShowSubtopicDropdown(false);
+    };
+
+    const handleInputFocus = () => {
+        if (inputSubtopicCard.trim() && suptopicsSearch.length > 0) {
+            setShowSubtopicDropdown(true);
+        }
+    };
+
+    const handleInputBlur = () => {
+        setTimeout(() => {
+            setShowSubtopicDropdown(false);
+        }, 200);
+    };
+
+    const handleSubtopicOptionClick = (subtopic: Subtopic) => {
+        handleSubtopicSelect(subtopic);
+    };
 
     return(
         <li id='li-quote-card'>
@@ -90,32 +144,41 @@ export default function QuoteCards({
                 <img alt='erase-icon' src={eraseIcon}/>
             </button>
 
-            <div id='container-quote-card-first-line'>
+            <div id='container-quote-card-first-line' ref={dropdownRef}>
                 <input 
                     className='input-subtopic-card'
                     type="text"
                     value={inputSubtopicCard}
-                    onChange={(e) => setInputSubtopicCard(e.target.value)}
+                    onChange={handleSubtopicInputChange}
+                    onFocus={handleInputFocus}
+                    onBlur={handleInputBlur}
                 />
-                {
-                    inputSubtopicCard.length > 0 ? (
-                        <ul className='ul-subtopics-card'>
-                            {suptopicsSearch.length > 0 ? (
-                                suptopicsSearch.map((subtopic, index) => 
-                                    subtopic.name.length > 0 ? (
-                                        <li key={index}>
-                                            {subtopic.name}
-                                        </li>
-                                    ) : null
-                                )
-                            ) : (
-                                <li className="add-new-subtopic">
-                                    Add "{inputSubtopicCard}"
-                                </li>
-                            )}
-                        </ul>
-                    ) : null
-                }
+                {showSubtopicDropdown && inputSubtopicCard.length > 0 && (
+                    <ul className='ul-subtopics-card'>
+                        {suptopicsSearch.length > 0 ? (
+                            suptopicsSearch.map((subtopic, index) => 
+                                subtopic.name.length > 0 ? (
+                                    <li 
+                                        key={index}
+                                        onMouseDown={(e) => e.preventDefault()}
+                                        onClick={() => handleSubtopicOptionClick(subtopic)}
+                                        className="subtopic-option"
+                                    >
+                                        {subtopic.name}
+                                    </li>
+                                ) : null
+                            )
+                        ) : (
+                            <li 
+                                className="add-new-subtopic"
+                                onMouseDown={(e) => e.preventDefault()}
+                                onClick={handleAddNewSubtopic}
+                            >
+                                Add "{inputSubtopicCard}"
+                            </li>
+                        )}
+                    </ul>
+                )}
             </div>
                 
             <div id='container-quote-card-second-line'>

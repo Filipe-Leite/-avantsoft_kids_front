@@ -70,7 +70,6 @@ const sessionCardsSlice = createSlice({
       .addCase(getUserCurrentCards.pending, (state, action: any) => {  
       })
         .addCase(getUserCurrentCards.fulfilled, (state, action: any) => {
-          console.log("action.payload >>>>>> ", action.payload)
           state.currentCards = convertKeysToCamelCase(action.payload)
         })
           .addCase(getUserCurrentCards.rejected, (state, action: any) => {
