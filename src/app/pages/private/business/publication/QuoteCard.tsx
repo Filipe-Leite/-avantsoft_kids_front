@@ -6,7 +6,8 @@ import eraseIcon from '../../../../../assets/erase-icon-white-50.png';
 import { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../../store';
-import { getSearch, getSubtopics } from '../../../../../features/sessionBusiness/sessionNavigation';
+import { getSearch } from '../../../../../features/sessionBusiness/sessionNavigation';
+import ChooseSubtopicCardAssociationsModal from '../../../../components/modals/ChooseSubtopicCardAssociationsModal';
 
 interface QuoteCardsProps {
     id?: number;
@@ -59,12 +60,14 @@ export default function QuoteCards({
     const authHeaders = useSelector((state: RootState) => state.session.authHeaders);
     const [subtopicSearchPage, setSubtopicSearchPage] = useState(1);
     const suptopicsSearch = useSelector((state: RootState) => state.sessionNavigation.subtopicsSearch);
+    const suptopicsSearchLoading = useSelector((state: RootState) => state.sessionNavigation.loadingSubtopics);
     const [subtopicSelected, setSubtopicSelected] = useState<Subtopic | null>(subtopic || null);
     const [inputSubtopicCard, setInputSubtopicCard] = useState<string>(
         subtopic?.name?.trim() || ''
     );
     const [showSubtopicDropdown, setShowSubtopicDropdown] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const [showChooseSubtopicCardAssociationsModal, setShowChooseSubtopicCardAssociationsModal] = useState(false);
 
     useEffect(() => {
         if (subtopicSelected) {
@@ -93,6 +96,7 @@ export default function QuoteCards({
         }, 500);
 
         return () => clearTimeout(timeoutId);
+
     }, [inputSubtopicCard, subtopicSearchPage, authHeaders, dispatch]);
 
     const handleSubtopicInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -136,6 +140,15 @@ export default function QuoteCards({
     return(
         <li id='li-quote-card'>
 
+            {showChooseSubtopicCardAssociationsModal && (
+                <ChooseSubtopicCardAssociationsModal 
+                    isOpen={showChooseSubtopicCardAssociationsModal}
+                    title={'Associate Subtopic to: '}
+                    inputSubtopic={inputSubtopicCard}
+                    onClose={() => setShowChooseSubtopicCardAssociationsModal(false)}
+                />
+            )}
+            
             <button className='button-close-new-quote-card'>
                 <img alt='close-icon' src={closeIcon}/>
             </button>
@@ -153,7 +166,7 @@ export default function QuoteCards({
                     onFocus={handleInputFocus}
                     onBlur={handleInputBlur}
                 />
-                {showSubtopicDropdown && inputSubtopicCard.length > 0 && (
+                {!suptopicsSearchLoading && showSubtopicDropdown && inputSubtopicCard.length > 0 && (
                     <ul className='ul-subtopics-card'>
                         {suptopicsSearch.length > 0 ? (
                             suptopicsSearch.map((subtopic, index) => 
@@ -161,7 +174,9 @@ export default function QuoteCards({
                                     <li 
                                         key={index}
                                         onMouseDown={(e) => e.preventDefault()}
-                                        onClick={() => handleSubtopicOptionClick(subtopic)}
+                                        onClick={() => {
+                                            handleSubtopicOptionClick(subtopic);
+                                        }}
                                         className="subtopic-option"
                                     >
                                         {subtopic.name}
@@ -169,13 +184,18 @@ export default function QuoteCards({
                                 ) : null
                             )
                         ) : (
-                            <li 
-                                className="add-new-subtopic"
-                                onMouseDown={(e) => e.preventDefault()}
-                                onClick={handleAddNewSubtopic}
-                            >
-                                Add "{inputSubtopicCard}"
-                            </li>
+                            !suptopicsSearchLoading && (
+                                <li 
+                                    className="add-new-subtopic"
+                                    onMouseDown={(e) => e.preventDefault()}
+                                    onClick={() => {
+                                        handleAddNewSubtopic();
+                                        setShowChooseSubtopicCardAssociationsModal(true);
+                                    }}
+                                >
+                                    Add "{inputSubtopicCard}"
+                                </li>
+                            )
                         )}
                     </ul>
                 )}

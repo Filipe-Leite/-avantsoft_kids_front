@@ -28,11 +28,11 @@
 
         }
         
-        ul{
+        .ul-current-cards{
             margin: 0px;
             list-style: none;
             display: flex;
-            overflow-x: scroll;
+            overflow-x: hidden;
             padding: 0px;
             margin: 0px;
 

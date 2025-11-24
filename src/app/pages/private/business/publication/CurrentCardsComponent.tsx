@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Card } from "../../../../#interfaces/slicesInterfaces";
 import './currentCardsComponent.css';
 import QuoteCard from "./QuoteCard";
 import IconAddButton from '../../../../../assets/add-icon-white.png';
@@ -160,7 +159,7 @@ export default function CurrentCardsComponent(){
                     <img src={IconAddButton} alt='icon-add-card'/>
                 </button>
                 
-                <ul>
+                <ul className='ul-current-cards'>
                     {safeCurrentCards.length > 0 ? (
                         safeCurrentCards.map((card, index) => (
                             card.cardTypeId === 1 ? (

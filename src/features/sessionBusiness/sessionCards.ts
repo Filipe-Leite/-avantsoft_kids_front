@@ -1,16 +1,25 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { Card, NavigationState } from "../../app/#interfaces/slicesInterfaces";
+import { Author, Card, Discipline, NavigationState, Source, Subtopic, Topic } from "../../app/#interfaces/slicesInterfaces";
 import { AuthHeaders } from "../../app/#interfaces/interfaces";
-import { getUserCurrentCardsWithUserId, postCurrentCard } from "../../app/api/sessionAPI";
+import { getSearchWithQuertTypeAndPage, getUserCurrentCardsWithUserId, postCurrentCard } from "../../app/api/sessionAPI";
 import { convertKeysToCamelCase } from "../../genericFunctions";
 
 interface CardsState {
     currentCards: Card[];
+    disciplinesAssociationSearch: Discipline[];
+    topicsSearch: Topic[];
+    subtopicsAssossiationSearch: Subtopic[];
+    authorsSearch: Author[];
+    sourcesSearch: Source[];
+    errors: string[];
+    loadingDisciplines: boolean;
+    loadingTopics: boolean;
+    loadingSubtopics: boolean;
+    loadingAuthors: boolean;
+    loadingSources: boolean;
+    selectedDisciplinesAssociation: Discipline[];
 }
 
-const initialState: CardsState = {
-    currentCards: []
-};
 
 interface PostCurrentCard{
   authHeaders?: AuthHeaders;
@@ -21,6 +30,30 @@ interface GetUserCurrentCard{
   authHeaders: AuthHeaders;
   userId: number;
 }
+
+interface GetSearch{
+  authHeaders?: AuthHeaders;
+  queryType: string;
+  page: number;
+  searchTerm: string;
+  letter?: string;
+}
+
+const initialState: CardsState = {
+    currentCards: [],
+    disciplinesAssociationSearch: [],
+    topicsSearch: [],
+    subtopicsAssossiationSearch: [],
+    authorsSearch: [],
+    sourcesSearch: [],
+    errors: [],
+    loadingDisciplines: false,
+    loadingTopics: false,
+    loadingSubtopics: false,
+    loadingAuthors: false,
+    loadingSources: false,
+    selectedDisciplinesAssociation: []
+};
 
 export const createCurrentCard = createAsyncThunk(
     'sessionCardsSlice/createCard',
@@ -52,10 +85,37 @@ export const getUserCurrentCards = createAsyncThunk(
     }
 )
 
+export const getSearch = createAsyncThunk(
+    'sessionNavigation/getSearch',
+    async (payload: GetSearch, {rejectWithValue}) => {
+        const response = await getSearchWithQuertTypeAndPage(
+            payload.authHeaders,
+            payload.queryType,
+            payload.page,
+            payload.searchTerm,
+            payload.letter
+        )
+        if (response.status >= 200 && response.status < 300) {
+            return response.data 
+        } else {
+          return rejectWithValue(response.data)
+        }
+    }
+)
+
 const sessionCardsSlice = createSlice({
   name: 'sessionCardsSlice',
   initialState,
-  reducers: {},
+  reducers: {
+    selectDiciplineAssociated: (state, action: PayloadAction<Discipline>) => {
+        state.selectedDisciplinesAssociation = [...state.selectedDisciplinesAssociation,action.payload]
+    },
+    deselectDiciplineAssociated: (state, action: PayloadAction<Discipline>) => {
+      state.selectedDisciplinesAssociation = state.selectedDisciplinesAssociation.filter(
+          discipline => discipline.id !== action.payload.id
+      );
+    }
+  },
   extraReducers: (builder) => {
       builder
       .addCase(createCurrentCard.pending, (state, action: any) => {
@@ -75,9 +135,101 @@ const sessionCardsSlice = createSlice({
           .addCase(getUserCurrentCards.rejected, (state, action: any) => {
           
           })
+            .addCase(getSearch.pending, (state, action: any) => {
+              
+              if (action.meta.arg.queryType === 'discipline' && action.meta.arg.page === 1 ){
+                state.disciplinesAssociationSearch = [];
+                state.loadingDisciplines = true;
+              }
+              if (action.meta.arg.queryType === 'topic' && action.meta.arg.page === 1 ){
+                state.topicsSearch = [];
+                state.loadingTopics = true;
+              }
+              if (action.meta.arg.queryType === 'subtopic' && action.meta.arg.page === 1 ){
+                state.subtopicsAssossiationSearch = [];
+                state.loadingTopics = true;
+              }
+              if (action.meta.arg.queryType === 'author' && action.meta.arg.page === 1 ){
+                state.authorsSearch = [];
+                state.loadingAuthors = true;
+              }
+              if (action.meta.arg.queryType === 'source' && action.meta.arg.page === 1 ){
+                state.sourcesSearch = [];
+                state.loadingSources = true;
+              }
+            })
+            .addCase(getSearch.fulfilled, (state, action: any) => {
+      
+              if (action.meta.arg.queryType === 'discipline'){
+                if (action.meta.arg.page === 1){
+                  state.disciplinesAssociationSearch = convertKeysToCamelCase(action.payload);
+                  state.disciplinesAssociationSearch = convertKeysToCamelCase(action.payload).filter(
+                      (payloadItem: Discipline) => !state.selectedDisciplinesAssociation.some(
+                          selectedItem => selectedItem.id === payloadItem.id
+                      )
+                  );
+                  state.loadingDisciplines = false;
+                } else {
+                  state.disciplinesAssociationSearch = [...state.disciplinesAssociationSearch,...convertKeysToCamelCase(action.payload)];
+                  state.loadingDisciplines = false;
+                }
+              } else if ((action.meta.arg.queryType === 'topic')){
+                if (action.meta.arg.page === 1){
+                  state.topicsSearch = convertKeysToCamelCase(action.payload);
+                  state.loadingTopics = false;
+                } else {
+                  state.topicsSearch = [...state.topicsSearch,...convertKeysToCamelCase(action.payload)];
+                  state.loadingTopics = false;
+                }
+              } else if ((action.meta.arg.queryType === 'subtopic')){
+                if (action.meta.arg.page === 1){
+                  state.subtopicsAssossiationSearch = convertKeysToCamelCase(action.payload);
+                  state.loadingSubtopics = false;
+                } else {
+                  state.subtopicsAssossiationSearch = [...state.subtopicsAssossiationSearch,...convertKeysToCamelCase(action.payload)];
+                  state.loadingSubtopics = false;
+                }
+              } else if ((action.meta.arg.queryType === 'author')){
+                if (action.meta.arg.page === 1){
+                  state.authorsSearch = convertKeysToCamelCase(action.payload);
+                  state.loadingAuthors = false;
+                } else {
+                  state.authorsSearch = [...state.authorsSearch,...convertKeysToCamelCase(action.payload)];
+                  state.loadingAuthors = false;
+                }
+              } else if ((action.meta.arg.queryType === 'source')){
+                  state.sourcesSearch = convertKeysToCamelCase(action.payload);
+                  state.loadingSources = false;
+                } else {
+                  state.sourcesSearch = [...state.sourcesSearch,...convertKeysToCamelCase(action.payload)];
+                  state.loadingSources = false;
+                }
+            })
+            .addCase(getSearch.rejected, (state, action: any) => {
+              if (action.meta.arg.queryType === 'discipline'){
+                state.errors = ['Error on disciplines search']
+                state.loadingDisciplines = false;
+              }
+              if (action.meta.arg.queryType === 'topic'){
+                state.errors = ['Error on disciplines search']
+                state.loadingTopics = false;
+              }
+              if (action.meta.arg.queryType === 'subtopic'){
+                state.errors = ['Error on disciplines search']
+                state.loadingSubtopics = false;
+              }
+              if (action.meta.arg.queryType === 'author'){
+                state.errors = ['Error on disciplines search']
+                state.loadingAuthors = false;
+              }
+              if (action.meta.arg.queryType === 'source'){
+                state.errors = ['Error on disciplines search']
+                state.loadingSources = false;
+              }
+            })
       }
     }
 );
 
-export const cardsSliceActions = sessionCardsSlice.actions;
+export const { selectDiciplineAssociated, deselectDiciplineAssociated } = sessionCardsSlice.actions;
 export const cardsSliceReducers = sessionCardsSlice.reducer;

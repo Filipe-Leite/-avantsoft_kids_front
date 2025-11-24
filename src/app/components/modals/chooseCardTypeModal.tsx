@@ -44,7 +44,7 @@ const Modal: React.FC<ModalProps> = ({
             &times;
           </button>
         </div>
-        <div className="modal-body">
+        <div className="modal-card-type-body">
           {children}
         </div>
       </div>

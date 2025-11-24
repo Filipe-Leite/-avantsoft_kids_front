@@ -4,25 +4,7 @@ import { AuthHeaders } from "../../app/#interfaces/interfaces";
 import { getAuthorsByPage, getDisciplinesByPage, getSearchWithQuertTypeAndPage, getSourcesByPage, getSubtopicsByPage, getTopicsByPage } from "../../app/api/sessionAPI";
 import { convertKeysToCamelCase } from "../../genericFunctions";
 
-const initialState: NavigationState = {
-    levels: [],
-    disciplines: [],
-    disciplinesSearch: [],
-    topics: [],
-    topicsSearch: [],
-    subtopicsSearch: [],
-    subtopics: [],
-    authors: [],
-    authorsSearch: [],
-    sources: [],
-    sourcesSearch: [],
-    errors: [],
-    loadingDisciplines: false,
-    loadingTopics: false,
-    loadingSubtopics: false,
-    loadingAuthors: false,
-    loadingSources: false,
-};
+
 
 interface GetSearch{
   authHeaders?: AuthHeaders;
@@ -65,6 +47,26 @@ interface GetSources{
   letter?: string;
   discipline?: number;
 }
+
+const initialState: NavigationState = {
+    levels: [],
+    disciplines: [],
+    disciplinesSearch: [],
+    topics: [],
+    topicsSearch: [],
+    subtopicsSearch: [],
+    subtopics: [],
+    authors: [],
+    authorsSearch: [],
+    sources: [],
+    sourcesSearch: [],
+    errors: [],
+    loadingDisciplines: false,
+    loadingTopics: false,
+    loadingSubtopics: false,
+    loadingAuthors: false,
+    loadingSources: false,
+};
 
 export const getSearch = createAsyncThunk(
     'sessionNavigation/getSearch',
@@ -170,10 +172,7 @@ const sessionNavigationSlice = createSlice({
   name: 'sessionNavigation',
   initialState,
   reducers: {
-    setLevelSearch: (state, action: PayloadAction<Level>) => {
-        
-        const index = state.levels?.findIndex(item => item?.position === action.payload.position);
-        
+    setLevelSearch: (state, action: PayloadAction<Level>) => {        
 
         if (action.payload.position === 1){
           state.levels[0] = action.payload;
@@ -195,7 +194,9 @@ const sessionNavigationSlice = createSlice({
             level?.position !== undefined && level.position <= 3
           );
         }
-
+    },
+    clearSubtopicsSelection: (state) => {
+      state.subtopicsSearch = []
     }
   },
   extraReducers: (builder) => {
@@ -367,5 +368,5 @@ const sessionNavigationSlice = createSlice({
     }
 });
 
-export const { setLevelSearch } = sessionNavigationSlice.actions;
+export const { setLevelSearch, clearSubtopicsSelection } = sessionNavigationSlice.actions;
 export const navigationSliceReducers = sessionNavigationSlice.reducer;

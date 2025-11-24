@@ -80,7 +80,7 @@
   color: #333;
 }
 
-.modal-body {
+.modal-card-type-body {
   padding: 0 24px 24px 24px;
 }
 
@@ -124,7 +124,7 @@
     padding-bottom: 12px;
   }
   
-  .modal-body {
+  .modal-card-type-body {
     padding: 20px;
   }
 }
