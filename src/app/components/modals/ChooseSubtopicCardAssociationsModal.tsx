@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import './chooseSubtopicCardAssociationsModal.css';
-import { Discipline, Subtopic } from '../../#interfaces/slicesInterfaces';
+import { Discipline, Subtopic, Topic } from '../../#interfaces/slicesInterfaces';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store';
 import { getSearch } from '../../../features/sessionBusiness/sessionNavigation';
-import { deselectDiciplineAssociated, selectDiciplineAssociated } from '../../../features/sessionBusiness/sessionCards';
+import { deselectDiciplineAssociated, deselectTopicAssociated, selectDiciplineAssociated, selectTopicAssociated } from '../../../features/sessionBusiness/sessionCards';
 import IconCloseWhite from '../../../assets/close-icon-white-24.png'
 
 interface ModalProps {
@@ -25,13 +25,12 @@ const ChooseSubtopicCardAssociations: React.FC<ModalProps> = ({
 }) => {
   const authHeaders = useSelector((state: RootState) => state.session.authHeaders);
   const disciplinesAssociation = useSelector((state: RootState) => state.sessionCards.disciplinesAssociationSearch);
+  const topicsAssociation = useSelector((state: RootState) => state.sessionCards.topicsAssociationSearch);
   const [inputSearchDisciplineAssociated, setInputSearchDisciplineAssociated] = useState('');
   const [inputSearchTopicAssociated, setInputSearchTopicAssociated] = useState('');
   const selectedDisciplinesAssociation = useSelector((state: RootState) => state.sessionCards.selectedDisciplinesAssociation);
-  const dispatch = useDispatch<AppDispatch>()
-  let disciplinesList: Discipline[] = [];
-
-  console.log("inputSubtopic >>> ", inputSubtopic)
+  const selectedTopicsAssociation = useSelector((state: RootState) => state.sessionCards.selectedTopicsAssociation);
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
               
@@ -46,6 +45,20 @@ const ChooseSubtopicCardAssociations: React.FC<ModalProps> = ({
     fetchDisciplinesSearch()
 
   },[inputSearchDisciplineAssociated])
+
+  useEffect(() => {
+              
+    async function fetchTopicsSearch(){
+        await dispatch(getSearch({authHeaders: authHeaders,
+                                                            queryType: 'topic',
+                                                            page: 1,
+                                                            searchTerm: inputSearchTopicAssociated.trim(),
+                                                            letter: undefined}))
+    }
+
+    fetchTopicsSearch()
+
+  },[inputSearchTopicAssociated])
 
   if (!isOpen) return null;
 
@@ -66,13 +79,20 @@ const ChooseSubtopicCardAssociations: React.FC<ModalProps> = ({
     onClose();
   };
 
-  const handleSubtopicSelect = (selectedDiscipline: Discipline) => {
-      disciplinesList = [...disciplinesList, selectedDiscipline]
+  const handleDisciplineSelect = (selectedDiscipline: Discipline) => {
       setInputSearchDisciplineAssociated(selectedDiscipline.name);
   };
 
   const handleDisciplineOptionClick = (discipline: Discipline) => {
-      handleSubtopicSelect(discipline);
+      handleDisciplineSelect(discipline);
+  };
+
+  const handleTopicSelect = (selectedTopic: Topic) => {
+    setInputSearchTopicAssociated(selectedTopic.name);
+  };
+
+  const handleTopicOptionClick = (topic: Topic) => {
+    handleTopicSelect(topic);
   };
 
   return (
@@ -137,6 +157,63 @@ const ChooseSubtopicCardAssociations: React.FC<ModalProps> = ({
                                 >
                                     <p>{discipline.name}</p>
                                     <button className='button-deselect-item' onClick={() => dispatch(deselectDiciplineAssociated(discipline))}>
+                                      <img src={IconCloseWhite} alt='close-icon-white'/>
+                                    </button>
+                                </li>
+                            ) : null
+                        )
+                    ) : null}
+                </ul>
+                )}
+            </div>
+            <div className="association-options-container" >
+              
+              <p className='p-association-options'>
+                Topic:
+              </p>
+              <input
+                id='search-input'
+                type="text"
+                placeholder="Search..."
+                autoComplete="off"
+                disabled={selectedTopicsAssociation.length >= 5}
+                value={inputSearchTopicAssociated}
+                onChange={(e) => setInputSearchTopicAssociated(e.target.value)}
+              />
+              {topicsAssociation && topicsAssociation.length > 0 && (
+                <ul className='ul-subtopics-card'>
+                    {topicsAssociation.length > 0 ? (
+                        topicsAssociation.map((topic: Topic, index) => 
+                            topic.name.length > 0 ? (
+                                <li 
+                                    key={index}
+                                    onMouseDown={(e) => e.preventDefault()}
+                                    onClick={() => {
+                                        dispatch(selectTopicAssociated(topic));
+                                        handleTopicOptionClick(topic);
+                                        setInputSearchTopicAssociated('');
+                                      }}
+                                    className="subtopic-option"
+                                >
+                                    {topic.name}
+                                </li>
+                            ) : null
+                        )
+                    ) : null}
+                </ul>
+                )}
+              {selectedTopicsAssociation && selectedTopicsAssociation.length > 0 && (
+                <ul className='ul-selected-disciplines-associated'>
+                    {selectedTopicsAssociation.length > 0 ? (
+                        selectedTopicsAssociation.map((topic: Topic, index: number) => 
+                            topic.name.length > 0 ? (
+                                <li 
+                                    key={index}
+                                    onMouseDown={(e) => e.preventDefault()}
+                                    className="subtopic-option-selected"
+                                >
+                                    <p>{topic.name}</p>
+                                    <button className='button-deselect-item' onClick={() => dispatch(deselectTopicAssociated(topic))}>
                                       <img src={IconCloseWhite} alt='close-icon-white'/>
                                     </button>
                                 </li>

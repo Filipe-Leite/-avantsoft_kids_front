@@ -7,8 +7,10 @@ import { convertKeysToCamelCase } from "../../genericFunctions";
 interface CardsState {
     currentCards: Card[];
     disciplinesAssociationSearch: Discipline[];
+    topicsAssociationSearch: Topic[];
     topicsSearch: Topic[];
     subtopicsAssossiationSearch: Subtopic[];
+    authorsAssossiationSearch: Author[];
     authorsSearch: Author[];
     sourcesSearch: Source[];
     errors: string[];
@@ -18,6 +20,8 @@ interface CardsState {
     loadingAuthors: boolean;
     loadingSources: boolean;
     selectedDisciplinesAssociation: Discipline[];
+    selectedTopicsAssociation: Topic[];
+    selectedAuthorsAssociation: Author[];
 }
 
 
@@ -42,8 +46,10 @@ interface GetSearch{
 const initialState: CardsState = {
     currentCards: [],
     disciplinesAssociationSearch: [],
+    topicsAssociationSearch: [],
     topicsSearch: [],
     subtopicsAssossiationSearch: [],
+    authorsAssossiationSearch: [],
     authorsSearch: [],
     sourcesSearch: [],
     errors: [],
@@ -52,7 +58,9 @@ const initialState: CardsState = {
     loadingSubtopics: false,
     loadingAuthors: false,
     loadingSources: false,
-    selectedDisciplinesAssociation: []
+    selectedDisciplinesAssociation: [],
+    selectedTopicsAssociation: [],
+    selectedAuthorsAssociation: []
 };
 
 export const createCurrentCard = createAsyncThunk(
@@ -114,6 +122,22 @@ const sessionCardsSlice = createSlice({
       state.selectedDisciplinesAssociation = state.selectedDisciplinesAssociation.filter(
           discipline => discipline.id !== action.payload.id
       );
+    },
+    selectTopicAssociated: (state, action: PayloadAction<Discipline>) => {
+        state.selectedTopicsAssociation = [...state.selectedTopicsAssociation,action.payload]
+    },
+    deselectTopicAssociated: (state, action: PayloadAction<Discipline>) => {
+      state.selectedTopicsAssociation = state.selectedTopicsAssociation.filter(
+          (topic: Topic) => topic.id !== action.payload.id
+      );
+    },
+    selectAuthorAssociated: (state, action: PayloadAction<Author>) => {
+        state.selectedAuthorsAssociation = [...state.selectedAuthorsAssociation,action.payload]
+    },
+    deselectAuthorAssociated: (state, action: PayloadAction<Author>) => {
+      state.selectedAuthorsAssociation = state.selectedAuthorsAssociation.filter(
+          (author: Author) => author.id !== action.payload.id
+      );
     }
   },
   extraReducers: (builder) => {
@@ -135,101 +159,111 @@ const sessionCardsSlice = createSlice({
           .addCase(getUserCurrentCards.rejected, (state, action: any) => {
           
           })
-            .addCase(getSearch.pending, (state, action: any) => {
+      .addCase(getSearch.pending, (state, action: any) => {
+        
+        if (action.meta.arg.queryType === 'discipline' && action.meta.arg.page === 1 ){
+          state.disciplinesAssociationSearch = [];
+          state.loadingDisciplines = true;
+        }
+        if (action.meta.arg.queryType === 'topic' && action.meta.arg.page === 1 ){
+          state.topicsAssociationSearch = [];
+          state.loadingTopics = true;
+        }
+        if (action.meta.arg.queryType === 'subtopic' && action.meta.arg.page === 1 ){
+          state.subtopicsAssossiationSearch = [];
+          state.loadingTopics = true;
+        }
+        if (action.meta.arg.queryType === 'author' && action.meta.arg.page === 1 ){
+          state.authorsAssossiationSearch = [];
+          state.loadingAuthors = true;
+        }
+        if (action.meta.arg.queryType === 'source' && action.meta.arg.page === 1 ){
+          state.sourcesSearch = [];
+          state.loadingSources = true;
+        }
+      })
+        .addCase(getSearch.fulfilled, (state, action: any) => {
+
+          if (action.meta.arg.queryType === 'discipline'){
+            if (action.meta.arg.page === 1){
+              state.disciplinesAssociationSearch = convertKeysToCamelCase(action.payload).filter(
+                  (payloadItem: Discipline) => !state.selectedDisciplinesAssociation.some(
+                      selectedItem => selectedItem.id === payloadItem.id
+                  )
+              );
+              state.loadingDisciplines = false;
+            } else {
+              state.disciplinesAssociationSearch = [...state.disciplinesAssociationSearch,...convertKeysToCamelCase(action.payload)];
+              state.loadingDisciplines = false;
+            }
+          } else if ((action.meta.arg.queryType === 'topic')){
+            if (action.meta.arg.page === 1){
               
-              if (action.meta.arg.queryType === 'discipline' && action.meta.arg.page === 1 ){
-                state.disciplinesAssociationSearch = [];
-                state.loadingDisciplines = true;
-              }
-              if (action.meta.arg.queryType === 'topic' && action.meta.arg.page === 1 ){
-                state.topicsSearch = [];
-                state.loadingTopics = true;
-              }
-              if (action.meta.arg.queryType === 'subtopic' && action.meta.arg.page === 1 ){
-                state.subtopicsAssossiationSearch = [];
-                state.loadingTopics = true;
-              }
-              if (action.meta.arg.queryType === 'author' && action.meta.arg.page === 1 ){
-                state.authorsSearch = [];
-                state.loadingAuthors = true;
-              }
-              if (action.meta.arg.queryType === 'source' && action.meta.arg.page === 1 ){
-                state.sourcesSearch = [];
-                state.loadingSources = true;
-              }
-            })
-            .addCase(getSearch.fulfilled, (state, action: any) => {
-      
-              if (action.meta.arg.queryType === 'discipline'){
-                if (action.meta.arg.page === 1){
-                  state.disciplinesAssociationSearch = convertKeysToCamelCase(action.payload);
-                  state.disciplinesAssociationSearch = convertKeysToCamelCase(action.payload).filter(
-                      (payloadItem: Discipline) => !state.selectedDisciplinesAssociation.some(
-                          selectedItem => selectedItem.id === payloadItem.id
-                      )
-                  );
-                  state.loadingDisciplines = false;
-                } else {
-                  state.disciplinesAssociationSearch = [...state.disciplinesAssociationSearch,...convertKeysToCamelCase(action.payload)];
-                  state.loadingDisciplines = false;
-                }
-              } else if ((action.meta.arg.queryType === 'topic')){
-                if (action.meta.arg.page === 1){
-                  state.topicsSearch = convertKeysToCamelCase(action.payload);
-                  state.loadingTopics = false;
-                } else {
-                  state.topicsSearch = [...state.topicsSearch,...convertKeysToCamelCase(action.payload)];
-                  state.loadingTopics = false;
-                }
-              } else if ((action.meta.arg.queryType === 'subtopic')){
-                if (action.meta.arg.page === 1){
-                  state.subtopicsAssossiationSearch = convertKeysToCamelCase(action.payload);
-                  state.loadingSubtopics = false;
-                } else {
-                  state.subtopicsAssossiationSearch = [...state.subtopicsAssossiationSearch,...convertKeysToCamelCase(action.payload)];
-                  state.loadingSubtopics = false;
-                }
-              } else if ((action.meta.arg.queryType === 'author')){
-                if (action.meta.arg.page === 1){
-                  state.authorsSearch = convertKeysToCamelCase(action.payload);
-                  state.loadingAuthors = false;
-                } else {
-                  state.authorsSearch = [...state.authorsSearch,...convertKeysToCamelCase(action.payload)];
-                  state.loadingAuthors = false;
-                }
-              } else if ((action.meta.arg.queryType === 'source')){
-                  state.sourcesSearch = convertKeysToCamelCase(action.payload);
-                  state.loadingSources = false;
-                } else {
-                  state.sourcesSearch = [...state.sourcesSearch,...convertKeysToCamelCase(action.payload)];
-                  state.loadingSources = false;
-                }
-            })
-            .addCase(getSearch.rejected, (state, action: any) => {
-              if (action.meta.arg.queryType === 'discipline'){
-                state.errors = ['Error on disciplines search']
-                state.loadingDisciplines = false;
-              }
-              if (action.meta.arg.queryType === 'topic'){
-                state.errors = ['Error on disciplines search']
-                state.loadingTopics = false;
-              }
-              if (action.meta.arg.queryType === 'subtopic'){
-                state.errors = ['Error on disciplines search']
-                state.loadingSubtopics = false;
-              }
-              if (action.meta.arg.queryType === 'author'){
-                state.errors = ['Error on disciplines search']
-                state.loadingAuthors = false;
-              }
-              if (action.meta.arg.queryType === 'source'){
-                state.errors = ['Error on disciplines search']
-                state.loadingSources = false;
-              }
-            })
+              state.topicsAssociationSearch = convertKeysToCamelCase(action.payload).filter(
+                  (payloadItem: Topic) => !state.selectedTopicsAssociation.some(
+                      selectedItem => selectedItem.id === payloadItem.id
+                  )
+              );
+              state.loadingTopics = false;
+            } else {
+              state.topicsSearch = [...state.topicsSearch,...convertKeysToCamelCase(action.payload)];
+              state.loadingTopics = false;
+            }
+          } else if ((action.meta.arg.queryType === 'subtopic')){
+            if (action.meta.arg.page === 1){
+              state.subtopicsAssossiationSearch = convertKeysToCamelCase(action.payload);
+              state.loadingSubtopics = false;
+            } else {
+              state.subtopicsAssossiationSearch = [...state.subtopicsAssossiationSearch,...convertKeysToCamelCase(action.payload)];
+              state.loadingSubtopics = false;
+            }
+          } else if ((action.meta.arg.queryType === 'author')){
+            console.log("fgdgggggggggggggggg")
+            if (action.meta.arg.page === 1){
+              state.authorsAssossiationSearch = convertKeysToCamelCase(action.payload);
+              state.loadingAuthors = false;
+            } else {
+              state.authorsSearch = [...state.authorsSearch,...convertKeysToCamelCase(action.payload)];
+              state.loadingAuthors = false;
+            }
+          } else if ((action.meta.arg.queryType === 'source')){
+              state.sourcesSearch = convertKeysToCamelCase(action.payload);
+              state.loadingSources = false;
+            } else {
+              state.sourcesSearch = [...state.sourcesSearch,...convertKeysToCamelCase(action.payload)];
+              state.loadingSources = false;
+            }
+        })
+          .addCase(getSearch.rejected, (state, action: any) => {
+            if (action.meta.arg.queryType === 'discipline'){
+              state.errors = ['Error on disciplines search']
+              state.loadingDisciplines = false;
+            }
+            if (action.meta.arg.queryType === 'topic'){
+              state.errors = ['Error on disciplines search']
+              state.loadingTopics = false;
+            }
+            if (action.meta.arg.queryType === 'subtopic'){
+              state.errors = ['Error on disciplines search']
+              state.loadingSubtopics = false;
+            }
+            if (action.meta.arg.queryType === 'author'){
+              state.errors = ['Error on disciplines search']
+              state.loadingAuthors = false;
+            }
+            if (action.meta.arg.queryType === 'source'){
+              state.errors = ['Error on disciplines search']
+              state.loadingSources = false;
+            }
+          })
       }
     }
 );
 
-export const { selectDiciplineAssociated, deselectDiciplineAssociated } = sessionCardsSlice.actions;
+export const { selectDiciplineAssociated, 
+               deselectDiciplineAssociated, 
+               selectTopicAssociated, 
+               deselectTopicAssociated,
+               selectAuthorAssociated,
+               deselectAuthorAssociated } = sessionCardsSlice.actions;
 export const cardsSliceReducers = sessionCardsSlice.reducer;

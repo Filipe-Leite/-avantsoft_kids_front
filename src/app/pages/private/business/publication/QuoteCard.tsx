@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../../store';
 import { getSearch } from '../../../../../features/sessionBusiness/sessionNavigation';
 import ChooseSubtopicCardAssociationsModal from '../../../../components/modals/ChooseSubtopicCardAssociationsModal';
+import { selectAuthorAssociated } from '../../../../../features/sessionBusiness/sessionCards';
 
 interface QuoteCardsProps {
     id?: number;
@@ -61,13 +62,22 @@ export default function QuoteCards({
     const [subtopicSearchPage, setSubtopicSearchPage] = useState(1);
     const suptopicsSearch = useSelector((state: RootState) => state.sessionNavigation.subtopicsSearch);
     const suptopicsSearchLoading = useSelector((state: RootState) => state.sessionNavigation.loadingSubtopics);
+    const authorsAssociationSearch = useSelector((state: RootState) => state.sessionCards.authorsAssossiationSearch);
+    const authorsSearchLoading = useSelector((state: RootState) => state.sessionCards.loadingAuthors);
     const [subtopicSelected, setSubtopicSelected] = useState<Subtopic | null>(subtopic || null);
+    const [authorsSelected, setAuthorsSelected] = useState<Author[] | null>(authors || null);
     const [inputSubtopicCard, setInputSubtopicCard] = useState<string>(
         subtopic?.name?.trim() || ''
     );
     const [showSubtopicDropdown, setShowSubtopicDropdown] = useState(false);
+    const [showAuthorsDropdown, setShowAuthorsDropdown] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const [showChooseSubtopicCardAssociationsModal, setShowChooseSubtopicCardAssociationsModal] = useState(false);
+    const [showChooseSubtopicCardAuthorsAssociationsModal, setShowChooseSubtopicCardAuthorsAssociationsModal] = useState(false);
+    const [inputQuote, setInputQuote] = useState('');
+    const [inputComment, setInputComment] = useState('');
+    const [inputAuthor, setInputAuthor] = useState('');
+    const [showAuthorsDropDown, setShowAuthorsDropDown] = useState(true)
 
     useEffect(() => {
         if (subtopicSelected) {
@@ -99,11 +109,47 @@ export default function QuoteCards({
 
     }, [inputSubtopicCard, subtopicSearchPage, authHeaders, dispatch]);
 
+    useEffect(() => {
+
+        if (!inputAuthor.trim()) {
+            setShowAuthorsDropdown(false);
+            return;
+        }
+
+        const timeoutId = setTimeout(() => {
+            async function fetchData() {
+                await dispatch(getSearch({
+                    authHeaders: authHeaders,
+                    queryType: 'author',
+                    page: 1,
+                    searchTerm: inputAuthor
+                }));
+                setShowSubtopicDropdown(true);
+            }
+            fetchData();
+        }, 500);
+
+        return () => clearTimeout(timeoutId);
+
+    }, [inputAuthor, authHeaders, dispatch]);
+
     const handleSubtopicInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setInputSubtopicCard(value);
         setSubtopicSelected(null);
         
+        if (value.trim()) {
+            setShowSubtopicDropdown(true);
+        } else {
+            setShowSubtopicDropdown(false);
+        }
+    };
+
+    const handleAuthorInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setInputAuthor(value);
+        setShowAuthorsDropDown(true);
+
         if (value.trim()) {
             setShowSubtopicDropdown(true);
         } else {
@@ -137,6 +183,37 @@ export default function QuoteCards({
         handleSubtopicSelect(subtopic);
     };
 
+    const handleAuthorOptionClick = (author: Author) => {
+        dispatch(selectAuthorAssociated(author));
+        setInputAuthor(author.name)
+        setShowAuthorsDropdown(false);
+    };
+
+    const handleAddNewAuthor = () => {
+        setShowAuthorsDropdown(false);
+    };
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            const dropdown = document.querySelector('.dropdown-wrapper');
+            const input = document.querySelector('.input-subtopic-card');
+            
+            if (dropdown && input && 
+                !dropdown.contains(event.target as Node) && 
+                !input.contains(event.target as Node)) {
+                setShowAuthorsDropDown(false);
+            }
+        };
+
+        if (showAuthorsDropDown) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showAuthorsDropDown]);
+
     return(
         <li id='li-quote-card'>
 
@@ -160,7 +237,9 @@ export default function QuoteCards({
             <div id='container-quote-card-first-line' ref={dropdownRef}>
                 <input 
                     className='input-subtopic-card'
+                    maxLength={85}
                     type="text"
+                    placeholder='Type the subtopic/title here'
                     value={inputSubtopicCard}
                     onChange={handleSubtopicInputChange}
                     onFocus={handleInputFocus}
@@ -204,26 +283,77 @@ export default function QuoteCards({
             <div id='container-quote-card-second-line'>
                 <div id='container-quote-card-second-line-left'>
                     <p className='p-quote-card-description'><strong>Quote:</strong></p> 
-                    <p className='p-quote-card'>{quote}</p>
+                    <textarea className='textarea-quote-quote-card'
+                        maxLength={1150}
+                        placeholder="Type the quote here..."
+                        autoComplete="off"
+                        value={inputQuote}
+                        onChange={(e) => setInputQuote(e.target.value)}
+                    />
                 </div>
                 <div id='container-quote-card-second-line-right'>
                     <p className='p-quote-card-description'><strong>Comment:</strong></p> 
-                    <p className='p-quote-card'>{comment}</p>
+                    <textarea className='textarea-comment-quote-card'
+                        maxLength={1150}
+                        placeholder="Type the comment here..."
+                        autoComplete="off"
+                        value={inputComment}
+                        onChange={(e) => setInputComment(e.target.value)}
+                    />
                 </div>
             </div>
             <div id='container-quote-card-third-line'>
                 <div id='container-quote-card-third-line-left'>
-                    <p className='p-quote-card-description'><strong>Author:</strong></p>
-                    <p className='p-quote-card'>{authors?.length !== 0 ? (
-                            authors?.map((author, index) => (
-                            author.reference))) : null}
-                    </p>
+                    <label className='p-quote-card-label'><strong>Author:</strong></label>
+                    <input className='input-author-quote-card'
+                        maxLength={55}
+                        placeholder="Type the author here..."
+                        autoComplete="off"
+                        value={inputAuthor}
+                        onChange={handleAuthorInputChange}
+                    />
+                    
+                    {showAuthorsDropDown && !authorsSearchLoading && inputAuthor.length > 0 && (
+                        <div className="dropdown-wrapper">
+                            <ul className='ul-authors-card'>
+                                {authorsAssociationSearch.length > 0 ? (
+                                    authorsAssociationSearch.map((author, index) => 
+                                        author.name.length > 0 ? (
+                                            <li 
+                                                key={index}
+                                                onMouseDown={(e) => e.preventDefault()}
+                                                onClick={() => {
+                                                    handleAuthorOptionClick(author);
+                                                }}
+                                                className="subtopic-option"
+                                            >
+                                                {author.name}
+                                            </li>
+                                        ) : null
+                                    )
+                                ) : (
+                                    !suptopicsSearchLoading && (
+                                        <li 
+                                            className="add-new-subtopic"
+                                            onMouseDown={(e) => e.preventDefault()}
+                                            onClick={() => {
+                                                handleAddNewAuthor();
+                                                setShowChooseSubtopicCardAuthorsAssociationsModal(true);
+                                            }}
+                                        >
+                                            Add "{inputAuthor}"
+                                        </li>
+                                    )
+                                )}
+                            </ul>
+                        </div>
+                    )}
                 </div>
                 <div id='container-quote-card-third-line-right'>
                     <p className='p-quote-card-description'><strong>Source:</strong></p> 
                     {source && source.title ? <p className='p-quote-card'>{source.title}</p> : null}
                 </div>
-            </div>
+            </div> 
             <div id='container-quote-card-forth-line'>
                 <div className='container-quote-card-forth-line-item'>
                     <p className='p-quote-card-description'><strong>Edition:</strong></p>
@@ -256,7 +386,7 @@ export default function QuoteCards({
                     }
                 </div>
                 <div id='container-quote-card-five-line-right'>
-                    <p className='p-quote-card-description'><strong>Source:</strong></p> 
+                    <p className='p-quote-card-description'><strong>Link:</strong></p> 
                     {source && source.title ? <p className='p-quote-card'>{source.title}</p> : null}
                 </div>
             </div>

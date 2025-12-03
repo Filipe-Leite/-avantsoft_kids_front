@@ -1,8 +1,12 @@
 #container-current-cards-component{
     width: 95vw;
+    isolation: isolate;
     
     #container-ul-current-cards{
         display: flex;
+        margin-bottom: 10px;
+        isolation: isolate;
+        height: 700px;
 
         .button-add-new-quote-card{
             display: flex;
@@ -32,7 +36,7 @@
             margin: 0px;
             list-style: none;
             display: flex;
-            overflow-x: hidden;
+            overflow-y: hidden;
             padding: 0px;
             margin: 0px;
 
@@ -41,6 +45,7 @@
                 background-color: rgb(255, 255, 255);
                 border: 1px solid black;
                 margin-right: 5px;
+                height: 500px;
                 margin-left: 5px;
             }
         }
