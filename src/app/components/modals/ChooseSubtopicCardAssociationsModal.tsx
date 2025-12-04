@@ -4,7 +4,10 @@ import { Discipline, Subtopic, Topic } from '../../#interfaces/slicesInterfaces'
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store';
 import { getSearch } from '../../../features/sessionBusiness/sessionNavigation';
-import { deselectDiciplineAssociated, deselectTopicAssociated, selectDiciplineAssociated, selectTopicAssociated } from '../../../features/sessionBusiness/sessionCards';
+import { deselectDiciplineAssociatedToSubject, 
+          deselectTopicAssociatedToSubject, 
+          selectDiciplineAssociatedToSubject, 
+          selectTopicAssociatedToSubject } from '../../../features/sessionBusiness/sessionCards';
 import IconCloseWhite from '../../../assets/close-icon-white-24.png'
 
 interface ModalProps {
@@ -28,8 +31,8 @@ const ChooseSubtopicCardAssociations: React.FC<ModalProps> = ({
   const topicsAssociation = useSelector((state: RootState) => state.sessionCards.topicsAssociationSearch);
   const [inputSearchDisciplineAssociated, setInputSearchDisciplineAssociated] = useState('');
   const [inputSearchTopicAssociated, setInputSearchTopicAssociated] = useState('');
-  const selectedDisciplinesAssociation = useSelector((state: RootState) => state.sessionCards.selectedDisciplinesAssociation);
-  const selectedTopicsAssociation = useSelector((state: RootState) => state.sessionCards.selectedTopicsAssociation);
+  const selectedDisciplinesAssociation = useSelector((state: RootState) => state.sessionCards.selectedDisciplinesAssociationToSubject);
+  const selectedTopicsAssociation = useSelector((state: RootState) => state.sessionCards.selectedTopicsAssociationToSubject);
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
@@ -132,7 +135,7 @@ const ChooseSubtopicCardAssociations: React.FC<ModalProps> = ({
                                     key={index}
                                     onMouseDown={(e) => e.preventDefault()}
                                     onClick={() => {
-                                        dispatch(selectDiciplineAssociated(discipline));
+                                        dispatch(selectDiciplineAssociatedToSubject(discipline));
                                         handleDisciplineOptionClick(discipline);
                                         setInputSearchDisciplineAssociated('');
                                       }}
@@ -156,7 +159,7 @@ const ChooseSubtopicCardAssociations: React.FC<ModalProps> = ({
                                     className="subtopic-option-selected"
                                 >
                                     <p>{discipline.name}</p>
-                                    <button className='button-deselect-item' onClick={() => dispatch(deselectDiciplineAssociated(discipline))}>
+                                    <button className='button-deselect-item' onClick={() => dispatch(deselectDiciplineAssociatedToSubject(discipline))}>
                                       <img src={IconCloseWhite} alt='close-icon-white'/>
                                     </button>
                                 </li>
@@ -189,7 +192,7 @@ const ChooseSubtopicCardAssociations: React.FC<ModalProps> = ({
                                     key={index}
                                     onMouseDown={(e) => e.preventDefault()}
                                     onClick={() => {
-                                        dispatch(selectTopicAssociated(topic));
+                                        dispatch(selectTopicAssociatedToSubject(topic));
                                         handleTopicOptionClick(topic);
                                         setInputSearchTopicAssociated('');
                                       }}
@@ -213,7 +216,7 @@ const ChooseSubtopicCardAssociations: React.FC<ModalProps> = ({
                                     className="subtopic-option-selected"
                                 >
                                     <p>{topic.name}</p>
-                                    <button className='button-deselect-item' onClick={() => dispatch(deselectTopicAssociated(topic))}>
+                                    <button className='button-deselect-item' onClick={() => dispatch(deselectTopicAssociatedToSubject(topic))}>
                                       <img src={IconCloseWhite} alt='close-icon-white'/>
                                     </button>
                                 </li>

@@ -19,8 +19,8 @@ interface CardsState {
     loadingSubtopics: boolean;
     loadingAuthors: boolean;
     loadingSources: boolean;
-    selectedDisciplinesAssociation: Discipline[];
-    selectedTopicsAssociation: Topic[];
+    selectedDisciplinesAssociationToSubject: Discipline[];
+    selectedTopicsAssociationToSubject: Topic[];
     selectedAuthorsAssociation: Author[];
 }
 
@@ -58,8 +58,8 @@ const initialState: CardsState = {
     loadingSubtopics: false,
     loadingAuthors: false,
     loadingSources: false,
-    selectedDisciplinesAssociation: [],
-    selectedTopicsAssociation: [],
+    selectedDisciplinesAssociationToSubject: [],
+    selectedTopicsAssociationToSubject: [],
     selectedAuthorsAssociation: []
 };
 
@@ -115,19 +115,19 @@ const sessionCardsSlice = createSlice({
   name: 'sessionCardsSlice',
   initialState,
   reducers: {
-    selectDiciplineAssociated: (state, action: PayloadAction<Discipline>) => {
-        state.selectedDisciplinesAssociation = [...state.selectedDisciplinesAssociation,action.payload]
+    selectDiciplineAssociatedToSubject: (state, action: PayloadAction<Discipline>) => {
+        state.selectedDisciplinesAssociationToSubject = [...state.selectedDisciplinesAssociationToSubject,action.payload]
     },
-    deselectDiciplineAssociated: (state, action: PayloadAction<Discipline>) => {
-      state.selectedDisciplinesAssociation = state.selectedDisciplinesAssociation.filter(
+    deselectDiciplineAssociatedToSubject: (state, action: PayloadAction<Discipline>) => {
+      state.selectedDisciplinesAssociationToSubject = state.selectedDisciplinesAssociationToSubject.filter(
           discipline => discipline.id !== action.payload.id
       );
     },
-    selectTopicAssociated: (state, action: PayloadAction<Discipline>) => {
-        state.selectedTopicsAssociation = [...state.selectedTopicsAssociation,action.payload]
+    selectTopicAssociatedToSubject: (state, action: PayloadAction<Discipline>) => {
+        state.selectedTopicsAssociationToSubject = [...state.selectedTopicsAssociationToSubject,action.payload]
     },
-    deselectTopicAssociated: (state, action: PayloadAction<Discipline>) => {
-      state.selectedTopicsAssociation = state.selectedTopicsAssociation.filter(
+    deselectTopicAssociatedToSubject: (state, action: PayloadAction<Discipline>) => {
+      state.selectedTopicsAssociationToSubject = state.selectedTopicsAssociationToSubject.filter(
           (topic: Topic) => topic.id !== action.payload.id
       );
     },
@@ -187,7 +187,7 @@ const sessionCardsSlice = createSlice({
           if (action.meta.arg.queryType === 'discipline'){
             if (action.meta.arg.page === 1){
               state.disciplinesAssociationSearch = convertKeysToCamelCase(action.payload).filter(
-                  (payloadItem: Discipline) => !state.selectedDisciplinesAssociation.some(
+                  (payloadItem: Discipline) => !state.selectedDisciplinesAssociationToSubject.some(
                       selectedItem => selectedItem.id === payloadItem.id
                   )
               );
@@ -200,7 +200,7 @@ const sessionCardsSlice = createSlice({
             if (action.meta.arg.page === 1){
               
               state.topicsAssociationSearch = convertKeysToCamelCase(action.payload).filter(
-                  (payloadItem: Topic) => !state.selectedTopicsAssociation.some(
+                  (payloadItem: Topic) => !state.selectedTopicsAssociationToSubject.some(
                       selectedItem => selectedItem.id === payloadItem.id
                   )
               );
@@ -218,7 +218,6 @@ const sessionCardsSlice = createSlice({
               state.loadingSubtopics = false;
             }
           } else if ((action.meta.arg.queryType === 'author')){
-            console.log("fgdgggggggggggggggg")
             if (action.meta.arg.page === 1){
               state.authorsAssossiationSearch = convertKeysToCamelCase(action.payload);
               state.loadingAuthors = false;
@@ -260,10 +259,10 @@ const sessionCardsSlice = createSlice({
     }
 );
 
-export const { selectDiciplineAssociated, 
-               deselectDiciplineAssociated, 
-               selectTopicAssociated, 
-               deselectTopicAssociated,
+export const { selectDiciplineAssociatedToSubject, 
+               deselectDiciplineAssociatedToSubject, 
+               selectTopicAssociatedToSubject, 
+               deselectTopicAssociatedToSubject,
                selectAuthorAssociated,
                deselectAuthorAssociated } = sessionCardsSlice.actions;
 export const cardsSliceReducers = sessionCardsSlice.reducer;

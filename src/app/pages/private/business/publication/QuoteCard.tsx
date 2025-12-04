@@ -73,11 +73,12 @@ export default function QuoteCards({
     const [showAuthorsDropdown, setShowAuthorsDropdown] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const [showChooseSubtopicCardAssociationsModal, setShowChooseSubtopicCardAssociationsModal] = useState(false);
-    const [showChooseSubtopicCardAuthorsAssociationsModal, setShowChooseSubtopicCardAuthorsAssociationsModal] = useState(false);
     const [inputQuote, setInputQuote] = useState('');
     const [inputComment, setInputComment] = useState('');
     const [inputAuthor, setInputAuthor] = useState('');
-    const [showAuthorsDropDown, setShowAuthorsDropDown] = useState(true)
+    const [showAuthorsDropDown, setShowAuthorsDropDown] = useState(true);
+    const selectedAuthorsAssociation = useSelector((state: RootState) => state.sessionCards.selectedAuthorsAssociation);
+    
 
     useEffect(() => {
         if (subtopicSelected) {
@@ -185,7 +186,7 @@ export default function QuoteCards({
 
     const handleAuthorOptionClick = (author: Author) => {
         dispatch(selectAuthorAssociated(author));
-        setInputAuthor(author.name)
+        setInputAuthor('')
         setShowAuthorsDropdown(false);
     };
 
@@ -305,6 +306,13 @@ export default function QuoteCards({
             <div id='container-quote-card-third-line'>
                 <div id='container-quote-card-third-line-left'>
                     <label className='p-quote-card-label'><strong>Author:</strong></label>
+
+                    <span>
+                        {selectedAuthorsAssociation.reduce((acc, author, index) => {
+                            return acc + (index > 0 ? ', ' : '') + author.name;
+                        }, '')}
+                    </span>
+
                     <input className='input-author-quote-card'
                         maxLength={55}
                         placeholder="Type the author here..."
@@ -332,13 +340,12 @@ export default function QuoteCards({
                                         ) : null
                                     )
                                 ) : (
-                                    !suptopicsSearchLoading && (
+                                    !authorsSearchLoading && (
                                         <li 
                                             className="add-new-subtopic"
                                             onMouseDown={(e) => e.preventDefault()}
                                             onClick={() => {
                                                 handleAddNewAuthor();
-                                                setShowChooseSubtopicCardAuthorsAssociationsModal(true);
                                             }}
                                         >
                                             Add "{inputAuthor}"
