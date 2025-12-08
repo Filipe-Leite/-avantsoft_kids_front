@@ -8,7 +8,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../../store';
 import { getSearch } from '../../../../../features/sessionBusiness/sessionNavigation';
 import ChooseSubtopicCardAssociationsModal from '../../../../components/modals/ChooseSubtopicCardAssociationsModal';
-import { selectAuthorAssociated } from '../../../../../features/sessionBusiness/sessionCards';
+import { selectAuthorAssociated, selectNewAuthorAssociated, unselectAuthorAssociated, unselectNewAuthorAssociated } from '../../../../../features/sessionBusiness/sessionCards';
+import { AuthorReferenceFormatter } from '../../../../../../src/genericFunctions';
+import { NewAuthor } from '../../../../#interfaces/interfaces';
 
 interface QuoteCardsProps {
     id?: number;
@@ -76,10 +78,12 @@ export default function QuoteCards({
     const [inputQuote, setInputQuote] = useState('');
     const [inputComment, setInputComment] = useState('');
     const [inputAuthor, setInputAuthor] = useState('');
+    const [inputSource, setInputSource] = useState('');
     const [showAuthorsDropDown, setShowAuthorsDropDown] = useState(true);
+    const [showSourceDropdown, setShowSourceDropdown] = useState(true);
     const selectedAuthorsAssociation = useSelector((state: RootState) => state.sessionCards.selectedAuthorsAssociation);
+    const selectedNewAuthorsAssociation = useSelector((state: RootState) => state.sessionCards.selectedNewAuthorsAssociation);
     
-
     useEffect(() => {
         if (subtopicSelected) {
             setInputSubtopicCard(subtopicSelected.name);
@@ -158,6 +162,18 @@ export default function QuoteCards({
         }
     };
 
+    const handleSourceInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setInputSource(value);
+        setShowSourceDropdown(true);
+
+        if (value.trim()) {
+            setShowSourceDropdown(true);
+        } else {
+            setShowSourceDropdown(false);
+        }
+    };
+
     const handleSubtopicSelect = (selectedSubtopic: Subtopic) => {
         setSubtopicSelected(selectedSubtopic);
         setInputSubtopicCard(selectedSubtopic.name);
@@ -186,6 +202,12 @@ export default function QuoteCards({
 
     const handleAuthorOptionClick = (author: Author) => {
         dispatch(selectAuthorAssociated(author));
+        setInputAuthor('')
+        setShowAuthorsDropdown(false);
+    };
+
+    const handleNewAuthorOptionClick = (author: NewAuthor) => {
+        dispatch(selectNewAuthorAssociated(author));
         setInputAuthor('')
         setShowAuthorsDropdown(false);
     };
@@ -309,7 +331,10 @@ export default function QuoteCards({
 
                     <span>
                         {selectedAuthorsAssociation.reduce((acc, author, index) => {
-                            return acc + (index > 0 ? ', ' : '') + author.name;
+                            return acc + (index > 0 ? ', ' : '') + AuthorReferenceFormatter.formatAuthorReference(author.name);
+                        }, '')}
+                        {selectedNewAuthorsAssociation.reduce((acc, author, index) => {
+                            return acc + (index > 0 ? ', ' : '') + AuthorReferenceFormatter.formatAuthorReference(author.name);
                         }, '')}
                     </span>
 
@@ -321,44 +346,94 @@ export default function QuoteCards({
                         onChange={handleAuthorInputChange}
                     />
                     
-                    {showAuthorsDropDown && !authorsSearchLoading && inputAuthor.length > 0 && (
+                    {selectedNewAuthorsAssociation.length < 3 && 
+                     selectedAuthorsAssociation.length < 3 && 
+                     showAuthorsDropDown && 
+                     !authorsSearchLoading && 
+                     inputAuthor.length > 0 && (
                         <div className="dropdown-wrapper">
                             <ul className='ul-authors-card'>
+                                {selectedAuthorsAssociation.map((author, index) => (
+                                    <li
+                                    key={`selected-author-${index}`}
+                                    className="subtopic-option-selected"
+                                    onClick={() => dispatch(unselectAuthorAssociated(author))}
+                                    onMouseDown={(e) => e.preventDefault()
+                                    }
+                                    >
+                                    {author.name}
+                                        <img src={closeIcon}/>
+                                    </li>
+                                ))}
+
+                                {selectedNewAuthorsAssociation.map((author, index) => (
+                                    <li
+                                    key={`selected-new-author-${index}`}
+                                    className="subtopic-option-selected"
+                                    onClick={() => dispatch(unselectNewAuthorAssociated(author))}
+                                    onMouseDown={(e) => e.preventDefault()}
+                                    >
+                                    {author.name}
+                                    </li>
+                                ))}
+
                                 {authorsAssociationSearch.length > 0 ? (
-                                    authorsAssociationSearch.map((author, index) => 
+                                    authorsAssociationSearch
+                                    .filter(a => 
+                                        !selectedAuthorsAssociation.some(s => s.id === a.id) &&
+                                        !selectedNewAuthorsAssociation.some(s => s.name === a.name)
+                                    )
+                                    .slice(0, 3)
+                                    .map((author, index) =>
                                         author.name.length > 0 ? (
-                                            <li 
-                                                key={index}
-                                                onMouseDown={(e) => e.preventDefault()}
-                                                onClick={() => {
-                                                    handleAuthorOptionClick(author);
-                                                }}
-                                                className="subtopic-option"
-                                            >
-                                                {author.name}
-                                            </li>
+                                        <li 
+                                            key={`search-author-${index}`}
+                                            onMouseDown={(e) => e.preventDefault()}
+                                            onClick={() => {
+                                            handleAuthorOptionClick(author)
+                                            }}
+                                            className="subtopic-option"
+                                        >
+                                            {author.name}
+                                        </li>
                                         ) : null
                                     )
                                 ) : (
-                                    !authorsSearchLoading && (
-                                        <li 
-                                            className="add-new-subtopic"
-                                            onMouseDown={(e) => e.preventDefault()}
-                                            onClick={() => {
-                                                handleAddNewAuthor();
-                                            }}
-                                        >
-                                            Add "{inputAuthor}"
-                                        </li>
+                                    !authorsSearchLoading && inputAuthor && (
+                                    <li 
+                                        className="add-new-subtopic"
+                                        onMouseDown={(e) => e.preventDefault()}
+                                        onClick={() => {
+                                        handleAddNewAuthor()
+                                        handleNewAuthorOptionClick({
+                                            name: inputAuthor, 
+                                            reference: AuthorReferenceFormatter.formatAuthorReference(inputAuthor)
+                                        })
+                                        }}
+                                    >
+                                        Add "{AuthorReferenceFormatter.formatAuthorReference(inputAuthor)}"
+                                    </li>
                                     )
                                 )}
-                            </ul>
+                                </ul>
                         </div>
                     )}
                 </div>
                 <div id='container-quote-card-third-line-right'>
                     <p className='p-quote-card-description'><strong>Source:</strong></p> 
-                    {source && source.title ? <p className='p-quote-card'>{source.title}</p> : null}
+                    {source && source.title ? 
+                        <p className='p-quote-card'>{source.title}</p> 
+                        
+                        : 
+                        
+                        <input className='input-source-quote-card'
+                            maxLength={55}
+                            placeholder="Type the source here..."
+                            autoComplete="off"
+                            value={inputSource}
+                            onChange={handleSourceInputChange}
+                        />
+                    }
                 </div>
             </div> 
             <div id='container-quote-card-forth-line'>

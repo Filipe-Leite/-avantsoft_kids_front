@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { Author, Card, Discipline, NavigationState, Source, Subtopic, Topic } from "../../app/#interfaces/slicesInterfaces";
-import { AuthHeaders } from "../../app/#interfaces/interfaces";
+import { AuthHeaders, NewAuthor } from "../../app/#interfaces/interfaces";
 import { getSearchWithQuertTypeAndPage, getUserCurrentCardsWithUserId, postCurrentCard } from "../../app/api/sessionAPI";
 import { convertKeysToCamelCase } from "../../genericFunctions";
 
@@ -22,6 +22,7 @@ interface CardsState {
     selectedDisciplinesAssociationToSubject: Discipline[];
     selectedTopicsAssociationToSubject: Topic[];
     selectedAuthorsAssociation: Author[];
+    selectedNewAuthorsAssociation: NewAuthor[];
 }
 
 
@@ -60,7 +61,8 @@ const initialState: CardsState = {
     loadingSources: false,
     selectedDisciplinesAssociationToSubject: [],
     selectedTopicsAssociationToSubject: [],
-    selectedAuthorsAssociation: []
+    selectedAuthorsAssociation: [],
+    selectedNewAuthorsAssociation: [],
 };
 
 export const createCurrentCard = createAsyncThunk(
@@ -134,9 +136,17 @@ const sessionCardsSlice = createSlice({
     selectAuthorAssociated: (state, action: PayloadAction<Author>) => {
         state.selectedAuthorsAssociation = [...state.selectedAuthorsAssociation,action.payload]
     },
-    deselectAuthorAssociated: (state, action: PayloadAction<Author>) => {
+    unselectAuthorAssociated: (state, action: PayloadAction<Author>) => {
       state.selectedAuthorsAssociation = state.selectedAuthorsAssociation.filter(
           (author: Author) => author.id !== action.payload.id
+      );
+    },
+    selectNewAuthorAssociated: (state, action: PayloadAction<NewAuthor>) => {
+        state.selectedNewAuthorsAssociation = [...state.selectedNewAuthorsAssociation,action.payload]
+    },
+    unselectNewAuthorAssociated: (state, action: PayloadAction<NewAuthor>) => {
+      state.selectedNewAuthorsAssociation = state.selectedNewAuthorsAssociation.filter(
+          (author: NewAuthor) => author.name !== action.payload.name
       );
     }
   },
@@ -264,5 +274,7 @@ export const { selectDiciplineAssociatedToSubject,
                selectTopicAssociatedToSubject, 
                deselectTopicAssociatedToSubject,
                selectAuthorAssociated,
-               deselectAuthorAssociated } = sessionCardsSlice.actions;
+               unselectAuthorAssociated,
+               selectNewAuthorAssociated,
+               unselectNewAuthorAssociated } = sessionCardsSlice.actions;
 export const cardsSliceReducers = sessionCardsSlice.reducer;

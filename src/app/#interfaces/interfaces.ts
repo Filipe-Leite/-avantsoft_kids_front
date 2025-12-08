@@ -5,3 +5,9 @@ export interface AuthHeaders {
     'client'?: string;
     'uid'?: string;
 }
+
+export interface NewAuthor {
+  id?: number;
+  name: string;
+  reference: string;
+}
